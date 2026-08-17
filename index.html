@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="zh-TW" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#080b12">
+  <meta name="description" content="Memory Manager / 記憶體管理器 / 内存管理器 — local-first Windows memory management by Ray20123315.">
+  <title>記憶體管理器 · Memory Manager</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="ambient ambient-a"></div><div class="ambient ambient-b"></div>
+  <header class="nav shell">
+    <a class="brand" href="#top" aria-label="Memory Manager">
+      <span class="logo" aria-hidden="true">
+        <svg viewBox="0 0 48 48"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#6aa8ff"/><stop offset="1" stop-color="#36d8d0"/></linearGradient></defs><path d="M24 3 40 9v12c0 11-6.4 19-16 24C14.4 40 8 32 8 21V9l16-6Z" fill="url(#g)" opacity=".2"/><path d="M24 5.8 37.4 11v10c0 9.1-5.1 15.9-13.4 20.5C15.7 36.9 10.6 30.1 10.6 21V11L24 5.8Z" fill="none" stroke="url(#g)" stroke-width="2.1"/><rect x="16" y="17" width="16" height="14" rx="3" fill="#0b1322" stroke="#6aa8ff"/><path d="M19 21h10M19 25h7M19 29h9" stroke="#83b7ff" stroke-width="1.6" stroke-linecap="round"/></svg>
+      </span>
+      <span><strong data-i18n="brand">記憶體管理器</strong><small>Ray20123315</small></span>
+    </a>
+    <nav class="nav-actions">
+      <div class="lang" aria-label="Language"><button data-lang="en">EN</button><button class="active" data-lang="zh-TW">繁</button><button data-lang="zh-CN">简</button></div>
+      <button id="themeToggle" class="icon-button" aria-label="Theme"><span class="sun">☼</span><span class="moon">◐</span></button>
+      <a class="nav-link" href="https://github.com/Ray20123315/Memory_manager" target="_blank" rel="noopener">GitHub</a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero shell">
+      <div class="hero-copy">
+        <span class="eyebrow"><i></i><span data-i18n="eyebrow">Windows · Local-first · Safety-first</span></span>
+        <h1><span data-i18n="heroA">把記憶體控制</span><br><em data-i18n="heroB">做得安靜又清楚。</em></h1>
+        <p data-i18n="heroText">即時監控記憶體壓力、保護多款遊戲、管理閒置背景程式，並保留每一步安全檢查。沒有第三方追蹤，也不靠誇張的「一鍵清空 RAM」。</p>
+        <div class="cta-row">
+          <a class="cta primary" href="https://github.com/Ray20123315/Memory_manager" target="_blank" rel="noopener"><span data-i18n="github">查看 GitHub</span><b>↗</b></a>
+          <a class="cta" href="https://www.youtube.com/@raychen0817" target="_blank" rel="noopener"><span>YouTube</span><b>▶</b></a>
+        </div>
+        <div class="trust"><span>● <b data-i18n="local">本機運作</b></span><span>● <b data-i18n="privacy">無第三方追蹤</b></span><span>● <b data-i18n="games">多遊戲保護</b></span></div>
+      </div>
+      <div class="hero-ui" aria-label="Memory Manager preview">
+        <div class="window">
+          <div class="titlebar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><b data-i18n="brand">記憶體管理器</b><small>v0.9 beta</small></div>
+          <div class="dashboard">
+            <div class="side"><span class="side-brand"></span><button class="sel">◈</button><button>▦</button><button>⌁</button><button>◉</button><button>⚙</button></div>
+            <div class="canvas">
+              <div class="topline"><div><small data-i18n="available">可用記憶體</small><strong>8.6 GB</strong></div><span class="status"><i></i><span data-i18n="normal">正常</span></span></div>
+              <div class="mini-grid"><div><small>Commit</small><strong>Normal</strong></div><div><small data-i18n="protected">受保護</small><strong>12</strong></div><div><small data-i18n="idle">閒置低優先</small><strong>4</strong></div></div>
+              <div class="chart-card"><div class="chart-head"><span data-i18n="history">記憶體歷史</span><b>8.6 GB</b></div><svg viewBox="0 0 560 165" preserveAspectRatio="none"><defs><linearGradient id="fill" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#4c8cff" stop-opacity=".28"/><stop offset="1" stop-color="#4c8cff" stop-opacity="0"/></linearGradient></defs><path class="grid" d="M0 35H560M0 82H560M0 130H560"/><path class="area" d="M0 132 C60 124 85 130 130 112 S205 90 250 100 330 45 380 64 455 34 510 58 540 45 560 48 V165H0Z"/><path class="line" d="M0 132 C60 124 85 130 130 112 S205 90 250 100 330 45 380 64 455 34 510 58 540 45 560 48"/></svg></div>
+              <div class="process-card"><span class="app-dot brave"></span><div><b>Brave Browser</b><small>5 instances</small></div><strong>1.2 GB</strong></div>
+              <div class="process-card"><span class="app-dot code"></span><div><b>Visual Studio Code</b><small>6 instances</small></div><strong>1.0 GB</strong></div>
+            </div>
+          </div>
+        </div>
+        <div class="float-orb"><span>RAM</span><b>8.6</b><small>GB</small></div>
+      </div>
+    </section>
+
+    <section class="strip"><div class="shell strip-inner"><div><strong>Safety-first</strong><span data-i18n="safetyLine">前景、系統、遊戲與反作弊程式持續受保護</span></div><div><strong>WebView2 + Go</strong><span data-i18n="uiLine">流暢 UI，原生 Windows 控制能力</span></div><div><strong>Local-first</strong><span data-i18n="privacyLine">設定與診斷以本機為主，不植入追蹤器</span></div></div></section>
+
+    <section class="features shell" id="features">
+      <div class="section-copy"><span class="eyebrow"><i></i><span data-i18n="featureEyebrow">不是「清 RAM」小工具</span></span><h2 data-i18n="featureTitle">每個動作，都先知道為什麼。</h2><p data-i18n="featureText">從記憶體歷史、多遊戲保護到可回復的記憶體優先順序，功能以可理解、可驗證為優先。</p></div>
+      <div class="feature-cards">
+        <article><span class="num">01</span><h3 data-i18n="f1t">智慧壓力控制</h3><p data-i18n="f1p">依可用 RAM、Commit、Windows 訊號與安全角色決定是否介入。</p></article>
+        <article><span class="num">02</span><h3 data-i18n="f2t">多遊戲保護</h3><p data-i18n="f2p">同時保護多個遊戲執行檔，避免自動 Trim 或降低記憶體優先順序。</p></article>
+        <article><span class="num">03</span><h3 data-i18n="f3t">即時程式視圖</h3><p data-i18n="f3p">群組、圖示、Working Set、Private Memory 與 RAM 變化量一眼看懂。</p></article>
+        <article><span class="num">04</span><h3 data-i18n="f4t">可回復策略</h3><p data-i18n="f4p">記錄由管理器調整的記憶體優先順序，必要時可一鍵還原。</p></article>
+        <article><span class="num">05</span><h3 data-i18n="f5t">懸浮狀態球</h3><p data-i18n="f5p">在桌面上快速掌握可用 RAM、Commit 與目前壓力狀態。</p></article>
+        <article><span class="num">06</span><h3 data-i18n="f6t">三語與自訂主題</h3><p data-i18n="f6p">English、繁體中文、简体中文，搭配深淺色與自訂 Accent。</p></article>
+      </div>
+    </section>
+
+    <section class="cta-section shell">
+      <div class="cta-panel"><div><span class="eyebrow"><i></i><span data-i18n="ctaEyebrow">Memory Manager</span></span><h2 data-i18n="ctaTitle">想看看它怎麼做？</h2><p data-i18n="ctaText">原始碼、版本與後續更新都會整理在 GitHub；使用示範則放在 YouTube。</p></div><div class="cta-row"><a class="cta primary" href="https://github.com/Ray20123315/Memory_manager" target="_blank" rel="noopener">GitHub <b>↗</b></a><a class="cta" href="https://www.youtube.com/@raychen0817" target="_blank" rel="noopener">YouTube <b>▶</b></a></div></div>
+    </section>
+  </main>
+
+  <footer class="shell"><span>© 2026 Ray20123315</span><span>Memory Manager · 記憶體管理器 · 内存管理器</span></footer>
+  <script src="app.js"></script>
+</body>
+</html>
