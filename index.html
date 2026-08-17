@@ -3,26 +3,195 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#070a10">
-  <meta name="description" content="Memory Manager / 記憶體管理器 — Windows 11 記憶體監控、Commit 壓力分析、通知、簡單 Log 與安全優先的記憶體管理。">
-  <title>記憶體管理器 · Memory Manager</title><link rel="stylesheet" href="styles.css">
+  <meta name="theme-color" content="#07090d">
+  <meta name="description" content="Memory Manager beta.29 — Windows 11 RAM / Commit 監控、事故分析、可回復 Game Memory Rules、Update Center 與真正 Installer V2。">
+  <title>Memory Manager beta.29 · 記憶體管理器</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="noise"></div><div class="orb orb-a"></div><div class="orb orb-b"></div>
-  <header class="nav shell"><a class="brand" href="#top"><span class="mark">M</span><span><strong data-i18n="brand">記憶體管理器</strong><small>Memory Manager · beta.28</small></span></a><nav class="links"><a href="#features" data-i18n="navFeatures">功能</a><a href="#install" data-i18n="navInstall">安裝</a><a href="#logs" data-i18n="navLogs">Log</a><a href="#safety" data-i18n="navSafety">安全</a></nav><div class="tools"><div class="lang"><button data-lang="en">EN</button><button class="active" data-lang="zh-TW">繁</button><button data-lang="zh-CN">简</button></div><button id="themeToggle" class="theme" aria-label="切換主題">◐</button></div></header>
+  <div class="ambient" aria-hidden="true"><i></i><i></i></div>
+  <header class="topbar shell">
+    <a class="brand" href="#top" aria-label="Memory Manager home">
+      <span class="logo">M</span>
+      <span><strong data-i18n="brand">記憶體管理器</strong><small>Memory Manager · beta.29</small></span>
+    </a>
+    <nav class="navlinks" aria-label="主要導覽">
+      <a href="#observe" data-i18n="navObserve">觀測</a>
+      <a href="#incident" data-i18n="navIncident">事故</a>
+      <a href="#game" data-i18n="navGame">遊戲規則</a>
+      <a href="#install" data-i18n="navInstall">安裝</a>
+      <a href="#safety" data-i18n="navSafety">安全</a>
+    </nav>
+    <div class="navtools">
+      <div class="lang" aria-label="Language">
+        <button type="button" data-lang="en">EN</button>
+        <button type="button" data-lang="zh-TW" class="active">繁</button>
+        <button type="button" data-lang="zh-CN">简</button>
+      </div>
+      <button id="themeToggle" class="theme" type="button" aria-label="切換深淺色">◐</button>
+    </div>
+  </header>
+
   <main id="top">
     <section class="hero shell">
-      <div class="hero-copy reveal"><div class="eyebrow"><i></i><span data-i18n="eyebrow">Windows 11 · 本機優先 · 安全優先</span></div><h1><span class="hero-line" data-i18n="heroA">把記憶體控制</span><span class="hero-line accent" data-i18n="heroB">做得安靜又清楚。</span></h1><p class="lead" data-i18n="heroText">不是「一鍵清 RAM」的魔法按鈕。它先告訴你 RAM、Commit、程式增長與風險，再用白話說明現在要不要處理。</p><div class="cta-row"><a class="cta primary" href="https://github.com/Ray20123315/Memory_manager/releases/latest" target="_blank" rel="noopener"><span data-i18n="download">下載最新版</span><b>↓</b></a><a class="cta" href="https://github.com/Ray20123315/Memory_manager" target="_blank" rel="noopener">GitHub <b>↗</b></a><a class="cta ghost" href="https://www.youtube.com/@raychen0817" target="_blank" rel="noopener"><span data-i18n="youtube">YouTube 頻道</span></a></div><div class="proof"><span><i>01</i><b data-i18n="proof1">1 ms 起資料取樣</b></span><span><i>02</i><b data-i18n="proof2">Log 白話化</b></span><span><i>03</i><b data-i18n="proof3">真正安裝 / 修復 / 移除</b></span></div></div>
-      <div class="product-stage reveal delay-1" aria-label="Memory Manager animated preview"><div class="app-window"><div class="app-bar"><span class="app-logo">M</span><b data-i18n="brand">記憶體管理器</b><small>beta.28</small><span class="window-dots"><i></i><i></i><i></i></span></div><div class="app-body"><aside><button class="active">總</button><button>程</button><button>通</button><button>Log</button><button>設</button></aside><div class="dash"><div class="dash-head"><div><small data-i18n="available">可用 RAM</small><strong id="ramValue">8.6 GB</strong></div><span id="healthPill" class="health good"><i></i><b data-i18n="normal">正常</b></span></div><div class="metrics"><div><small>Commit</small><strong id="commitValue">64%</strong></div><div><small>Headroom</small><strong id="headroomValue">12.4 GB</strong></div><div><small data-i18n="sampling">取樣</small><strong>1 ms</strong></div></div><div class="chart"><div class="chart-top"><span data-i18n="pressure">Memory Pressure</span><b id="chartLabel">Stable</b></div><svg viewBox="0 0 650 180" preserveAspectRatio="none"><defs><linearGradient id="area" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#4c8cff" stop-opacity=".38"/><stop offset="1" stop-color="#4c8cff" stop-opacity="0"/></linearGradient></defs><path class="grid" d="M0 45H650M0 90H650M0 135H650"/><path class="area" d="M0 132 C60 128 90 118 130 120 S220 104 260 108 350 72 410 82 500 58 550 70 610 48 650 52 V180H0Z"/><path class="line" d="M0 132 C60 128 90 118 130 120 S220 104 260 108 350 72 410 82 500 58 550 70 610 48 650 52"/></svg></div><div class="mini-row"><span><i class="appdot"></i><b>Brave Browser</b><small>+84 MB</small></span><strong>1.2 GB</strong></div><div class="mini-row"><span><i class="appdot code"></i><b>Visual Studio Code</b><small>Stable</small></span><strong>0.9 GB</strong></div></div></div></div><div class="float-card notification-pop"><small data-i18n="newUpdate">新功能與改進</small><b>beta.28</b><span data-i18n="notifText">通知中心、簡單 Log、真正安裝器</span></div><div class="float-card log-pop"><small>Log</small><b data-i18n="logOk">不用看天書</b><span data-i18n="logExample">02:31 · 更新檢查完成，沒有問題</span></div></div>
+      <div class="hero-copy reveal">
+        <div class="eyebrow"><span></span><b data-i18n="heroEyebrow">Windows 11 · local-first · safety-first</b></div>
+        <h1>
+          <span class="hero-line" data-i18n="heroA">把記憶體控制</span>
+          <span class="hero-line accent" data-i18n="heroB">做得安靜又清楚。</span>
+        </h1>
+        <p class="lead" data-i18n="heroText">不是「一鍵清 RAM」。先看 RAM、Commit、Process Commit、趨勢與事故證據，再決定需不需要動作；任何會改變程序 Memory Priority 的規則都預設關閉、可回復。</p>
+        <div class="cta-row">
+          <a class="cta primary" href="https://github.com/Ray20123315/Memory_manager/releases/download/v0.9.0-beta.29/MemoryManagerSetup.exe" target="_blank" rel="noopener"><span data-i18n="downloadSetup">下載 beta.29 安裝器</span><b>↓</b></a>
+          <a class="cta" href="https://github.com/Ray20123315/Memory_manager/releases/tag/v0.9.0-beta.29" target="_blank" rel="noopener"><span data-i18n="releasePage">Release 頁</span><b>↗</b></a>
+          <a class="cta ghost" href="https://github.com/Ray20123315/Memory_manager" target="_blank" rel="noopener">GitHub</a>
+        </div>
+        <div class="proof-grid">
+          <div><small>01</small><strong data-i18n="proof1">真正 Process Commit</strong><span>PrivateUsage / Δ / trend</span></div>
+          <div><small>02</small><strong data-i18n="proof2">Windows 事故時間線</strong><span>Event Log + heartbeat</span></div>
+          <div><small>03</small><strong data-i18n="proof3">可回復 Memory Rules</strong><span>default-off / restore</span></div>
+          <div><small>04</small><strong data-i18n="proof4">真正 Installer V2</strong><span>install / repair / uninstall</span></div>
+        </div>
+      </div>
+
+      <div class="product-stage reveal delay-1" aria-label="Memory Manager interface preview">
+        <div class="window">
+          <div class="windowbar"><span class="mini-logo">M</span><strong data-i18n="brand">記憶體管理器</strong><small>beta.29</small><i></i><i></i><i></i></div>
+          <div class="windowbody">
+            <aside class="sidebar"><b>總</b><span>程</span><span>遊</span><span>更</span><span>事</span></aside>
+            <div class="dashboard">
+              <div class="dash-title"><div><small data-i18n="dashState">目前狀態</small><strong data-i18n="dashHealthy">正常，不需要亂清 RAM</strong></div><em>Normal</em></div>
+              <div class="metric-grid">
+                <div><small data-i18n="availableRam">可用 RAM</small><b id="ramValue">8.6 GB</b></div>
+                <div><small>Commit</small><b id="commitValue">64%</b></div>
+                <div><small>Headroom</small><b id="headroomValue">12.4 GB</b></div>
+              </div>
+              <div class="chart">
+                <div><span>Commit trend</span><b id="chartLabel">Stable</b></div>
+                <svg viewBox="0 0 680 190" preserveAspectRatio="none" aria-hidden="true">
+                  <path class="gridline" d="M0 45H680M0 95H680M0 145H680"/>
+                  <path class="area" d="M0 142 C70 138 110 128 155 130 S245 109 300 114 380 82 430 89 515 63 565 75 630 54 680 58 V190H0Z"/>
+                  <path class="trend" d="M0 142 C70 138 110 128 155 130 S245 109 300 114 380 82 430 89 515 63 565 75 630 54 680 58"/>
+                </svg>
+              </div>
+              <div class="process-row"><span><i></i><b>Browser</b><small>Commit Δ +84 MB</small></span><strong>1.2 GB</strong></div>
+              <div class="process-row"><span><i class="good"></i><b>Game.exe</b><small data-i18n="protectedGame">Game Profile · 保護</small></span><strong>2.8 GB</strong></div>
+            </div>
+          </div>
+        </div>
+        <div class="floating incident-card"><small data-i18n="incidentCardSmall">上一輪狀態</small><strong data-i18n="incidentCardTitle">證據一致，沒有亂猜根因</strong><span>Event 2004 · heartbeat · 41/6008</span></div>
+        <div class="floating release-card"><small>Release</small><strong>v0.9.0-beta.29</strong><span>SHA-256 · Installer V2 · prerelease</span></div>
+      </div>
     </section>
-    <section class="quick shell reveal"><div><span>Telemetry</span><strong>1 ms →</strong><p data-i18n="q1">資料可以高頻取樣；畫面另行節流，不讓監控工具自己吃掉效能。</p></div><div><span>Commit</span><strong>看得懂 →</strong><p data-i18n="q2">把「快用完了嗎？」轉成百分比、Headroom 與趨勢 ETA。</p></div><div><span>Safety</span><strong>先建議 →</strong><p data-i18n="q3">先告訴你哪個一般程式最值得正常關閉，不直接亂殺系統程序。</p></div></section>
-    <section class="section shell" id="features"><div class="section-head reveal"><div class="eyebrow"><i></i><span data-i18n="featureEyebrow">beta.28 · 20+ 個實際功能</span></div><h2 data-i18n="featureTitle">功能很多，但不用先變成工程師。</h2><p data-i18n="featureText">專業資料留在底層；畫面先回答三件事：現在正常嗎？哪裡在變？我需要做什麼？</p></div><div class="feature-grid">
-      <article class="feature reveal"><span>01</span><h3>1 ms Expert Telemetry</h3><p>最快 1 ms 要求取樣，UI 更新獨立控制。</p></article><article class="feature reveal"><span>02</span><h3>Adaptive Refresh</h3><p>前景、背景、Tray 依情境降低不必要更新。</p></article><article class="feature reveal"><span>03</span><h3>Process Memory</h3><p>Working Set、Private Memory 與最近變化一起看。</p></article><article class="feature reveal"><span>04</span><h3>Commit Δ</h3><p>找出最近記憶體增長最快的程式。</p></article><article class="feature reveal"><span>05</span><h3>Leak Indicator</h3><p>短時間快速增長時提醒「可能持續變大」。</p></article><article class="feature reveal"><span>06</span><h3>Commit ETA</h3><p>依近期趨勢估算安全空間還能撐多久。</p></article><article class="feature reveal"><span>07</span><h3>Page File Health</h3><p>用 Commit Headroom 告訴你虛擬記憶體還有多少餘裕。</p></article><article class="feature reveal"><span>08</span><h3>Emergency Status</h3><p>壓力偏高或危險時，狀態直接變成白話警示。</p></article><article class="feature reveal"><span>09</span><h3>Safe Close Advisor</h3><p>優先建議關閉大型一般程式，保護系統程序。</p></article><article class="feature reveal"><span>10</span><h3>Flight Recorder</h3><p>背景保留近期 RAM / Commit 樣本，事故後能回看。</p></article><article class="feature reveal"><span>11</span><h3>Incident Bundle</h3><p>一鍵匯出事故資料，除錯不必到處找。</p></article><article class="feature reveal"><span>12</span><h3>Notifications</h3><p>新功能、改進、更新與重要狀態集中一頁。</p></article><article class="feature reveal"><span>13</span><h3>Update Center</h3><p>直接檢查 GitHub Releases 的最新版本。</p></article><article class="feature reveal"><span>14</span><h3>Desktop Notification</h3><p>背景檢查發現新版時顯示本機通知，不搶焦點。</p></article><article class="feature reveal"><span>15</span><h3>Beginner Log</h3><p>Log 先翻成「發生什麼、要不要擔心」再顯示。</p></article><article class="feature reveal"><span>16</span><h3>Open Log Folder</h3><p>按下就開真正的 Log 目錄，不再沒有反應。</p></article><article class="feature reveal"><span>17</span><h3>Default Maximized</h3><p>啟動直接最大化，版面按視窗比例伸縮。</p></article><article class="feature reveal"><span>18</span><h3>Real Installer</h3><p>真正複製程式、建捷徑、寫解除安裝資訊。</p></article><article class="feature reveal"><span>19</span><h3>Repair / Uninstall</h3><p>再次執行可修復；Windows 解除安裝清單可移除。</p></article><article class="feature reveal"><span>20</span><h3>Release Integrity</h3><p>Release 同時提供 EXE、Setup 與 SHA-256。</p></article></div></section>
-    <section class="section shell split" id="logs"><div class="section-head reveal"><div class="eyebrow"><i></i><span>Log · Easy mode</span></div><h2 data-i18n="logTitle">Log 不該像考試題。</h2><p data-i18n="logText">原始紀錄仍保留，但 App 內先把常見事件翻成簡單句子。需要深入檢查時，再按「開啟 Log 資料夾」看完整檔案。</p><ul class="checks"><li>時間：什麼時候發生</li><li>分類：啟動 / 更新 / 設定 / 錯誤</li><li>說明：要不要處理、下一步是什麼</li></ul></div><div class="log-demo reveal delay-1"><div class="log-head"><b>Log（簡單版）</b><span>● 正常</span></div><div class="log-line"><time>02:31:05</time><em>啟動</em><p>程式已正常啟動，主視窗已最大化。</p></div><div class="log-line"><time>02:31:06</time><em>更新</em><p>GitHub 更新檢查完成，目前沒有需要處理的問題。</p></div><div class="log-line"><time>02:31:12</time><em>設定</em><p>資料取樣改為 1 ms；畫面仍維持節流更新。</p></div><button class="fake-button">開啟 Log 資料夾 ↗</button></div></section>
-    <section class="section shell split reverse" id="notifications"><div class="notify-demo reveal"><div class="notify-top"><b>通知</b><span>3</span></div><article><i class="blue"></i><div><strong>beta.28 新功能</strong><p>新增通知中心、簡單 Log 與真正安裝程式。</p><small>剛剛</small></div></article><article><i class="green"></i><div><strong>系統正常</strong><p>Commit Headroom 足夠，目前不用清理。</p><small>1 分鐘前</small></div></article><article><i class="orange"></i><div><strong>有新版可用</strong><p>背景檢查到新的 GitHub Release。</p><small>30 分鐘前</small></div></article></div><div class="section-head reveal delay-1"><div class="eyebrow"><i></i><span>Notification Center</span></div><h2 data-i18n="notifyTitle">更新會提醒，但不一直吵你。</h2><p data-i18n="notifyText">App 會定期檢查 GitHub Releases；發現新版本時放進通知頁並顯示 Windows 本機通知。這是背景 polling，不會假裝成伺服器 true push。</p><div class="callout"><b>為什麼這樣做？</b><span>不用額外架一個收集裝置 ID 的推播伺服器，仍能保持 local-first。</span></div></div></section>
-    <section class="section shell" id="install"><div class="section-head center reveal"><div class="eyebrow"><i></i><span>Install · Repair · Uninstall</span></div><h2 data-i18n="installTitle">「安裝」就真的安裝。</h2><p data-i18n="installText">Setup 不是假的進度條。它會把程式放到使用者程式目錄、建立開始功能表與桌面捷徑，並加入 Windows 解除安裝清單。</p></div><div class="install-flow reveal"><div><span>1</span><b>下載</b><p>從 GitHub Releases 取得 `MemoryManagerSetup.exe`。</p></div><i>→</i><div><span>2</span><b>安裝</b><p>寫入程式檔、捷徑與 Uninstall registry。</p></div><i>→</i><div><span>3</span><b>修復</b><p>再次執行 Setup 可覆蓋修復損壞檔案。</p></div><i>→</i><div><span>4</span><b>移除</b><p>從 Windows 解除安裝或 Setup 內移除。</p></div></div><div class="download-card reveal"><div><small>Recommended</small><h3>MemoryManagerSetup.exe</h3><p>適合一般使用者：真正安裝、Repair、Uninstall。</p></div><a class="cta primary" href="https://github.com/Ray20123315/Memory_manager/releases/latest" target="_blank" rel="noopener">前往 Releases ↓</a></div></section>
-    <section class="section shell safety" id="safety"><div class="section-head reveal"><div class="eyebrow"><i></i><span>Safety philosophy</span></div><h2 data-i18n="safetyTitle">先避免把「優化」做成新的問題。</h2></div><div class="safety-grid"><article class="reveal"><b>不亂殺</b><p>系統程序預設受保護；Safe Close Advisor 先建議你正常關閉一般程式。</p></article><article class="reveal"><b>不假裝</b><p>1 ms 是取樣要求，不宣稱畫面真的 1000 FPS；polling 也不叫 true push。</p></article><article class="reveal"><b>不亂簽</b><p>沒有可信 Code Signing 憑證時，Release 會明確是 unsigned，不拿自簽冒充公開信任。</p></article><article class="reveal"><b>不偷追蹤</b><p>核心監控與 Log 留在本機；更新檢查只讀 GitHub Release metadata。</p></article></div></section>
-    <section class="section shell faq"><div class="section-head reveal"><div class="eyebrow"><i></i><span>FAQ</span></div><h2>第一次用也能看懂。</h2></div><details class="reveal"><summary>1 ms 會不會讓電腦更快？</summary><p>不會。它只是讓資料引擎可以更密集取樣。大多數情況 10–100 ms 已足夠，畫面也不需要每毫秒重畫。</p></details><details class="reveal"><summary>為什麼不做「一鍵清空 RAM」？</summary><p>Windows 會主動使用 RAM 做快取；空白 RAM 本身不是效能目標。工具優先處理「壓力是否真的高、哪個程式在增長」。</p></details><details class="reveal"><summary>Windows 顯示 SmartScreen 怎麼辦？</summary><p>公開可信簽章需要正式 Code Signing 憑證或服務。專案不會用自簽憑證假裝已解決 SmartScreen。</p></details><details class="reveal"><summary>更新通知是不是雲端推播？</summary><p>目前不是。App 每 30 分鐘讀一次 GitHub Releases；發現版本變化才在本機通知。</p></details></section>
-    <section class="final shell reveal"><div><small>Memory Manager · beta.28</small><h2 data-i18n="finalTitle">想控制記憶體，不必先學會看天書。</h2><p data-i18n="finalText">先下載、先看懂，再決定要不要動。原始碼、Release 與版本紀錄全部放在 GitHub。</p></div><div class="cta-row"><a class="cta primary" href="https://github.com/Ray20123315/Memory_manager/releases/latest" target="_blank" rel="noopener">下載最新版 ↓</a><a class="cta" href="https://github.com/Ray20123315/Memory_manager" target="_blank" rel="noopener">查看原始碼 ↗</a></div></section>
-  </main><footer class="shell"><span>© 2026 Ray20123315</span><span>Memory Manager · 記憶體管理器 · 内存管理器</span><a href="https://github.com/Ray20123315/Memory_manager" target="_blank" rel="noopener">GitHub</a></footer><script src="app.js"></script>
-</body></html>
+
+    <section class="release-strip shell reveal" aria-label="beta.29 release integrity">
+      <div><span class="status-dot"></span><strong>v0.9.0-beta.29</strong><small data-i18n="released">已發布 · prerelease</small></div>
+      <div><small>MemoryManager.exe</small><code>87f6e980…a6ca8b3d</code></div>
+      <div><small>MemoryManagerSetup.exe</small><code>03eaa6a4…5010e674</code></div>
+      <a href="https://github.com/Ray20123315/Memory_manager/releases/download/v0.9.0-beta.29/SHA256SUMS.txt" target="_blank" rel="noopener" data-i18n="checksums">下載 SHA256SUMS.txt ↗</a>
+    </section>
+
+    <section class="section shell" id="observe">
+      <div class="section-head reveal">
+        <div class="eyebrow"><span></span><b>OBSERVE FIRST</b></div>
+        <h2 data-i18n="observeTitle">先量對，再談「最佳化」。</h2>
+        <p data-i18n="observeText">beta.29 把 Windows 真正的 Commit 壓力、Process Commit、Page File、Headroom 與趨勢放在一起。1 ms 是資料取樣要求，不等於 UI 每毫秒重畫。</p>
+      </div>
+      <div class="feature-grid">
+        <article class="card reveal"><span>01</span><h3>Process Commit Charge</h3><p data-i18n="f01">使用 Windows PrivateUsage，而不是把 Working Set 或 .NET PrivateMemory 當成 Commit。</p></article>
+        <article class="card reveal"><span>02</span><h3>Commit Δ + Leak trend</h3><p data-i18n="f02">看近期增長量與多次樣本的持續成長，降低單次尖峰誤報。</p></article>
+        <article class="card reveal"><span>03</span><h3>Commit Headroom + ETA</h3><p data-i18n="f03">回答「離 system commit limit 還有多遠」，並用近期趨勢估算 ETA。</p></article>
+        <article class="card reveal"><span>04</span><h3>Page File Health</h3><p data-i18n="f04">用白話顯示 Windows 是否自動管理 Page File，以及 Commit Limit 是否有足夠餘裕。</p></article>
+        <article class="card reveal"><span>05</span><h3>Adaptive Refresh</h3><p data-i18n="f05">Telemetry 與 UI refresh 分離；視窗、前景與遊戲狀態決定合理畫面更新頻率。</p></article>
+        <article class="card reveal"><span>06</span><h3>Emergency Rescue</h3><p data-i18n="f06">壓力真的高時才顯示救援面板，先看大用量 App、正常關閉、再考慮工作管理員。</p></article>
+      </div>
+    </section>
+
+    <section class="section shell split" id="incident">
+      <div class="section-head reveal">
+        <div class="eyebrow"><span></span><b>INCIDENT & RELIABILITY</b></div>
+        <h2 data-i18n="incidentTitle">當機之後，先還原時間線。</h2>
+        <p data-i18n="incidentText">Previous Crash Analyzer 把上一輪 heartbeat、persistent Flight Recorder 與 Windows Event Log 串在一起。Event 41 / 6008 只表示異常關機序列，不單獨宣稱是電源、RAM 或某個程式造成。</p>
+        <ul class="checks">
+          <li data-i18n="inc1">Resource Exhaustion Event 2004：低虛擬記憶體／Commit 壓力證據</li>
+          <li data-i18n="inc2">BugCheck / WHEA：分開標示，不跟記憶體壓力混成同一原因</li>
+          <li data-i18n="inc3">Incident-only Support Bundle：只匯出事故附近的小時間窗</li>
+          <li data-i18n="inc4">Reliability History：把近期相關事件整理成可讀列表</li>
+        </ul>
+      </div>
+      <div class="timeline-panel reveal delay-1">
+        <div class="panel-head"><b data-i18n="timelineTitle">上一輪證據時間線</b><span data-i18n="confidence">判斷強度：高度相關</span></div>
+        <div class="timeline"><article><time>02:27:11</time><i></i><div><strong>Flight Recorder</strong><p>Commit 由 78% 持續上升</p></div></article><article><time>02:29:04</time><i class="warn"></i><div><strong>Event 2004</strong><p data-i18n="tl2">Windows 偵測到 Resource Exhaustion</p></div></article><article><time>02:29:38</time><i class="warn"></i><div><strong>Heartbeat</strong><p data-i18n="tl3">Memory Manager 最後一次正常回報</p></div></article><article><time>02:30:02</time><i class="danger"></i><div><strong>Event 41 / 6008</strong><p data-i18n="tl4">系統之後出現未正常關機證據</p></div></article></div>
+        <div class="evidence-note" data-i18n="evidenceNote">結論：記憶體壓力與異常重新啟動時間高度相關；仍不把相關性寫成未證明的單一根因。</div>
+      </div>
+    </section>
+
+    <section class="section shell" id="game">
+      <div class="section-head reveal">
+        <div class="eyebrow"><span></span><b>REVERSIBLE RULES</b></div>
+        <h2 data-i18n="gameTitle">Game Memory Reserve V2：不是鎖 RAM。</h2>
+        <p data-i18n="gameText">只有你建立 Per-App Rule 並打開總開關後，符合「背景時間 + Commit 門檻」的普通 App 才可能暫時降低 Windows Process Memory Priority。遊戲、前景、反作弊、語音、輸入與核心程序保持原設定。</p>
+      </div>
+      <div class="policy-grid">
+        <div class="policy-card reveal"><small>DEFAULT</small><strong data-i18n="policyOff">總開關預設關閉</strong><p data-i18n="policyOffText">第一次啟動不會自行修改任何程序 Memory Priority。</p></div>
+        <div class="policy-card reveal"><small>PROTECT</small><strong data-i18n="policyProtect">硬保護清單</strong><p data-i18n="policyProtectText">Foreground / Game Profile / anti-cheat / voice / input / Windows core 都不降。</p></div>
+        <div class="policy-card reveal"><small>RESTORE</small><strong data-i18n="policyRestore">條件消失就還原</strong><p data-i18n="policyRestoreText">變成前景、規則停用、程式不再符合或 App 結束時，要求回復原 Memory Priority。</p></div>
+      </div>
+      <div class="rule-demo reveal">
+        <div><b>Browser.exe</b><span data-i18n="backgroundRule">背景 15 分鐘 · Commit ≥ 512 MB</span></div><code>Memory Priority 5 → 2</code><em data-i18n="reversible">暫時、可還原</em>
+      </div>
+    </section>
+
+    <section class="section shell split reverse" id="update">
+      <div class="update-panel reveal">
+        <div class="panel-head"><b>Update Center</b><span>Beta / Stable</span></div>
+        <div class="release-row"><div><strong>v0.9.0-beta.29</strong><small>prerelease · 2026-08-17</small></div><em>Current</em></div>
+        <div class="asset-row"><span>MemoryManagerSetup.exe</span><code>03eaa6a4…</code></div>
+        <div class="asset-row"><span>MemoryManager.exe</span><code>87f6e980…</code></div>
+        <div class="asset-row"><span>SHA256SUMS.txt</span><code>f5921f7c…</code></div>
+        <div class="backup-flow"><span data-i18n="backup">設定備份</span><b>→</b><span data-i18n="change">修改</span><b>→</b><span data-i18n="rollback">Rollback</span></div>
+      </div>
+      <div class="section-head reveal delay-1">
+        <div class="eyebrow"><span></span><b>UPDATE / OEM</b></div>
+        <h2 data-i18n="updateTitle">更新能驗證；OEM 控制不越界。</h2>
+        <p data-i18n="updateText">Update Center 直接讀 GitHub Releases 的 prerelease、Release Notes、asset 大小與 SHA-256 digest。設定支援 Backup / Rollback；還原前會再建立 safety backup。</p>
+        <div class="oem-note"><strong>MSI OEM Control Center</strong><p data-i18n="oemText">讀 BIOS 廠牌／機型並安全偵測 MSI Center；需要風扇、功耗、效能情境時開啟 MSI 官方程式。沒有公開安全介面時，不直接寫 EC / MSR / 私有 register。</p></div>
+      </div>
+    </section>
+
+    <section class="section shell" id="install">
+      <div class="section-head reveal">
+        <div class="eyebrow"><span></span><b>INSTALLER V2</b></div>
+        <h2 data-i18n="installTitle">「安裝」是真的 install / repair / uninstall。</h2>
+        <p data-i18n="installText">Windows CI 每次都在隔離目錄執行完整週期：安裝後核對 payload SHA-256、repair 後再次核對、最後 uninstall 並確認目錄沒有殘留。正式安裝同時建立 Start Menu 與 Installed Apps 資訊。</p>
+      </div>
+      <div class="install-grid">
+        <a class="download-card primary-card reveal" href="https://github.com/Ray20123315/Memory_manager/releases/download/v0.9.0-beta.29/MemoryManagerSetup.exe" target="_blank" rel="noopener"><small data-i18n="recommended">建議</small><strong>MemoryManagerSetup.exe</strong><span data-i18n="setupDesc">真正安裝 / 修復 / 解除安裝</span><code>SHA-256 03eaa6a4…5010e674</code><b data-i18n="download">下載 ↓</b></a>
+        <a class="download-card reveal" href="https://github.com/Ray20123315/Memory_manager/releases/download/v0.9.0-beta.29/MemoryManager.exe" target="_blank" rel="noopener"><small>Portable</small><strong>MemoryManager.exe</strong><span data-i18n="portableDesc">免安裝，直接執行</span><code>SHA-256 87f6e980…a6ca8b3d</code><b data-i18n="download">下載 ↓</b></a>
+        <a class="download-card reveal" href="https://github.com/Ray20123315/Memory_manager/releases/download/v0.9.0-beta.29/SHA256SUMS.txt" target="_blank" rel="noopener"><small>Integrity</small><strong>SHA256SUMS.txt</strong><span data-i18n="checksumDesc">完整 SHA-256 清單</span><code>GitHub digest f5921f7c…</code><b data-i18n="download">下載 ↓</b></a>
+      </div>
+    </section>
+
+    <section class="section shell" id="safety">
+      <div class="section-head reveal">
+        <div class="eyebrow"><span></span><b>SAFETY BOUNDARIES</b></div>
+        <h2 data-i18n="safetyTitle">把「不做什麼」也寫清楚。</h2>
+      </div>
+      <div class="safety-grid">
+        <article class="reveal"><b>01</b><h3 data-i18n="s1t">不亂殺程式</h3><p data-i18n="s1p">Emergency Rescue 先建議正常關閉；系統與受保護程序不自動終止。</p></article>
+        <article class="reveal"><b>02</b><h3 data-i18n="s2t">不把 Event 41 當根因</h3><p data-i18n="s2p">異常關機事件只當時間線證據，根因需要更多事件與趨勢佐證。</p></article>
+        <article class="reveal"><b>03</b><h3 data-i18n="s3t">不直接寫未公開 MSI EC</h3><p data-i18n="s3p">OEM 硬體控制交由 MSI Center，避免跨機型 EC 風險。</p></article>
+        <article class="reveal"><b>04</b><h3 data-i18n="s4t">不假裝有可信簽章</h3><p data-i18n="s4p">beta.29 目前沒有正式 Code Signing PFX，因此 Release 是 unsigned；不宣稱能繞過 SmartScreen / Smart App Control。</p></article>
+      </div>
+    </section>
+
+    <section class="final shell reveal">
+      <div><span>Memory Manager</span><h2 data-i18n="finalTitle">先看懂，再決定要不要動。</h2><p data-i18n="finalText">beta.29 已在 GitHub Actions 的 Windows runner 通過 app self-test、Memory Priority round-trip、設定 rollback、Installer V2 與 SHA-256 manifest 驗證。實體 MSI 機器仍需要最後的視覺、MSI Center 與 SmartScreen 驗收。</p></div>
+      <div class="final-actions"><a class="cta primary" href="https://github.com/Ray20123315/Memory_manager/releases/download/v0.9.0-beta.29/MemoryManagerSetup.exe" target="_blank" rel="noopener"><span data-i18n="downloadSetup">下載 beta.29 安裝器</span><b>↓</b></a><a class="cta" href="https://github.com/Ray20123315/Memory_manager/releases/tag/v0.9.0-beta.29" target="_blank" rel="noopener">Release ↗</a></div>
+    </section>
+  </main>
+
+  <footer class="footer shell"><div><strong>Memory Manager · v0.9.0-beta.29</strong><span>Ray20123315 · Windows 11 · local-first</span></div><div><a href="https://github.com/Ray20123315/Memory_manager" target="_blank" rel="noopener">Source</a><a href="https://github.com/Ray20123315/Memory_manager/releases/tag/v0.9.0-beta.29" target="_blank" rel="noopener">Release</a><a href="https://www.youtube.com/@raychen0817" target="_blank" rel="noopener">YouTube</a></div></footer>
+  <script src="app.js"></script>
+</body>
+</html>
