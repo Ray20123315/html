@@ -1,24 +1,18 @@
 # ACTIVE_TASK
 
-task_status: completed
-revision: 3
+task_status: active
+revision: 4
 
 ## Goal
-Replace portfolio v2 because user reported the design was worse and the expected scroll animation was effectively absent. Rebuild with a cleaner premium visual system and reliable scroll-driven animation.
+Change the hero interaction to a single persistent visual object that starts large in the center and, while scrolling, continuously shrinks and docks to the side. The next content should reveal around that docked object.
 
 ## Acceptance
-- [x] Replace custom sticky/requestAnimationFrame choreography with GSAP ScrollTrigger pin/scrub timelines plus a no-library reveal fallback.
-- [x] Every major scroll layer visibly enters/exits; selected projects transition one-by-one in a pinned stage.
-- [x] Reduce visual noise to a controlled black / warm-white / icy-blue system.
-- [x] Preserve live GitHub public repository explorer and root Memory Manager site.
-- [x] Verify source, inline JavaScript syntax, GSAP/ScrollTrigger references, and GitHub Pages deployment.
-
-## Evidence
-- Main implementation commit: `ef456e98a712b43f25049e9e1f1d068c3359a509`.
-- Portfolio blob: `dfd858a86a49d6561242c3edf3314bba493310e9`.
-- Inline JavaScript V8 syntax check: PASS.
-- Verified hero pin, selected-work pin, scrub, IntersectionObserver fallback, reduced-motion fallback, live GitHub API, and repository fallback in source.
-- GitHub Pages runs 35459766131 and 35459765977: completed/success.
+- [~] Add one dominant glass/core object to the hero.
+- [ ] Pin only the outer hero frame; animate the inner object continuously with ScrollTrigger scrub.
+- [ ] Object moves from center to upper-right/side while scaling down, with no abrupt scene cut.
+- [ ] Supporting text exits while a second explanatory block enters after the object docks.
+- [ ] Preserve Selected Work, capabilities, live GitHub repository explorer, and Memory Manager root site.
+- [ ] Verify JavaScript syntax, ScrollTrigger pin/scrub markers, file commit, and Pages deployment.
 
 ## Next action
-None.
+Patch the v3 hero into the continuous center-to-side transform interaction and verify deployment.
