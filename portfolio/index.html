@@ -90,44 +90,48 @@
     .hero__ring:nth-child(2){width:min(83vw,1040px);aspect-ratio:1;border-style:dashed}
     .hero__ring:nth-child(3){width:min(106vw,1340px);aspect-ratio:1}
     .hero__core{
-      position:absolute;left:50%;top:48%;z-index:7;width:clamp(260px,27vw,390px);aspect-ratio:1;border-radius:50%;
-      transform:translate(-50%,-50%);display:grid;place-items:center;pointer-events:none;
-      border:1px solid rgba(255,255,255,.18);
-      background:
-        radial-gradient(circle at 33% 27%,rgba(255,255,255,.22),transparent 18%),
-        radial-gradient(circle at 64% 68%,rgba(139,233,255,.10),transparent 36%),
-        linear-gradient(145deg,rgba(24,24,30,.88),rgba(6,6,8,.74));
-      box-shadow:
-        inset 0 0 80px rgba(255,255,255,.035),
-        inset 0 0 36px rgba(139,233,255,.035),
-        0 0 0 1px rgba(255,255,255,.025),
-        0 38px 120px rgba(0,0,0,.48),
-        0 0 120px rgba(139,233,255,.09);
-      backdrop-filter:blur(22px) saturate(130%);
-      will-change:transform,filter,opacity
+      position:absolute;left:50%;top:49%;z-index:8;
+      width:min(720px,72vw);height:min(470px,54vh);
+      transform:translate(-50%,-50%);
+      border-radius:28px;overflow:hidden;pointer-events:none;
+      border:1px solid rgba(255,255,255,.22);
+      background:linear-gradient(145deg,rgba(18,19,24,.98),rgba(7,8,11,.98));
+      box-shadow:0 42px 140px rgba(0,0,0,.62),0 0 0 1px rgba(139,233,255,.05),0 0 120px rgba(139,233,255,.10);
+      will-change:transform
     }
-    .hero__core::before,.hero__core::after{
-      content:"";position:absolute;border-radius:50%;border:1px solid rgba(255,255,255,.105)
+    .hero__core::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 78% 18%,rgba(139,233,255,.12),transparent 31%),radial-gradient(circle at 15% 95%,rgba(169,150,255,.09),transparent 34%);pointer-events:none}
+    .hero__windowbar{
+      height:48px;border-bottom:1px solid rgba(255,255,255,.10);
+      display:flex;align-items:center;justify-content:space-between;padding:0 16px 0 18px;
+      background:rgba(255,255,255,.025)
     }
-    .hero__core::before{inset:12%;border-style:dashed}
-    .hero__core::after{inset:-9%;border-color:rgba(139,233,255,.09)}
-    .hero__core-inner{text-align:center;position:relative;z-index:2}
-    .hero__core-inner strong{display:block;font-size:clamp(52px,6vw,82px);line-height:.88;letter-spacing:-.085em}
-    .hero__core-inner small{display:block;margin-top:12px;font:9px var(--mono);letter-spacing:.18em;text-transform:uppercase;color:#83838e}
-    .hero__core-pulse{position:absolute;inset:27%;border-radius:50%;border:1px solid rgba(139,233,255,.22);box-shadow:0 0 44px rgba(139,233,255,.12)}
-    .hero__core-node{position:absolute;width:9px;height:9px;border-radius:50%;background:var(--accent);box-shadow:0 0 22px rgba(139,233,255,.75)}
-    .hero__core-node--a{left:13%;top:43%}.hero__core-node--b{right:17%;top:25%}.hero__core-node--c{right:23%;bottom:17%;width:6px;height:6px}
+    .hero__windowdots{display:flex;gap:7px}.hero__windowdots i{width:8px;height:8px;border-radius:50%;background:#4b4b55}
+    .hero__windowbar code{font:9px var(--mono);letter-spacing:.12em;color:#777782}
+    .hero__windowbody{position:relative;height:calc(100% - 48px);padding:26px;display:grid;grid-template-columns:.92fr 1.08fr;gap:18px}
+    .hero__windowleft{display:flex;flex-direction:column;justify-content:space-between}
+    .hero__window-kicker{font:9px var(--mono);letter-spacing:.13em;text-transform:uppercase;color:var(--accent)}
+    .hero__windowleft h2{font-size:clamp(38px,4.7vw,66px);line-height:.88;letter-spacing:-.065em;margin:12px 0 0}
+    .hero__windowleft p{font-size:11px;color:#858590;margin:16px 0 0;max-width:300px}
+    .hero__windowstats{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+    .hero__windowstats div{border:1px solid rgba(255,255,255,.09);border-radius:12px;padding:11px;background:rgba(255,255,255,.018)}
+    .hero__windowstats small{display:block;font:8px var(--mono);color:#666671}.hero__windowstats strong{display:block;margin-top:6px;font:16px var(--mono)}
+    .hero__windowright{position:relative;border:1px solid rgba(255,255,255,.09);border-radius:18px;background:rgba(255,255,255,.018);overflow:hidden}
+    .hero__windowright::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:28px 28px}
+    .hero__window-chart{position:absolute;inset:22px}
+    .hero__window-chart svg{width:100%;height:100%}
+    .hero__window-chart path:first-child{fill:rgba(139,233,255,.08)}
+    .hero__window-chart path:last-child{fill:none;stroke:var(--accent);stroke-width:3;filter:drop-shadow(0 0 8px rgba(139,233,255,.42))}
+    .hero__window-badge{position:absolute;right:16px;top:16px;padding:7px 9px;border:1px solid rgba(139,233,255,.22);border-radius:999px;background:rgba(139,233,255,.08);font:8px var(--mono);color:#bff5ff}
     .hero__dock-copy{
       position:absolute;left:max(28px,calc((100vw - min(var(--max),calc(100vw - 48px)))/2));top:50%;
-      z-index:6;width:min(590px,46vw);opacity:0;visibility:hidden;transform:translateY(-38%);
-      text-align:left
+      z-index:6;width:min(590px,46vw);opacity:0;visibility:hidden;transform:translateY(-38%);text-align:left
     }
     .hero__dock-copy .eyebrow{margin-bottom:18px}
     .hero__dock-copy h2{font-size:clamp(42px,6vw,84px);line-height:.92;letter-spacing:-.07em;margin:0}
     .hero__dock-copy h2 span{color:#696973}
     .hero__dock-copy p{max-width:500px;margin:22px 0 0;color:#8c8c96;font-size:13px}
     .hero__dock-line{margin-top:30px;width:min(360px,80%);height:1px;background:linear-gradient(90deg,var(--accent),rgba(255,255,255,.08),transparent);transform-origin:left}
-    .hero__content{position:relative;z-index:3;text-align:center}
+    .hero__content{position:relative;z-index:3;text-align:center;opacity:.22;filter:blur(.2px)}
     .hero__eyebrow{justify-content:center;margin-bottom:22px}
     .hero__title{margin:0;text-transform:uppercase;line-height:.76;letter-spacing:-.092em}
     .hero__word{display:block}
@@ -300,7 +304,10 @@
       .nav{top:10px;height:54px}.nav__links{display:none}.nav__github span{display:none}
       .motion-ready .hero{height:250svh}.motion-ready .work{height:450svh}
       .hero__frame{padding-top:105px}.hero__word--ray{font-size:clamp(104px,37vw,178px)}.hero__word--lab{font-size:17px;letter-spacing:.25em;margin-left:.25em}
-      .hero__core{width:clamp(210px,62vw,290px)}
+      .hero__core{width:calc(100vw - 34px);height:390px;border-radius:22px}
+      .hero__windowbody{grid-template-columns:1fr;grid-template-rows:1fr 130px;padding:18px;gap:12px}
+      .hero__windowleft h2{font-size:44px}.hero__windowstats{max-width:260px}
+      .hero__windowright{min-height:130px}
       .hero__dock-copy{left:20px;right:20px;top:57%;width:auto}
       .hero__dock-copy h2{font-size:clamp(36px,10vw,54px)}
       .hero__dock-copy p{font-size:11px;max-width:72%}
@@ -351,11 +358,32 @@
         <div class="hero__aurora"></div>
         <div class="hero__rings"><i class="hero__ring"></i><i class="hero__ring"></i><i class="hero__ring"></i></div>
         <div class="hero__core" id="heroCore" aria-hidden="true">
-          <i class="hero__core-pulse"></i>
-          <i class="hero__core-node hero__core-node--a"></i>
-          <i class="hero__core-node hero__core-node--b"></i>
-          <i class="hero__core-node hero__core-node--c"></i>
-          <div class="hero__core-inner"><strong>R/</strong><small>idea → system</small></div>
+          <div class="hero__windowbar">
+            <div class="hero__windowdots"><i></i><i></i><i></i></div>
+            <code>RAY / BUILD LAB</code>
+          </div>
+          <div class="hero__windowbody">
+            <div class="hero__windowleft">
+              <div>
+                <div class="hero__window-kicker">Live system / 01</div>
+                <h2>Ideas,<br>made real.</h2>
+                <p>一個真正看得見、會跟著滾動改變狀態的主物件。</p>
+              </div>
+              <div class="hero__windowstats">
+                <div><small>PROJECTS</small><strong>22+</strong></div>
+                <div><small>STATUS</small><strong>LIVE</strong></div>
+              </div>
+            </div>
+            <div class="hero__windowright">
+              <div class="hero__window-badge">SCROLL LINKED</div>
+              <div class="hero__window-chart">
+                <svg viewBox="0 0 520 300" preserveAspectRatio="none">
+                  <path d="M0 238 C62 225 95 204 145 211 S236 172 286 181 373 119 414 133 468 86 520 100 V300H0Z"/>
+                  <path d="M0 238 C62 225 95 204 145 211 S236 172 286 181 373 119 414 133 468 86 520 100"/>
+                </svg>
+              </div>
+            </div>
+          </div>
         </div>
         <div class="hero__dock-copy" id="heroDockCopy">
           <div class="eyebrow">Scroll / Transform / Dock</div>
@@ -514,8 +542,7 @@
       if(motion) document.documentElement.classList.add('motion-ready');
 
       var progress=document.getElementById('progress');
-      var hero=document.getElementById('hero');
-      var heroCore=document.getElementById('heroCore');
+      var hero=document.getElementById('hero');\n      var heroCore=document.getElementById('heroCore');
       var heroContent=document.querySelector('.hero__content');
       var heroDock=document.getElementById('heroDockCopy');
       var heroDockLine=document.querySelector('.hero__dock-line');
@@ -557,13 +584,14 @@
         if(!heroCore) return;
         var t=ease(p);
         var mobile=window.innerWidth<720;
-        var tx=(mobile?window.innerWidth*.29:Math.min(window.innerWidth*.33,470))*t;
-        var ty=-(mobile?Math.min(window.innerHeight*.27,190):Math.min(window.innerHeight*.25,220))*t;
-        var scale=lerp(1,mobile?.30:.34,t);
+        var tx=(mobile?window.innerWidth*.28:Math.min(window.innerWidth*.31,430))*t;
+        var ty=-(mobile?Math.min(window.innerHeight*.29,210):Math.min(window.innerHeight*.27,235))*t;
+        var scale=lerp(1,mobile?.34:.38,t);
         var rot=lerp(0,23,t);
 
         heroCore.style.transform='translate(-50%,-50%) translate3d('+tx+'px,'+ty+'px,0) scale('+scale+') rotate('+rot+'deg)';
-        heroCore.style.filter='blur(0px)';
+        heroCore.style.opacity='1';
+        heroCore.style.filter='none';
 
         var leave=range(p,.05,.58);
         if(heroContent){
