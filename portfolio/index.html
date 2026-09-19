@@ -3,831 +3,626 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#030304">
-  <meta name="description" content="Ray20123315 — cinematic scroll-driven GitHub portfolio. AI, web, systems, browser tools and Minecraft projects.">
-  <title>Ray / Build Lab — Motion Portfolio</title>
+  <meta name="theme-color" content="#050506">
+  <meta name="description" content="Ray20123315 — interactive GitHub portfolio for AI, browser tools, Windows utilities, realtime apps and Minecraft projects.">
+  <title>Ray / Portfolio</title>
   <style>
     :root{
-      --bg:#030304;
-      --panel:#0a0a0d;
-      --panel-2:#101014;
-      --text:#f8f8f5;
-      --muted:#9898a4;
-      --line:rgba(255,255,255,.11);
-      --line-strong:rgba(255,255,255,.22);
-      --cyan:#68e8ff;
-      --violet:#9a82ff;
-      --pink:#ff78cb;
-      --lime:#c0ff70;
-      --orange:#ffb05d;
-      --max:1320px;
+      --bg:#050506;
+      --bg-soft:#09090b;
+      --panel:#0d0d10;
+      --panel-2:#121216;
+      --text:#f4f4f1;
+      --muted:#8d8d96;
+      --muted-2:#62626b;
+      --line:rgba(255,255,255,.105);
+      --line-strong:rgba(255,255,255,.19);
+      --accent:#8be9ff;
+      --accent-soft:rgba(139,233,255,.12);
+      --violet:#a996ff;
+      --max:1280px;
       --sans:Inter,"Noto Sans TC","Segoe UI","Microsoft JhengHei",system-ui,sans-serif;
       --mono:"Cascadia Mono","SFMono-Regular",Consolas,monospace;
-      --mx:50vw;
-      --my:50vh;
     }
     *{box-sizing:border-box}
-    html{scroll-behavior:smooth;background:var(--bg)}
+    html{background:var(--bg);scroll-behavior:smooth}
     body{
-      margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.55;
-      overflow-x:hidden;letter-spacing:-.012em
+      margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);
+      overflow-x:hidden;line-height:1.55;letter-spacing:-.012em
     }
     body::before{
-      content:"";position:fixed;inset:0;pointer-events:none;z-index:-20;
+      content:"";position:fixed;inset:0;z-index:-20;pointer-events:none;
       background:
-        radial-gradient(700px circle at var(--mx) var(--my),rgba(104,232,255,.07),transparent 62%),
-        radial-gradient(900px circle at 82% -10%,rgba(154,130,255,.09),transparent 58%),
-        radial-gradient(750px circle at -8% 68%,rgba(255,120,203,.055),transparent 60%),
-        #030304;
+        radial-gradient(900px 620px at 78% -8%,rgba(129,114,255,.105),transparent 68%),
+        radial-gradient(820px 600px at -8% 55%,rgba(77,208,238,.075),transparent 70%),
+        #050506
     }
     body::after{
-      content:"";position:fixed;inset:0;pointer-events:none;z-index:120;opacity:.055;mix-blend-mode:screen;
-      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 220 220' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.33'/%3E%3C/svg%3E");
-      background-size:180px 180px;
+      content:"";position:fixed;inset:0;z-index:200;pointer-events:none;opacity:.035;mix-blend-mode:screen;
+      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.83' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.32'/%3E%3C/svg%3E")
     }
     a{color:inherit;text-decoration:none}
     button,input{font:inherit}
     button{color:inherit}
-    ::selection{background:rgba(104,232,255,.3);color:#fff}
-    .shell{width:min(var(--max),calc(100% - 52px));margin-inline:auto}
+    ::selection{background:rgba(139,233,255,.28);color:#fff}
+    .shell{width:min(var(--max),calc(100% - 48px));margin-inline:auto}
     .mono{font-family:var(--mono)}
-    .progress{position:fixed;left:0;top:0;height:2px;width:0;background:linear-gradient(90deg,var(--cyan),var(--violet),var(--pink));z-index:200;transform-origin:left}
-    .site-nav{
-      position:fixed;left:50%;top:18px;transform:translateX(-50%);width:min(1100px,calc(100% - 28px));
-      height:58px;display:flex;align-items:center;justify-content:space-between;gap:18px;padding:0 12px 0 15px;
-      border:1px solid rgba(255,255,255,.09);border-radius:18px;background:rgba(6,6,8,.62);
-      backdrop-filter:blur(20px) saturate(145%);z-index:100;
-      box-shadow:0 18px 60px rgba(0,0,0,.2)
+    .progress{position:fixed;left:0;top:0;height:2px;width:100%;transform:scaleX(0);transform-origin:left;background:linear-gradient(90deg,#fff,var(--accent),var(--violet));z-index:220}
+    .nav{
+      position:fixed;left:50%;top:18px;transform:translateX(-50%);width:min(1120px,calc(100% - 28px));
+      height:58px;padding:0 12px 0 15px;border:1px solid rgba(255,255,255,.085);border-radius:18px;
+      background:rgba(7,7,9,.68);backdrop-filter:blur(22px) saturate(130%);
+      display:flex;align-items:center;justify-content:space-between;gap:18px;z-index:150
     }
-    .brand{display:flex;align-items:center;gap:10px;font-weight:780;letter-spacing:-.035em}
-    .brand-mark{
-      width:34px;height:34px;display:grid;place-items:center;border-radius:11px;border:1px solid var(--line-strong);
-      background:linear-gradient(145deg,rgba(255,255,255,.1),rgba(255,255,255,.025));
-      font:700 12px var(--mono);color:var(--cyan)
+    .brand{display:flex;align-items:center;gap:10px;font-weight:780;letter-spacing:-.04em}
+    .brand__mark{
+      width:34px;height:34px;display:grid;place-items:center;border-radius:11px;
+      border:1px solid var(--line-strong);background:linear-gradient(145deg,rgba(255,255,255,.09),rgba(255,255,255,.02));
+      color:var(--accent);font:700 12px var(--mono)
     }
-    .nav-links{display:flex;align-items:center;gap:4px;color:#b9b9c2;font-size:12px}
-    .nav-links a{padding:9px 10px;border-radius:10px;transition:.2s ease}
-    .nav-links a:hover{background:rgba(255,255,255,.06);color:#fff}
-    .nav-github{
-      display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:12px;
-      background:#f3f3ef;color:#0a0a0b;font-weight:760;font-size:12px
+    .nav__links{display:flex;gap:3px;align-items:center;color:#b6b6be;font-size:12px}
+    .nav__links a{padding:9px 11px;border-radius:10px;transition:.2s ease}
+    .nav__links a:hover{background:rgba(255,255,255,.055);color:#fff}
+    .nav__github{height:36px;padding:0 12px;border-radius:11px;background:#f0f0ec;color:#09090a;display:flex;align-items:center;gap:8px;font-size:11px;font-weight:780}
+    .nav__github svg{width:15px;height:15px}
+    .eyebrow{display:flex;align-items:center;gap:10px;font:10px var(--mono);letter-spacing:.16em;text-transform:uppercase;color:#a8a8b1}
+    .eyebrow::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 18px rgba(139,233,255,.75)}
+    .hero{position:relative;min-height:100svh}
+    .hero__frame{
+      min-height:100svh;display:grid;align-items:center;position:relative;overflow:hidden;
+      padding:122px 0 54px
     }
-    .nav-github svg{width:15px;height:15px}
-    .scene-nav{
-      position:fixed;right:20px;top:50%;transform:translateY(-50%);z-index:90;
-      display:flex;flex-direction:column;align-items:flex-end;gap:10px
+    .hero__grid{
+      position:absolute;inset:-20%;pointer-events:none;opacity:.34;
+      background-image:linear-gradient(rgba(255,255,255,.028) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.028) 1px,transparent 1px);
+      background-size:64px 64px;
+      mask-image:radial-gradient(ellipse at center,black 0%,transparent 69%);
+      transform:perspective(900px) rotateX(64deg) translateY(31%) scale(1.35)
     }
-    .scene-dot{
-      border:0;background:transparent;padding:0;display:flex;align-items:center;gap:8px;cursor:pointer;opacity:.36;transition:.25s ease
+    .hero__aurora{
+      position:absolute;left:50%;top:48%;width:min(58vw,720px);aspect-ratio:1;border-radius:50%;transform:translate(-50%,-50%);
+      background:radial-gradient(circle at 38% 32%,rgba(255,255,255,.15),transparent 15%),radial-gradient(circle,rgba(120,217,255,.13),rgba(117,100,255,.07) 42%,transparent 68%);
+      filter:blur(2px);box-shadow:0 0 140px rgba(139,233,255,.05);pointer-events:none
     }
-    .scene-dot span{font:10px var(--mono);letter-spacing:.08em;text-transform:uppercase;max-width:0;overflow:hidden;white-space:nowrap;transition:.3s ease}
-    .scene-dot i{width:6px;height:6px;border-radius:50%;background:#fff;display:block;transition:.25s ease}
-    .scene-dot.active{opacity:1}
-    .scene-dot.active span,.scene-dot:hover span{max-width:120px}
-    .scene-dot.active i{background:var(--cyan);box-shadow:0 0 18px rgba(104,232,255,.7);transform:scale(1.35)}
-    .sticky-stage{
-      position:sticky;top:0;height:100svh;min-height:680px;overflow:hidden;
-      display:flex;align-items:center;will-change:transform
+    .hero__rings{position:absolute;inset:0;pointer-events:none}
+    .hero__ring{position:absolute;left:50%;top:48%;border:1px solid rgba(255,255,255,.065);border-radius:50%;transform:translate(-50%,-50%)}
+    .hero__ring:nth-child(1){width:min(62vw,780px);aspect-ratio:1}
+    .hero__ring:nth-child(2){width:min(83vw,1040px);aspect-ratio:1;border-style:dashed}
+    .hero__ring:nth-child(3){width:min(106vw,1340px);aspect-ratio:1}
+    .hero__content{position:relative;z-index:3;text-align:center}
+    .hero__eyebrow{justify-content:center;margin-bottom:22px}
+    .hero__title{margin:0;text-transform:uppercase;line-height:.76;letter-spacing:-.092em}
+    .hero__word{display:block}
+    .hero__word--ray{
+      font-size:clamp(118px,21vw,300px);font-weight:930;
+      background:linear-gradient(180deg,#fff 0%,#d9d9df 46%,#73737c 100%);
+      -webkit-background-clip:text;background-clip:text;color:transparent
     }
-    .scene{position:relative}
-    .hero-scene{height:190svh}
-    .universe-scene{height:235svh}
-    .rail-scene{height:310svh}
-    .depth-scene{height:330svh}
-    .final-scene{height:175svh}
-    .eyebrow{
-      display:inline-flex;align-items:center;gap:10px;font:11px var(--mono);letter-spacing:.15em;
-      text-transform:uppercase;color:#c9c9d1
+    .hero__word--lab{
+      margin-top:28px;margin-left:.34em;font:500 clamp(22px,3.4vw,48px)/1 var(--mono);
+      letter-spacing:.34em;color:#aaaab4
     }
-    .eyebrow i{display:block;width:7px;height:7px;border-radius:50%;background:var(--lime);box-shadow:0 0 18px rgba(192,255,112,.8)}
-    .hero-stage{justify-content:center;isolation:isolate}
-    .hero-grid{
-      position:absolute;inset:-10%;z-index:-6;opacity:.45;
-      background-image:
-        linear-gradient(rgba(255,255,255,.038) 1px,transparent 1px),
-        linear-gradient(90deg,rgba(255,255,255,.038) 1px,transparent 1px);
-      background-size:66px 66px;
-      mask-image:radial-gradient(circle at center,black,transparent 72%);
-      transform:perspective(900px) rotateX(64deg) translateY(28%) scale(1.35);
-      transform-origin:center 65%
-    }
-    .hero-orbit{position:absolute;left:50%;top:50%;border:1px solid rgba(255,255,255,.08);border-radius:50%;z-index:-4;will-change:transform}
-    .hero-orbit.o1{width:min(70vw,820px);aspect-ratio:1;transform:translate(-50%,-50%)}
-    .hero-orbit.o2{width:min(88vw,1080px);aspect-ratio:1;transform:translate(-50%,-50%)}
-    .hero-orbit.o3{width:min(108vw,1380px);aspect-ratio:1;transform:translate(-50%,-50%)}
-    .hero-glow{
-      position:absolute;left:50%;top:51%;width:min(50vw,640px);aspect-ratio:1;border-radius:50%;
-      transform:translate(-50%,-50%);background:
-        radial-gradient(circle at 40% 35%,rgba(255,255,255,.15),transparent 16%),
-        radial-gradient(circle,rgba(154,130,255,.17),rgba(104,232,255,.04) 42%,transparent 68%);
-      filter:blur(.3px);z-index:-5;box-shadow:0 0 160px rgba(104,232,255,.06),inset 0 0 100px rgba(255,255,255,.035)
-    }
-    .hero-content{text-align:center;width:min(1160px,calc(100% - 38px));margin:auto;position:relative;z-index:4;will-change:transform,opacity,filter}
-    .hero-topline{display:flex;justify-content:center;margin-bottom:28px}
-    .hero-title{margin:0;line-height:.76;letter-spacing:-.09em;text-transform:uppercase}
-    .hero-title .ray{
-      display:block;font-size:clamp(116px,21vw,310px);font-weight:930;
-      background:linear-gradient(180deg,#fff 0%,#d7d7df 45%,#777781 100%);
-      -webkit-background-clip:text;background-clip:text;color:transparent;
-      text-shadow:0 24px 90px rgba(0,0,0,.36)
-    }
-    .hero-title .lab{
-      display:block;font:500 clamp(23px,3.4vw,52px)/1 var(--mono);letter-spacing:.43em;
-      margin-left:.43em;color:#b8b8c3;margin-top:26px
-    }
-    .hero-lead{
-      width:min(680px,92%);margin:34px auto 0;color:#a8a8b2;font-size:clamp(15px,1.4vw,19px);
-      letter-spacing:-.018em
-    }
-    .hero-lead b{color:#eeeef1;font-weight:620}
-    .hero-actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:28px}
+    .hero__body{max-width:700px;margin:34px auto 0;color:#9c9ca7;font-size:clamp(15px,1.5vw,18px)}
+    .hero__body strong{color:#efeff1;font-weight:620}
+    .hero__actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:28px}
     .btn{
-      min-height:46px;padding:0 16px;display:inline-flex;align-items:center;justify-content:center;gap:9px;
-      border:1px solid var(--line);border-radius:13px;background:rgba(255,255,255,.035);
-      font-size:12px;font-weight:720;transition:.2s ease;backdrop-filter:blur(12px)
+      min-height:46px;padding:0 16px;border:1px solid var(--line);border-radius:13px;background:rgba(255,255,255,.025);
+      display:inline-flex;align-items:center;justify-content:center;gap:9px;font-size:12px;font-weight:730;
+      transition:transform .2s ease,background .2s ease,border-color .2s ease
     }
-    .btn:hover{transform:translateY(-2px);background:rgba(255,255,255,.075);border-color:rgba(255,255,255,.24)}
-    .btn.primary{background:#f5f5f1;color:#09090a;border-color:#f5f5f1}
-    .scroll-cue{
-      position:absolute;left:50%;bottom:32px;transform:translateX(-50%);display:flex;align-items:center;gap:10px;
-      font:10px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:#6f6f7a
+    .btn:hover{transform:translateY(-2px);background:rgba(255,255,255,.065);border-color:rgba(255,255,255,.22)}
+    .btn--solid{background:#f2f2ee;color:#0a0a0b;border-color:#f2f2ee}
+    .hero__footer{
+      position:absolute;left:0;right:0;bottom:28px;display:flex;align-items:center;justify-content:space-between;
+      font:9px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:#60606a
     }
-    .scroll-cue i{height:34px;width:1px;background:linear-gradient(#fff,transparent);animation:cue 1.7s ease-in-out infinite}
-    @keyframes cue{0%,100%{transform:scaleY(.4);transform-origin:top;opacity:.35}50%{transform:scaleY(1);opacity:1}}
-    .scene-kicker{font:10px var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--cyan)}
-    .scene-number{font:10px var(--mono);color:#5f5f68}
-    .scene-heading{
-      font-size:clamp(52px,8vw,122px);line-height:.87;letter-spacing:-.075em;margin:12px 0 0;
-      max-width:1000px
+    .hero__scroll{display:flex;align-items:center;gap:10px}
+    .hero__scroll i{width:28px;height:1px;background:linear-gradient(90deg,#fff,transparent);animation:scan 1.65s ease-in-out infinite}
+    @keyframes scan{0%,100%{transform:scaleX(.45);transform-origin:left;opacity:.35}50%{transform:scaleX(1);opacity:1}}
+    .intro{padding:150px 0 130px}
+    .intro__top{display:grid;grid-template-columns:.84fr 1.16fr;gap:9vw;align-items:start}
+    .intro__label{padding-top:10px}
+    .intro__statement{font-size:clamp(44px,6.6vw,92px);line-height:.94;letter-spacing:-.07em;margin:0}
+    .intro__statement span{color:#6c6c75}
+    .intro__notes{margin-top:86px;display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:22px;overflow:hidden}
+    .intro__note{background:#08080a;padding:26px;min-height:190px}
+    .intro__note b{display:block;font:10px var(--mono);letter-spacing:.12em;color:var(--accent);margin-bottom:48px}
+    .intro__note h3{font-size:20px;letter-spacing:-.035em;margin:0 0 8px}
+    .intro__note p{font-size:12px;color:#7f7f89;margin:0}
+    .work{position:relative}
+    .work__frame{min-height:100svh;display:flex;flex-direction:column;padding:104px 0 34px;overflow:hidden;background:linear-gradient(180deg,#050506,#070709)}
+    .work__header{display:flex;justify-content:space-between;align-items:end;gap:30px;margin-bottom:25px}
+    .work__header h2{font-size:clamp(44px,6.5vw,88px);line-height:.9;letter-spacing:-.07em;margin:10px 0 0}
+    .work__header p{max-width:410px;color:#81818b;font-size:12px;margin:0}
+    .work__stage{position:relative;flex:1;min-height:470px}
+    .work-card{
+      position:absolute;inset:0;border:1px solid var(--line);border-radius:30px;overflow:hidden;
+      background:linear-gradient(145deg,#0e0e11,#09090b);display:grid;grid-template-columns:.82fr 1.18fr;
+      box-shadow:0 40px 120px rgba(0,0,0,.36);visibility:hidden;opacity:0
     }
-    .scene-heading .outline{color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.32)}
-    .universe-stage{padding:98px 0 34px;align-items:stretch}
-    .universe-stage .shell{position:relative;height:100%;display:flex;flex-direction:column}
-    .universe-copy{display:flex;justify-content:space-between;align-items:flex-start;gap:30px;position:relative;z-index:8}
-    .universe-copy p{width:min(430px,38vw);color:#8d8d98;font-size:13px;margin:10px 0 0}
-    .universe-map{position:relative;flex:1;min-height:430px;margin-top:20px}
-    .universe-core{
-      position:absolute;left:50%;top:54%;width:180px;aspect-ratio:1;border-radius:50%;
-      transform:translate(-50%,-50%);display:grid;place-items:center;text-align:center;
-      border:1px solid rgba(255,255,255,.15);background:
-        radial-gradient(circle at 35% 28%,rgba(255,255,255,.16),transparent 20%),
-        radial-gradient(circle,rgba(104,232,255,.10),rgba(8,8,11,.88) 66%);
-      box-shadow:0 0 120px rgba(104,232,255,.08),inset 0 0 55px rgba(255,255,255,.025);
-      will-change:transform
+    .work-card:first-child{visibility:visible;opacity:1}
+    .work-card__copy{padding:34px;display:flex;flex-direction:column;justify-content:space-between;min-width:0}
+    .work-card__meta{display:flex;justify-content:space-between;gap:16px;font:9px var(--mono);text-transform:uppercase;letter-spacing:.11em;color:#6f6f79}
+    .work-card__meta em{font-style:normal;color:var(--accent)}
+    .work-card h3{font-size:clamp(46px,5.7vw,86px);line-height:.88;letter-spacing:-.073em;margin:0}
+    .work-card__desc{font-size:13px;color:#8c8c96;max-width:460px;margin:18px 0 0}
+    .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:22px}
+    .tags span{padding:5px 8px;border:1px solid var(--line);border-radius:999px;font:9px var(--mono);color:#aaaab3}
+    .work-card__link{font:10px var(--mono);color:#d4d4da}
+    .work-card__visual{position:relative;border-left:1px solid var(--line);overflow:hidden;background:#08080a}
+    .work-card__visual::before{
+      content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:38px 38px;mask-image:linear-gradient(135deg,black,transparent 80%)
     }
-    .universe-core strong{font-size:28px;letter-spacing:-.06em}
-    .universe-core small{display:block;font:9px var(--mono);letter-spacing:.13em;color:#888894;margin-top:5px}
-    .orbit-line{position:absolute;left:50%;top:54%;border:1px solid rgba(255,255,255,.075);border-radius:50%;transform:translate(-50%,-50%)}
-    .orbit-line.a{width:min(54vw,700px);height:min(29vw,380px);transform:translate(-50%,-50%) rotate(-12deg)}
-    .orbit-line.b{width:min(74vw,950px);height:min(43vw,560px);transform:translate(-50%,-50%) rotate(17deg)}
-    .orbit-line.c{width:min(88vw,1130px);height:min(51vw,660px);transform:translate(-50%,-50%) rotate(-5deg)}
-    .orbit-card{
-      position:absolute;width:min(280px,24vw);min-height:136px;padding:17px 18px;border:1px solid var(--line);
-      border-radius:18px;background:rgba(11,11,15,.78);backdrop-filter:blur(18px);
-      box-shadow:0 18px 60px rgba(0,0,0,.28);opacity:0;will-change:transform,opacity,filter
+    .visual-glow{position:absolute;width:420px;height:420px;border-radius:50%;right:-130px;bottom:-170px;background:var(--accent);filter:blur(110px);opacity:.13}
+    .memory-ui{position:absolute;left:10%;right:8%;top:13%;bottom:12%;border:1px solid rgba(255,255,255,.12);border-radius:20px;background:rgba(8,8,11,.8);box-shadow:0 30px 80px rgba(0,0,0,.45);overflow:hidden;transform:rotate(-2deg)}
+    .memory-ui__bar{height:38px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:6px;padding:0 13px}
+    .memory-ui__bar i{width:7px;height:7px;border-radius:50%;background:#3e3e47}
+    .memory-ui__body{padding:18px}
+    .metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+    .metrics div{height:72px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.02);padding:11px}
+    .metrics small{font:8px var(--mono);color:#666671}.metrics b{display:block;margin-top:8px;font:18px var(--mono)}
+    .chart{height:150px;margin-top:10px;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+    .chart svg{width:100%;height:100%}.chart path:first-child{fill:rgba(139,233,255,.06)}.chart path:last-child{fill:none;stroke:var(--accent);stroke-width:2}
+    .translate-ui{position:absolute;inset:12%;display:grid;grid-template-columns:1fr 1fr;gap:12px;transform:rotate(2deg)}
+    .translate-ui article{border:1px solid var(--line);border-radius:20px;background:rgba(11,11,15,.85);padding:22px;box-shadow:0 30px 80px rgba(0,0,0,.32)}
+    .translate-ui article:first-child{transform:translateY(-22px)}.translate-ui article:last-child{transform:translateY(22px)}
+    .translate-ui small{font:8px var(--mono);color:#6c6c75}.translate-ui strong{display:block;font-size:26px;line-height:1.06;margin:36px 0 10px}.translate-ui p{font-size:11px;color:#7e7e88}
+    .network{position:absolute;inset:0}
+    .node{position:absolute;width:80px;height:80px;border-radius:50%;border:1px solid rgba(255,255,255,.14);background:rgba(10,10,13,.78);display:grid;place-items:center;font:9px var(--mono);box-shadow:0 0 60px rgba(139,233,255,.05)}
+    .node::after{content:"";position:absolute;width:7px;height:7px;border-radius:50%;background:var(--accent);right:9px;top:9px;box-shadow:0 0 13px rgba(139,233,255,.65)}
+    .n1{left:40%;top:38%;width:110px;height:110px;color:#fff}.n2{left:12%;top:16%}.n3{right:13%;top:18%}.n4{left:15%;bottom:12%}.n5{right:15%;bottom:13%}
+    .link{position:absolute;height:1px;background:linear-gradient(90deg,transparent,rgba(139,233,255,.28),transparent);transform-origin:left}
+    .l1{width:32%;left:23%;top:31%;transform:rotate(18deg)}.l2{width:31%;left:54%;top:31%;transform:rotate(-17deg)}.l3{width:34%;left:23%;top:69%;transform:rotate(-16deg)}.l4{width:31%;left:54%;top:67%;transform:rotate(16deg)}
+    .timeline-ui{position:absolute;left:9%;right:7%;top:16%;bottom:14%;display:flex;flex-direction:column;justify-content:center}
+    .player{height:190px;border:1px solid var(--line);border-radius:20px;background:linear-gradient(135deg,#0c0c10,#15121d);display:grid;place-items:center;position:relative;overflow:hidden}
+    .player::before{content:"";width:120px;height:120px;border-radius:50%;border:1px solid rgba(255,255,255,.16);box-shadow:0 0 100px rgba(169,150,255,.12)}
+    .player::after{content:"▶";position:absolute;color:#fff;font-size:22px;transform:translateX(3px)}
+    .timeline{height:56px;margin-top:13px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.02);display:flex;align-items:center;gap:3px;padding:0 12px}
+    .timeline i{display:block;width:5px;background:linear-gradient(var(--accent),rgba(139,233,255,.2));border-radius:99px}
+    .keyboard{position:absolute;left:9%;right:7%;top:13%;bottom:12%;display:grid;grid-template-columns:repeat(7,1fr);grid-template-rows:repeat(5,1fr);gap:8px;transform:perspective(850px) rotateX(57deg) rotateZ(-15deg) scale(.94)}
+    .key{border:1px solid rgba(255,255,255,.1);border-radius:10px;background:rgba(255,255,255,.025);box-shadow:inset 0 1px rgba(255,255,255,.04)}
+    .key:nth-child(4n+1){background:rgba(139,233,255,.09);border-color:rgba(139,233,255,.18)}
+    .work__footer{margin-top:18px;display:flex;align-items:center;justify-content:space-between;gap:18px}
+    .work__dots{display:flex;gap:8px}.work__dot{width:28px;height:2px;background:#2c2c32;transform-origin:left}.work__dot:first-child{background:var(--accent)}
+    .work__count{font:9px var(--mono);letter-spacing:.12em;color:#777780}
+    .capabilities{padding:150px 0 120px}
+    .capabilities__head{display:flex;align-items:end;justify-content:space-between;gap:40px;margin-bottom:52px}
+    .capabilities__head h2{font-size:clamp(44px,6.2vw,86px);line-height:.92;letter-spacing:-.07em;margin:10px 0 0}
+    .capabilities__head p{max-width:420px;color:#80808a;font-size:12px;margin:0}
+    .cap-list{border-top:1px solid var(--line)}
+    .cap-row{
+      min-height:138px;border-bottom:1px solid var(--line);display:grid;grid-template-columns:80px 1fr 1fr 42px;
+      align-items:center;gap:24px;position:relative;overflow:hidden
     }
-    .orbit-card::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;background:linear-gradient(125deg,rgba(255,255,255,.18),transparent 42%,rgba(104,232,255,.13));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
-    .orbit-card .oc-top{display:flex;align-items:center;justify-content:space-between;gap:12px;font:9px var(--mono);text-transform:uppercase;letter-spacing:.09em;color:#71717d}
-    .orbit-card .dot{width:7px;height:7px;border-radius:50%;background:var(--cyan);box-shadow:0 0 16px currentColor}
-    .orbit-card h3{font-size:20px;margin:24px 0 7px;letter-spacing:-.04em}
-    .orbit-card p{font-size:11px;color:#8f8f99;margin:0}
-    .oc1{left:4%;top:14%}.oc2{right:2%;top:13%}.oc3{right:5%;bottom:10%}.oc4{left:2%;bottom:11%}.oc5{left:37%;top:0}.oc6{right:34%;bottom:0}
-    .orbit-card.violet .dot{background:var(--violet)}.orbit-card.pink .dot{background:var(--pink)}.orbit-card.lime .dot{background:var(--lime)}.orbit-card.orange .dot{background:var(--orange)}
-    .rail-stage{align-items:stretch;padding:96px 0 32px}
-    .rail-stage-inner{width:100%;display:flex;flex-direction:column;min-width:0}
-    .rail-head{width:min(var(--max),calc(100% - 52px));margin:0 auto 24px;display:flex;justify-content:space-between;align-items:end;gap:30px}
-    .rail-head h2{font-size:clamp(46px,7vw,100px);line-height:.9;letter-spacing:-.07em;margin:10px 0 0}
-    .rail-head p{max-width:390px;color:#878792;font-size:12px;margin:0}
-    .rail-viewport{flex:1;overflow:hidden;min-height:0;display:flex;align-items:center}
-    .rail-track{display:flex;gap:18px;width:max-content;padding:0 max(26px,calc((100vw - min(var(--max),calc(100vw - 52px)))/2));will-change:transform}
-    .rail-card{
-      width:min(76vw,950px);height:min(55vh,560px);min-height:390px;position:relative;border-radius:28px;
-      border:1px solid var(--line);overflow:hidden;background:#0b0b0e;display:grid;grid-template-columns:.86fr 1.14fr;
-      box-shadow:0 34px 100px rgba(0,0,0,.32)
-    }
-    .rail-copy{padding:30px;display:flex;flex-direction:column;justify-content:space-between;min-width:0;position:relative;z-index:5}
-    .rail-index{font:10px var(--mono);letter-spacing:.12em;color:#777782}
-    .rail-copy h3{font-size:clamp(35px,4.4vw,68px);line-height:.92;letter-spacing:-.065em;margin:0}
-    .rail-copy p{font-size:12px;color:#92929d;max-width:420px}
-    .rail-tags{display:flex;gap:6px;flex-wrap:wrap}
-    .rail-tags span{font:9px var(--mono);padding:5px 8px;border:1px solid var(--line);border-radius:999px;color:#b7b7c0}
-    .rail-visual{position:relative;overflow:hidden;background:linear-gradient(145deg,#101017,#070709)}
-    .mesh{position:absolute;inset:-20%;background-image:linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px);background-size:38px 38px;transform:perspective(700px) rotateX(62deg) rotateZ(-11deg) scale(1.3);opacity:.5}
-    .mock-window{
-      position:absolute;left:10%;right:8%;top:13%;bottom:12%;border:1px solid rgba(255,255,255,.13);border-radius:20px;
-      background:rgba(5,5,8,.78);backdrop-filter:blur(16px);box-shadow:0 30px 70px rgba(0,0,0,.4);overflow:hidden
-    }
-    .mock-bar{height:38px;border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 14px;gap:6px}
-    .mock-bar i{width:7px;height:7px;border-radius:50%;background:#42424a}
-    .mock-body{position:absolute;inset:38px 0 0;display:grid;grid-template-columns:58px 1fr}
-    .mock-side{border-right:1px solid var(--line);display:flex;flex-direction:column;gap:12px;padding:13px}
-    .mock-side span{height:28px;border-radius:8px;background:rgba(255,255,255,.045)}
-    .mock-main{padding:18px;display:grid;gap:12px}
-    .metric-row{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
-    .metric-row div,.mock-block{border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.025)}
-    .metric-row div{height:68px}.mock-block{min-height:100px}
-    .mock-chart{height:130px;border:1px solid var(--line);border-radius:12px;position:relative;overflow:hidden}
-    .mock-chart::before{content:"";position:absolute;inset:18px 10px 15px;background:linear-gradient(150deg,transparent 49%,rgba(104,232,255,.5) 50%,transparent 51%) 0 0/35px 25px;opacity:.5}
-    .visual-glow{position:absolute;width:320px;height:320px;border-radius:50%;filter:blur(70px);right:-100px;bottom:-130px;background:var(--cyan);opacity:.16}
-    .rc2 .visual-glow{background:var(--violet)}.rc3 .visual-glow{background:var(--pink)}.rc4 .visual-glow{background:var(--lime)}.rc5 .visual-glow{background:var(--orange)}
-    .terminal{position:absolute;left:10%;right:8%;top:13%;bottom:12%;padding:24px;border-radius:20px;border:1px solid var(--line);background:#07080a;font:11px/1.8 var(--mono);color:#8c8d96;box-shadow:0 30px 70px rgba(0,0,0,.4);overflow:hidden}
-    .terminal b{color:var(--lime);font-weight:600}.terminal em{color:var(--cyan);font-style:normal}.terminal strong{color:#eeeef2}
-    .translator-ui{position:absolute;inset:12%;display:grid;grid-template-columns:1fr 1fr;gap:10px;transform:rotate(-3deg)}
-    .translator-ui article{border:1px solid var(--line);border-radius:18px;background:rgba(10,10,14,.85);padding:18px;box-shadow:0 25px 70px rgba(0,0,0,.35)}
-    .translator-ui article:first-child{transform:translateY(-20px)}.translator-ui article:last-child{transform:translateY(30px)}
-    .translator-ui small{font:9px var(--mono);color:#777783}.translator-ui strong{display:block;font-size:22px;margin:26px 0 8px}.translator-ui p{font-size:11px;color:#8e8e98}
-    .game-grid{position:absolute;inset:8%;display:grid;grid-template-columns:repeat(6,1fr);grid-template-rows:repeat(5,1fr);gap:7px;transform:perspective(800px) rotateX(58deg) rotateZ(25deg) scale(.98)}
-    .game-grid i{border:1px solid rgba(255,255,255,.08);border-radius:8px;background:rgba(192,255,112,.03)}
-    .game-grid i:nth-child(4n){background:rgba(192,255,112,.15);box-shadow:0 0 30px rgba(192,255,112,.08)}
-    .depth-stage{padding:96px 0 30px;align-items:stretch}
-    .depth-shell{height:100%;position:relative}
-    .depth-head{position:absolute;left:0;top:0;z-index:20}
-    .depth-head h2{font-size:clamp(50px,7vw,104px);line-height:.9;letter-spacing:-.075em;margin:10px 0 0}
-    .depth-counter{position:absolute;right:0;top:16px;font:10px var(--mono);letter-spacing:.12em;color:#767681}
-    .depth-deck{position:absolute;left:0;right:0;top:30%;bottom:5%;perspective:1200px}
-    .depth-card{
-      position:absolute;inset:0;border:1px solid var(--line);border-radius:30px;background:linear-gradient(145deg,#0d0d11,#08080b);
-      overflow:hidden;display:grid;grid-template-columns:1fr 1fr;box-shadow:0 42px 130px rgba(0,0,0,.4);
-      opacity:0;will-change:transform,opacity,filter;transform-origin:center 65%
-    }
-    .depth-info{padding:34px;display:flex;flex-direction:column;justify-content:space-between;min-width:0}
-    .depth-info .index{font:10px var(--mono);color:#74747f}
-    .depth-info h3{font-size:clamp(40px,5.5vw,82px);line-height:.9;letter-spacing:-.07em;margin:0}
-    .depth-info p{font-size:13px;color:#8f8f99;max-width:520px}
-    .depth-link{font:11px var(--mono);color:#d8d8df}
-    .depth-art{position:relative;overflow:hidden;border-left:1px solid var(--line)}
-    .depth-art .halo{position:absolute;left:50%;top:50%;width:58%;aspect-ratio:1;border:1px solid rgba(255,255,255,.12);border-radius:50%;transform:translate(-50%,-50%);box-shadow:0 0 120px rgba(104,232,255,.12),inset 0 0 80px rgba(255,255,255,.035)}
-    .depth-art .halo::before,.depth-art .halo::after{content:"";position:absolute;border:1px solid rgba(255,255,255,.08);border-radius:50%;inset:-22%}
-    .depth-art .halo::after{inset:18%;border-style:dashed}
-    .depth-art .sig{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font:800 clamp(42px,6vw,88px) var(--mono);letter-spacing:-.08em}
-    .d2 .halo{box-shadow:0 0 120px rgba(154,130,255,.13)}.d2 .sig{color:#c6baff}
-    .d3 .halo{box-shadow:0 0 120px rgba(255,120,203,.13)}.d3 .sig{color:#ffb7e2}
-    .d4 .halo{box-shadow:0 0 120px rgba(192,255,112,.11)}.d4 .sig{color:#d8ffa8}
-    .repo-section{padding:130px 0 150px;position:relative}
-    .repo-head{display:flex;justify-content:space-between;align-items:end;gap:40px;margin-bottom:38px}
-    .repo-head h2{font-size:clamp(48px,7vw,104px);line-height:.9;letter-spacing:-.075em;margin:10px 0 0}
-    .repo-head p{max-width:430px;color:#85858f;font-size:13px;margin:0}
-    .repo-panel{border:1px solid var(--line);border-radius:28px;overflow:hidden;background:rgba(9,9,12,.72);backdrop-filter:blur(18px)}
-    .repo-bar{height:50px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 18px;gap:18px}
-    .repo-bar .lights{display:flex;gap:6px}.repo-bar .lights i{width:7px;height:7px;border-radius:50%;background:#42424b}
-    .repo-bar code{font:9px var(--mono);color:#70707b}
-    .repo-tools{padding:16px 18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+    .cap-row::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(139,233,255,.045),transparent 46%);transform:translateX(-105%);transition:transform .45s cubic-bezier(.2,.7,.2,1)}
+    .cap-row:hover::before{transform:none}
+    .cap-row__num{font:10px var(--mono);color:#60606a;position:relative}
+    .cap-row h3{font-size:clamp(26px,3vw,43px);letter-spacing:-.045em;margin:0;position:relative}
+    .cap-row p{font-size:12px;color:#81818b;margin:0;max-width:470px;position:relative}
+    .cap-row__arrow{font:18px var(--mono);color:#666671;position:relative;transition:.2s ease}.cap-row:hover .cap-row__arrow{color:var(--accent);transform:translate(4px,-4px)}
+    .repos{padding:125px 0 150px}
+    .repos__head{display:grid;grid-template-columns:1fr .75fr;gap:8vw;align-items:end;margin-bottom:38px}
+    .repos__head h2{font-size:clamp(48px,7vw,100px);line-height:.88;letter-spacing:-.075em;margin:10px 0 0}
+    .repos__head p{color:#81818b;font-size:12px;margin:0;max-width:420px}
+    .repo-browser{border:1px solid var(--line);border-radius:24px;overflow:hidden;background:#08080a}
+    .repo-browser__bar{height:52px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:18px;padding:0 18px}
+    .repo-browser__lights{display:flex;gap:6px}.repo-browser__lights i{width:7px;height:7px;border-radius:50%;background:#3e3e46}
+    .repo-browser code{font:9px var(--mono);color:#666670}
+    .repo-tools{padding:16px 18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
     .filters{display:flex;gap:6px;flex-wrap:wrap}
-    .filter-btn{border:1px solid var(--line);background:rgba(255,255,255,.025);border-radius:999px;padding:8px 10px;font:10px var(--mono);cursor:pointer;transition:.18s ease}
-    .filter-btn:hover,.filter-btn.active{background:#f2f2ef;color:#09090a;border-color:#f2f2ef}
-    .search-wrap{position:relative;width:min(290px,100%)}
-    .search-wrap::before{content:"⌕";position:absolute;left:12px;top:7px;color:#73737d;font-family:var(--mono)}
-    .search-wrap input{width:100%;height:36px;border:1px solid var(--line);border-radius:11px;background:rgba(255,255,255,.025);color:#fff;outline:none;padding:0 12px 0 32px;font-size:12px}
-    .search-wrap input:focus{border-color:rgba(104,232,255,.45)}
-    .repo-grid{display:grid;grid-template-columns:repeat(4,1fr)}
-    .repo-card{min-height:220px;padding:19px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);position:relative;transition:background .18s ease;overflow:hidden}
-    .repo-card:nth-child(4n){border-right:0}
-    .repo-card:hover{background:rgba(255,255,255,.03)}
-    .repo-card::after{content:"";position:absolute;width:160px;height:160px;border-radius:50%;right:-90px;bottom:-100px;background:var(--cyan);opacity:0;filter:blur(60px);transition:.25s ease}
-    .repo-card:hover::after{opacity:.15}
-    .repo-top{display:flex;justify-content:space-between;gap:12px;font:9px var(--mono);text-transform:uppercase;letter-spacing:.08em}
-    .repo-cat{color:var(--cyan)}.repo-time{color:#666672}
-    .repo-card h3{font-size:18px;line-height:1.12;letter-spacing:-.035em;margin:34px 0 9px;overflow-wrap:anywhere}
-    .repo-card p{font-size:11px;color:#80808b;margin:0;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
-    .repo-bottom{position:absolute;left:19px;right:19px;bottom:17px;display:flex;justify-content:space-between;gap:12px;font:9px var(--mono);color:#6e6e79}
-    .lang-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--violet);margin-right:6px}
-    .empty{grid-column:1/-1;padding:70px;text-align:center;color:#84848e}
-    .reveal{opacity:0;transform:translateY(26px);transition:opacity .75s cubic-bezier(.2,.72,.2,1),transform .75s cubic-bezier(.2,.72,.2,1)}
-    .reveal.visible{opacity:1;transform:none}
-    .final-stage{justify-content:center;text-align:center}
-    .final-rings{position:absolute;left:50%;top:50%;width:min(74vw,920px);aspect-ratio:1;transform:translate(-50%,-50%);border:1px solid rgba(255,255,255,.08);border-radius:50%;will-change:transform}
-    .final-rings::before,.final-rings::after{content:"";position:absolute;border:1px solid rgba(255,255,255,.07);border-radius:50%;inset:14%}
-    .final-rings::after{inset:-18%;border-style:dashed}
-    .final-copy{position:relative;z-index:4;will-change:transform,opacity,filter}
-    .final-copy small{font:10px var(--mono);letter-spacing:.16em;text-transform:uppercase;color:#8b8b96}
-    .final-copy h2{font-size:clamp(72px,14vw,210px);line-height:.76;letter-spacing:-.095em;margin:24px 0;text-transform:uppercase}
-    .final-copy h2 span{display:block}
-    .final-copy h2 .outline{color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.34)}
-    .final-copy p{max-width:600px;margin:26px auto 0;color:#8b8b95;font-size:13px}
-    .footer{height:90px;display:flex;align-items:center;justify-content:space-between;gap:20px;border-top:1px solid var(--line);font:9px var(--mono);color:#696974;letter-spacing:.07em;text-transform:uppercase}
-    @media(max-width:1100px){
-      .scene-nav{display:none}
-      .repo-grid{grid-template-columns:repeat(3,1fr)}
-      .repo-card:nth-child(4n){border-right:1px solid var(--line)}
-      .repo-card:nth-child(3n){border-right:0}
-      .orbit-card{width:250px}
-      .oc5,.oc6{display:none}
-      .rail-card{width:84vw}
+    .filter{border:1px solid var(--line);background:rgba(255,255,255,.02);padding:8px 10px;border-radius:999px;font:9px var(--mono);cursor:pointer;transition:.18s ease}
+    .filter:hover,.filter.active{background:#ededE9;color:#080809;border-color:#ededE9}
+    .repo-search{position:relative;width:min(290px,100%)}
+    .repo-search::before{content:"⌕";position:absolute;left:12px;top:6px;color:#6d6d76;font-family:var(--mono)}
+    .repo-search input{width:100%;height:36px;border:1px solid var(--line);border-radius:11px;background:rgba(255,255,255,.02);color:#fff;outline:none;padding:0 12px 0 32px;font-size:12px}
+    .repo-search input:focus{border-color:rgba(139,233,255,.4)}
+    .repo-list{display:block}
+    .repo{
+      min-height:92px;padding:0 18px;border-bottom:1px solid var(--line);display:grid;
+      grid-template-columns:44px minmax(220px,1.1fr) minmax(180px,1fr) 140px 30px;align-items:center;gap:18px;
+      position:relative;overflow:hidden;transition:background .2s ease
     }
-    @media(max-width:760px){
-      .shell{width:min(100% - 24px,var(--max))}
-      .site-nav{top:10px;height:54px}
-      .nav-links{display:none}
-      .nav-github span{display:none}
-      .sticky-stage{min-height:620px}
-      .hero-scene{height:155svh}.universe-scene{height:200svh}.rail-scene{height:260svh}.depth-scene{height:285svh}.final-scene{height:150svh}
-      .hero-title .ray{font-size:clamp(104px,36vw,170px)}
-      .hero-title .lab{font-size:18px;letter-spacing:.28em;margin-left:.28em}
-      .hero-lead{font-size:14px}
-      .hero-grid{background-size:42px 42px}
-      .universe-stage,.rail-stage,.depth-stage{padding-top:82px}
-      .universe-copy{display:block}
-      .universe-copy p{width:auto;margin-top:14px}
-      .scene-heading{font-size:50px}
-      .universe-map{min-height:460px}
-      .orbit-line.a{width:88vw;height:48vw}.orbit-line.b{width:112vw;height:78vw}.orbit-line.c{width:140vw;height:100vw}
-      .universe-core{width:120px;top:54%}
-      .orbit-card{width:46%;min-height:118px;padding:13px}
-      .orbit-card h3{font-size:15px;margin-top:16px}
-      .orbit-card p{font-size:9px}
-      .oc1{left:0;top:18%}.oc2{right:0;top:18%}.oc3{right:0;bottom:12%}.oc4{left:0;bottom:12%}
-      .rail-head{width:calc(100% - 24px);display:block}
-      .rail-head p{margin-top:14px}
-      .rail-track{padding-inline:12px}
-      .rail-card{width:88vw;height:58vh;min-height:430px;grid-template-columns:1fr}
-      .rail-copy{padding:21px;min-height:48%}
-      .rail-visual{min-height:52%}
-      .rail-copy h3{font-size:42px}
-      .depth-head{top:0}
-      .depth-head h2{font-size:50px}
-      .depth-deck{top:25%;bottom:4%}
-      .depth-card{grid-template-columns:1fr;grid-template-rows:1fr .72fr}
-      .depth-info{padding:22px}
-      .depth-info h3{font-size:44px}
-      .depth-art{border-left:0;border-top:1px solid var(--line)}
-      .repo-section{padding:100px 0}
-      .repo-head{display:block}
-      .repo-head p{margin-top:15px}
-      .repo-grid{grid-template-columns:1fr 1fr}
-      .repo-card,.repo-card:nth-child(3n),.repo-card:nth-child(4n){border-right:1px solid var(--line)}
-      .repo-card:nth-child(2n){border-right:0}
-      .final-copy h2{font-size:22vw}
-      .footer{height:auto;padding:24px 0;flex-direction:column;align-items:flex-start}
+    .repo:last-child{border-bottom:0}
+    .repo::before{content:"";position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--accent);transform:scaleY(0);transform-origin:center;transition:.2s ease}
+    .repo:hover{background:rgba(255,255,255,.025)}.repo:hover::before{transform:scaleY(1)}
+    .repo__index{font:9px var(--mono);color:#55555f}.repo__name{font-size:16px;font-weight:650;letter-spacing:-.03em;overflow-wrap:anywhere}
+    .repo__desc{font-size:11px;color:#777781;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .repo__meta{font:9px var(--mono);color:#666670}.repo__arrow{font:15px var(--mono);color:#61616b;transition:.2s ease}.repo:hover .repo__arrow{color:var(--accent);transform:translate(3px,-3px)}
+    .empty{padding:64px;text-align:center;color:#7b7b85;font-size:12px}
+    .final{position:relative;min-height:100svh;display:grid;place-items:center;overflow:hidden;padding:110px 24px}
+    .final__orb{position:absolute;width:min(68vw,820px);aspect-ratio:1;border-radius:50%;border:1px solid rgba(255,255,255,.075);box-shadow:inset 0 0 100px rgba(139,233,255,.035),0 0 160px rgba(139,233,255,.05)}
+    .final__orb::before,.final__orb::after{content:"";position:absolute;border-radius:50%;border:1px solid rgba(255,255,255,.055);inset:14%}
+    .final__orb::after{inset:-18%;border-style:dashed}
+    .final__content{text-align:center;position:relative;z-index:2}
+    .final__content h2{font-size:clamp(76px,14vw,205px);line-height:.75;letter-spacing:-.095em;margin:24px 0;text-transform:uppercase}
+    .final__content h2 span{display:block}.final__content h2 span:last-child{color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.36)}
+    .final__content p{max-width:590px;margin:26px auto 0;color:#83838d;font-size:13px}
+    .footer{min-height:88px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:18px;font:9px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:#5d5d67}
+    .reveal{opacity:0;transform:translateY(30px);filter:blur(6px);transition:opacity .75s cubic-bezier(.2,.72,.2,1),transform .75s cubic-bezier(.2,.72,.2,1),filter .75s ease}
+    .reveal.is-visible{opacity:1;transform:none;filter:none}
+    @media(max-width:980px){
+      .intro__top{grid-template-columns:1fr;gap:28px}
+      .intro__notes{grid-template-columns:1fr}
+      .intro__note{min-height:150px}.intro__note b{margin-bottom:26px}
+      .work-card{grid-template-columns:1fr}.work-card__copy{min-height:48%}.work-card__visual{border-left:0;border-top:1px solid var(--line);min-height:52%}
+      .work__header{align-items:start}.work__header p{max-width:330px}
+      .cap-row{grid-template-columns:56px 1fr 42px}.cap-row p{grid-column:2 / 3;margin:-22px 0 24px}.cap-row__arrow{grid-column:3;grid-row:1 / 3}
+      .repos__head{grid-template-columns:1fr;gap:26px}
+      .repo{grid-template-columns:36px minmax(180px,1fr) 120px 28px}.repo__desc{display:none}
     }
-    @media(max-width:500px){
-      .repo-grid{grid-template-columns:1fr}
-      .repo-card,.repo-card:nth-child(2n),.repo-card:nth-child(3n),.repo-card:nth-child(4n){border-right:0}
-      .hero-actions .btn{width:100%}
-      .orbit-card{width:48%}
+    @media(max-width:720px){
+      .shell{width:min(var(--max),calc(100% - 24px))}
+      .nav{top:10px;height:54px}.nav__links{display:none}.nav__github span{display:none}
+      .hero__frame{padding-top:105px}.hero__word--ray{font-size:clamp(104px,37vw,178px)}.hero__word--lab{font-size:17px;letter-spacing:.25em;margin-left:.25em}
+      .hero__body{font-size:14px}.hero__footer{bottom:18px}
+      .intro{padding:110px 0 92px}.intro__statement{font-size:47px}
+      .work__frame{padding:84px 0 18px}.work__header{display:block}.work__header p{margin-top:14px}.work__header h2{font-size:48px}
+      .work__stage{min-height:560px}.work-card{border-radius:22px}.work-card__copy{padding:22px}.work-card h3{font-size:48px}.work-card__desc{font-size:11px}
+      .work-card__visual{min-height:260px}.translate-ui{inset:9%}.translate-ui article{padding:14px}.translate-ui strong{font-size:18px;margin-top:22px}
+      .node{width:60px;height:60px}.n1{width:84px;height:84px}
+      .capabilities{padding:110px 0 90px}.capabilities__head{display:block}.capabilities__head p{margin-top:16px}.cap-row{min-height:150px}
+      .cap-row h3{font-size:28px}
+      .repos{padding:95px 0 110px}.repos__head h2{font-size:53px}
+      .repo{grid-template-columns:30px 1fr 28px;min-height:86px;gap:10px}.repo__meta{display:none}.repo__name{font-size:14px}
+      .final__content h2{font-size:22vw}
+      .footer{padding:22px 0;min-height:auto;flex-direction:column;align-items:flex-start}
     }
     @media(prefers-reduced-motion:reduce){
       html{scroll-behavior:auto}
       *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
-      .hero-scene,.universe-scene,.rail-scene,.depth-scene,.final-scene{height:auto}
-      .sticky-stage{position:relative;height:auto;min-height:auto;overflow:visible;padding-block:110px}
-      .hero-stage{min-height:760px}
-      .hero-content,.final-copy{transform:none!important;opacity:1!important;filter:none!important}
-      .hero-orbit,.final-rings,.universe-core,.rail-track{transform:none!important}
-      .universe-map{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:36px}
-      .orbit-line,.universe-core{display:none}
-      .orbit-card{position:relative;inset:auto!important;width:auto;opacity:1!important;transform:none!important;filter:none!important}
-      .rail-viewport{overflow:auto}
-      .rail-track{transform:none!important}
-      .depth-deck{position:relative;top:auto;bottom:auto;display:grid;gap:14px;padding-top:180px}
-      .depth-card{position:relative;inset:auto;min-height:560px;opacity:1!important;transform:none!important;filter:none!important}
-      .final-rings{display:none}
-      .reveal{opacity:1;transform:none}
+      .progress{display:none}
+      .reveal{opacity:1;transform:none;filter:none}
+      .hero__frame,.work__frame{min-height:auto}
+      .work{padding:80px 0}.work__frame{overflow:visible}.work__stage{display:grid;gap:14px;min-height:auto}
+      .work-card{position:relative;inset:auto;visibility:visible!important;opacity:1!important;min-height:660px;transform:none!important;filter:none!important}
     }
   </style>
 </head>
 <body>
   <div class="progress" id="progress"></div>
 
-  <nav class="site-nav">
-    <a class="brand" href="#top"><span class="brand-mark">R/</span><span>Ray Build Lab</span></a>
-    <div class="nav-links">
-      <a href="#universe">Universe</a>
-      <a href="#work">Work</a>
-      <a href="#depth">Systems</a>
-      <a href="#repos">Repos</a>
-    </div>
-    <a class="nav-github" href="https://github.com/Ray20123315" target="_blank" rel="noopener">
+  <nav class="nav">
+    <a class="brand" href="#hero"><span class="brand__mark">R/</span><span>Ray Portfolio</span></a>
+    <div class="nav__links"><a href="#about">About</a><a href="#work">Work</a><a href="#capabilities">Capabilities</a><a href="#repos">Repos</a></div>
+    <a class="nav__github" href="https://github.com/Ray20123315" target="_blank" rel="noopener">
       <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .7a11.3 11.3 0 0 0-3.57 22c.56.1.77-.24.77-.54v-2.2c-3.13.68-3.79-1.33-3.79-1.33-.51-1.3-1.25-1.65-1.25-1.65-1.02-.7.08-.69.08-.69 1.13.08 1.72 1.16 1.72 1.16 1 1.72 2.63 1.22 3.27.93.1-.73.39-1.22.71-1.5-2.5-.28-5.13-1.25-5.13-5.58 0-1.23.44-2.24 1.16-3.03-.12-.28-.5-1.43.11-2.98 0 0 .95-.3 3.11 1.16A10.8 10.8 0 0 1 12 6.07c.96 0 1.92.13 2.82.38 2.16-1.46 3.1-1.16 3.1-1.16.62 1.55.23 2.7.12 2.98.72.79 1.15 1.8 1.15 3.03 0 4.34-2.64 5.29-5.15 5.57.4.35.76 1.04.76 2.1v3.2c0 .3.2.65.78.54A11.3 11.3 0 0 0 12 .7Z"/></svg>
-      <span>@Ray20123315</span>
+      <span>GitHub</span>
     </a>
   </nav>
 
-  <aside class="scene-nav" aria-label="Page sections">
-    <button class="scene-dot active" type="button" data-target="top"><span>Intro</span><i></i></button>
-    <button class="scene-dot" type="button" data-target="universe"><span>Universe</span><i></i></button>
-    <button class="scene-dot" type="button" data-target="work"><span>Work</span><i></i></button>
-    <button class="scene-dot" type="button" data-target="depth"><span>Systems</span><i></i></button>
-    <button class="scene-dot" type="button" data-target="repos"><span>Repos</span><i></i></button>
-    <button class="scene-dot" type="button" data-target="final"><span>End</span><i></i></button>
-  </aside>
-
   <main>
-    <section class="scene hero-scene" id="top" data-scene="intro">
-      <div class="sticky-stage hero-stage">
-        <div class="hero-grid" id="heroGrid"></div>
-        <div class="hero-orbit o1"></div>
-        <div class="hero-orbit o2"></div>
-        <div class="hero-orbit o3"></div>
-        <div class="hero-glow" id="heroGlow"></div>
-
-        <div class="hero-content" id="heroContent">
-          <div class="hero-topline"><span class="eyebrow"><i></i>Public projects / motion portfolio / 2026</span></div>
-          <h1 class="hero-title"><span class="ray">RAY</span><span class="lab">BUILD / LAB</span></h1>
-          <p class="hero-lead">把想法做成可以真的跑的東西。<b>AI、Web、Windows、Browser Tools、Cloudflare、Minecraft</b>——每一層往下，都會進入下一個作品世界。</p>
-          <div class="hero-actions">
-            <a class="btn primary" href="#universe">開始往下看 <span class="mono">↓</span></a>
-            <a class="btn" href="https://github.com/Ray20123315?tab=repositories" target="_blank" rel="noopener">GitHub Repositories <span class="mono">↗</span></a>
+    <section class="hero" id="hero">
+      <div class="hero__frame">
+        <div class="hero__grid"></div>
+        <div class="hero__aurora"></div>
+        <div class="hero__rings"><i class="hero__ring"></i><i class="hero__ring"></i><i class="hero__ring"></i></div>
+        <div class="hero__content shell">
+          <div class="eyebrow hero__eyebrow">Designer by instinct · builder by habit</div>
+          <h1 class="hero__title"><span class="hero__word hero__word--ray">RAY</span><span class="hero__word hero__word--lab">BUILD / LAB</span></h1>
+          <div class="hero__body">
+            我把想法做成真的能跑的東西。從 <strong>AI、Realtime Web、Browser Extension</strong>，
+            到 <strong>Windows 工具與 Minecraft 系統</strong>。往下滑，每一層都會切到下一個作品。
+          </div>
+          <div class="hero__actions">
+            <a class="btn btn--solid" href="#work">看作品 <span class="mono">↓</span></a>
+            <a class="btn" href="https://github.com/Ray20123315?tab=repositories" target="_blank" rel="noopener">Repositories <span class="mono">↗</span></a>
           </div>
         </div>
-
-        <div class="scroll-cue"><i></i><span>Scroll to enter</span></div>
+        <div class="hero__footer shell"><span>Public GitHub portfolio · 2026</span><span class="hero__scroll"><i></i>Scroll to move the scene</span></div>
       </div>
     </section>
 
-    <section class="scene universe-scene" id="universe" data-scene="universe">
-      <div class="sticky-stage universe-stage">
-        <div class="shell">
-          <div class="universe-copy">
-            <div>
-              <div class="scene-kicker">01 / Project Universe</div>
-              <h2 class="scene-heading">不同領域，<br><span class="outline">同一個核心。</span></h2>
-            </div>
-            <p>每個專案看起來很不一樣，但底層都在處理相同的事：state、data、interface、failure、recovery。往下滑，專案會一個一個進場。</p>
-          </div>
-
-          <div class="universe-map">
-            <div class="orbit-line a"></div><div class="orbit-line b"></div><div class="orbit-line c"></div>
-            <div class="universe-core" id="universeCore"><div><strong>R/LAB</strong><small>SYSTEMS IN ORBIT</small></div></div>
-
-            <a class="orbit-card oc1" data-at=".06" href="https://github.com/Ray20123315/Memory_manager" target="_blank" rel="noopener">
-              <div class="oc-top"><span>Windows / Systems</span><span class="dot"></span></div><h3>Memory Manager</h3><p>Commit、process telemetry、incident timeline、reversible rules。</p>
-            </a>
-            <a class="orbit-card oc2 violet" data-at=".16" href="https://github.com/Ray20123315/RayLingo-translate" target="_blank" rel="noopener">
-              <div class="oc-top"><span>Browser / Translate</span><span class="dot"></span></div><h3>RayLingo</h3><p>跨瀏覽器即時翻譯、TTS、Workspace 與安全診斷。</p>
-            </a>
-            <a class="orbit-card oc3 pink" data-at=".29" href="https://github.com/Ray20123315/qqaibot" target="_blank" rel="noopener">
-              <div class="oc-top"><span>AI / Cloudflare</span><span class="dot"></span></div><h3>QQ AI Bot</h3><p>多模型、D1、Vectorize、Durable Objects、群組自動化。</p>
-            </a>
-            <a class="orbit-card oc4 lime" data-at=".42" href="https://github.com/Ray20123315/minecraft_key_random_scramble_mod" target="_blank" rel="noopener">
-              <div class="oc-top"><span>Minecraft / Java</span><span class="dot"></span></div><h3>Random Keys</h3><p>Fabric + Forge，多人 authoritative key-layout gameplay。</p>
-            </a>
-            <a class="orbit-card oc5 orange" data-at=".54" href="https://github.com/Ray20123315/youtube-speed-studio" target="_blank" rel="noopener">
-              <div class="oc-top"><span>Extension / Media</span><span class="dot"></span></div><h3>Speed Studio</h3><p>影片控制、runtime recovery 與 signed integrity lock。</p>
-            </a>
-            <a class="orbit-card oc6 violet" data-at=".66" href="https://github.com/Ray20123315/werewolf-ai-worker" target="_blank" rel="noopener">
-              <div class="oc-top"><span>Realtime / Game</span><span class="dot"></span></div><h3>Werewolf Worker</h3><p>WebSocket + Durable Object 的多人狀態機。</p>
-            </a>
-          </div>
-        </div>
+    <section class="intro shell" id="about">
+      <div class="intro__top">
+        <div class="intro__label reveal"><div class="eyebrow">00 / About</div></div>
+        <h2 class="intro__statement reveal">不只把功能做出來。<br><span>把狀態、失敗、回復，也一起設計。</span></h2>
+      </div>
+      <div class="intro__notes">
+        <article class="intro__note reveal"><b>01 / BUILD</b><h3>先讓核心真的能跑</h3><p>比起一開始堆滿功能，我更在意資料流、state 與實際行為是否可驗證。</p></article>
+        <article class="intro__note reveal"><b>02 / VERIFY</b><h3>信任要有證據</h3><p>Release、hash、workflow、事件時間線與錯誤狀態，都應該可以被追蹤。</p></article>
+        <article class="intro__note reveal"><b>03 / ITERATE</b><h3>每一版都能再往前</h3><p>做完不是終點。好用、可回復、可維護，才是專案真正開始成熟的地方。</p></article>
       </div>
     </section>
 
-    <section class="scene rail-scene" id="work" data-scene="work">
-      <div class="sticky-stage rail-stage">
-        <div class="rail-stage-inner">
-          <div class="rail-head">
-            <div><div class="scene-kicker">02 / Selected Work</div><h2>往右穿過<br>我的作品。</h2></div>
-            <p>這一段不是自己播放；你的滾輪就是時間軸。往下滑，整個作品軌道會橫向推進。</p>
+    <section class="work" id="work">
+      <div class="work__frame">
+        <div class="shell" style="display:flex;flex-direction:column;flex:1;min-height:0">
+          <div class="work__header">
+            <div><div class="eyebrow">01 / Selected Work</div><h2>一層，一個作品。</h2></div>
+            <p>這一段會固定在畫面中。每往下一層，上一個作品退場，下一個作品接進來；你的滾輪就是動畫時間軸。</p>
           </div>
-          <div class="rail-viewport" id="railViewport">
-            <div class="rail-track" id="railTrack">
-              <article class="rail-card rc1">
-                <div class="rail-copy">
-                  <div><div class="rail-index">01 / SYSTEM OBSERVABILITY</div></div>
-                  <div><h3>Memory<br>Manager</h3><p>把「RAM 很高」拆成可以被量測與驗證的狀態：Commit、Process Commit、Headroom、Event Log、heartbeat 與事故證據。</p></div>
-                  <div class="rail-tags"><span>Windows</span><span>Telemetry</span><span>Recovery</span></div>
-                </div>
-                <div class="rail-visual">
-                  <div class="mesh"></div><div class="visual-glow"></div>
-                  <div class="mock-window"><div class="mock-bar"><i></i><i></i><i></i></div><div class="mock-body"><div class="mock-side"><span></span><span></span><span></span><span></span></div><div class="mock-main"><div class="metric-row"><div></div><div></div><div></div></div><div class="mock-chart"></div><div class="mock-block"></div></div></div></div>
-                </div>
-              </article>
 
-              <article class="rail-card rc2">
-                <div class="rail-copy">
-                  <div><div class="rail-index">02 / LANGUAGE INTERFACE</div></div>
-                  <div><h3>RayLingo</h3><p>把翻譯做成真正能長期使用的瀏覽器工具：多語 UI、反白翻譯、TTS、history、update verification 與跨瀏覽器能力差異。</p></div>
-                  <div class="rail-tags"><span>MV3</span><span>Firefox</span><span>Safari</span><span>TTS</span></div>
-                </div>
-                <div class="rail-visual"><div class="visual-glow"></div><div class="translator-ui"><article><small>SOURCE / ZH-TW</small><strong>讓語言<br>不要擋路。</strong><p>Selected text → Translator → TTS → History</p></article><article><small>TARGET / EN</small><strong>Make language<br>disappear.</strong><p>Workspace · runtime · browser capability</p></article></div></div>
-              </article>
+          <div class="work__stage">
+            <article class="work-card" data-project="0">
+              <div class="work-card__copy">
+                <div class="work-card__meta"><em>Windows / Systems</em><span>01 — 05</span></div>
+                <div><h3>Memory<br>Manager</h3><p class="work-card__desc">Windows 11 記憶體觀測、Commit 壓力、Process Commit、事故時間線與可回復規則。核心不是「清 RAM」，而是先把證據看清楚。</p><div class="tags"><span>Telemetry</span><span>Event Log</span><span>Recovery</span><span>Safety-first</span></div></div>
+                <a class="work-card__link" href="https://github.com/Ray20123315/Memory_manager" target="_blank" rel="noopener">Open repository ↗</a>
+              </div>
+              <div class="work-card__visual">
+                <div class="visual-glow"></div>
+                <div class="memory-ui"><div class="memory-ui__bar"><i></i><i></i><i></i></div><div class="memory-ui__body">
+                  <div class="metrics"><div><small>AVAILABLE RAM</small><b>8.6 GB</b></div><div><small>COMMIT</small><b>64%</b></div><div><small>HEADROOM</small><b>12.4</b></div></div>
+                  <div class="chart"><svg viewBox="0 0 600 180" preserveAspectRatio="none"><path d="M0 150 C80 142 120 120 180 126 S270 98 330 104 420 70 470 81 535 55 600 61 V180H0Z"/><path d="M0 150 C80 142 120 120 180 126 S270 98 330 104 420 70 470 81 535 55 600 61"/></svg></div>
+                </div></div>
+              </div>
+            </article>
 
-              <article class="rail-card rc3">
-                <div class="rail-copy">
-                  <div><div class="rail-index">03 / REALTIME AI</div></div>
-                  <div><h3>QQ AI<br>Bot</h3><p>單一 Cloudflare Worker 整合群聊、模型路由、D1、Vectorize、Durable Objects、排程、群規、活動與管理 Portal。</p></div>
-                  <div class="rail-tags"><span>Workers</span><span>Gemini</span><span>D1</span><span>Vectorize</span></div>
-                </div>
-                <div class="rail-visual"><div class="visual-glow"></div><div class="terminal"><b>$ worker boot</b><br><strong>OneBotHub</strong> → websocket connected<br><em>AI Router</em> → Gemini / Gemma / DeepSeek<br>D1 → memory + configuration<br>Vectorize → semantic context<br>Durable Object → queue / rpc / state<br><br><b>✓ realtime pipeline ready</b><br><em>→ waiting for next event...</em></div></div>
-              </article>
+            <article class="work-card" data-project="1">
+              <div class="work-card__copy">
+                <div class="work-card__meta"><em>Browser / Language</em><span>02 — 05</span></div>
+                <div><h3>RayLingo</h3><p class="work-card__desc">跨瀏覽器即時翻譯擴充套件。Popup、Workspace、TTS、反白翻譯、多語 UI、更新驗證與安全診斷被整理成同一套使用體驗。</p><div class="tags"><span>MV3</span><span>Firefox</span><span>Safari</span><span>Translator API</span></div></div>
+                <a class="work-card__link" href="https://github.com/Ray20123315/RayLingo-translate" target="_blank" rel="noopener">Open repository ↗</a>
+              </div>
+              <div class="work-card__visual">
+                <div class="visual-glow" style="background:var(--violet)"></div>
+                <div class="translate-ui"><article><small>SOURCE / ZH-TW</small><strong>把語言<br>變得透明。</strong><p>Selected text · instant translate · TTS</p></article><article><small>TARGET / EN</small><strong>Make language<br>disappear.</strong><p>Workspace · history · browser capability</p></article></div>
+              </div>
+            </article>
 
-              <article class="rail-card rc4">
-                <div class="rail-copy">
-                  <div><div class="rail-index">04 / GAME STATE</div></div>
-                  <div><h3>Random Keys<br>Survival</h3><p>每次有效扣血都可能改變控制方式；Server 保存唯一 authoritative layout，並處理多人交換、維度共享、重登與死亡狀態。</p></div>
-                  <div class="rail-tags"><span>Minecraft 1.20.1</span><span>Fabric</span><span>Forge</span><span>Java 17</span></div>
-                </div>
-                <div class="rail-visual"><div class="visual-glow"></div><div class="game-grid"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
-              </article>
+            <article class="work-card" data-project="2">
+              <div class="work-card__copy">
+                <div class="work-card__meta"><em>AI / Cloudflare</em><span>03 — 05</span></div>
+                <div><h3>QQ AI<br>Bot</h3><p class="work-card__desc">以 Cloudflare Worker 串起 OneBot WebSocket、多模型路由、D1、Vectorize、Durable Objects、群管、排程與 Portal 的即時 AI 系統。</p><div class="tags"><span>Workers</span><span>Gemini</span><span>D1</span><span>Vectorize</span></div></div>
+                <a class="work-card__link" href="https://github.com/Ray20123315/qqaibot" target="_blank" rel="noopener">Open repository ↗</a>
+              </div>
+              <div class="work-card__visual">
+                <div class="visual-glow"></div>
+                <div class="network"><i class="link l1"></i><i class="link l2"></i><i class="link l3"></i><i class="link l4"></i><div class="node n1">Worker</div><div class="node n2">OneBot</div><div class="node n3">Models</div><div class="node n4">D1</div><div class="node n5">Vector</div></div>
+              </div>
+            </article>
 
-              <article class="rail-card rc5">
-                <div class="rail-copy">
-                  <div><div class="rail-index">05 / COMPRESSION</div></div>
-                  <div><h3>RayPack</h3><p>Windows 壓縮與解壓縮工具。Exact、AutoBest、LZMA2、Zstd、Smart Media 以不同策略在完整還原、速度與體積之間取捨。</p></div>
-                  <div class="rail-tags"><span>LZMA2</span><span>Zstd</span><span>Brotli</span><span>SHA-256</span></div>
-                </div>
-                <div class="rail-visual"><div class="mesh"></div><div class="visual-glow"></div><div class="universe-core" style="top:50%;"><div><strong>RAYZ</strong><small>COMPRESS / VERIFY / RESTORE</small></div></div></div>
-              </article>
-            </div>
+            <article class="work-card" data-project="3">
+              <div class="work-card__copy">
+                <div class="work-card__meta"><em>Browser / Media</em><span>04 — 05</span></div>
+                <div><h3>YouTube<br>Speed Studio</h3><p class="work-card__desc">影片控制與媒體工作流擴充套件，包含 runtime recovery、更新檢查、多語介面與 signed anti-tamper integrity lock。</p><div class="tags"><span>Extension</span><span>Runtime Recovery</span><span>RSA-3072</span><span>Integrity</span></div></div>
+                <a class="work-card__link" href="https://github.com/Ray20123315/youtube-speed-studio" target="_blank" rel="noopener">Open repository ↗</a>
+              </div>
+              <div class="work-card__visual">
+                <div class="visual-glow" style="background:var(--violet)"></div>
+                <div class="timeline-ui"><div class="player"></div><div class="timeline"><i style="height:14px"></i><i style="height:25px"></i><i style="height:34px"></i><i style="height:20px"></i><i style="height:41px"></i><i style="height:26px"></i><i style="height:17px"></i><i style="height:38px"></i><i style="height:29px"></i><i style="height:45px"></i><i style="height:21px"></i><i style="height:32px"></i><i style="height:18px"></i><i style="height:37px"></i><i style="height:24px"></i><i style="height:43px"></i><i style="height:26px"></i><i style="height:17px"></i><i style="height:35px"></i><i style="height:22px"></i></div></div>
+              </div>
+            </article>
+
+            <article class="work-card" data-project="4">
+              <div class="work-card__copy">
+                <div class="work-card__meta"><em>Minecraft / Game Systems</em><span>05 — 05</span></div>
+                <div><h3>Random Keys<br>Survival</h3><p class="work-card__desc">Minecraft 1.20.1 Fabric + Forge Mod。每次有效扣血都可能重新抽選控制鍵位，Server 保存 authoritative layout，並管理多人交換與重登狀態。</p><div class="tags"><span>Fabric</span><span>Forge</span><span>Java 17</span><span>Authoritative State</span></div></div>
+                <a class="work-card__link" href="https://github.com/Ray20123315/minecraft_key_random_scramble_mod" target="_blank" rel="noopener">Open repository ↗</a>
+              </div>
+              <div class="work-card__visual">
+                <div class="visual-glow"></div>
+                <div class="keyboard"><i class="key"></i><i class="key"></i><i class="key"></i><i class="key"></i><i class="key"></i><i class="key"></i><i class="key"></i><i class="key"></i><i class="key"></i><i class="key"></i><i class="key"></i><i class="key"></i><i class="key"></i><i class="key"></i><i class="key"></i><i class="key"></i><i class="key"></i><i class="key"></i><i class="key"></i><i class="key"></i><i class="key"></i><i class="key"></i><i class="key"></i><i class="key"></i><i class="key"></i><i class="key"></i><i class="key"></i><i class="key"></i><i class="key"></i><i class="key"></i><i class="key"></i><i class="key"></i><i class="key"></i><i class="key"></i><i class="key"></i></div>
+              </div>
+            </article>
           </div>
+
+          <div class="work__footer"><div class="work__dots"><i class="work__dot"></i><i class="work__dot"></i><i class="work__dot"></i><i class="work__dot"></i><i class="work__dot"></i></div><span class="work__count" id="workCount">01 / 05</span></div>
         </div>
       </div>
     </section>
 
-    <section class="scene depth-scene" id="depth" data-scene="depth">
-      <div class="sticky-stage depth-stage">
-        <div class="shell depth-shell">
-          <div class="depth-head"><div class="scene-kicker">03 / Under the Surface</div><h2>真正難的，<br>都在下面。</h2></div>
-          <div class="depth-counter" id="depthCounter">01 / 04</div>
-
-          <div class="depth-deck">
-            <article class="depth-card d1" data-depth="0">
-              <div class="depth-info"><div class="index">01 / STATE</div><div><h3>Authoritative<br>State</h3><p>多人遊戲、Bot、桌面工具或瀏覽器擴充，只要狀態來源不清楚，最後都會變成同步問題。把唯一權威寫清楚，比堆功能更重要。</p></div><a class="depth-link" href="https://github.com/Ray20123315/werewolf-ai-worker" target="_blank" rel="noopener">Explore state machine ↗</a></div>
-              <div class="depth-art"><div class="halo"></div><div class="sig">STATE</div></div>
-            </article>
-            <article class="depth-card d2" data-depth="1">
-              <div class="depth-info"><div class="index">02 / RECOVERY</div><div><h3>Recover,<br>don’t guess.</h3><p>Runtime context 失效、事故發生、設定被修改時，系統應該知道怎麼重建、怎麼回復、怎麼留下證據，而不是假裝一切沒事。</p></div><a class="depth-link" href="https://github.com/Ray20123315/Memory_manager" target="_blank" rel="noopener">Explore recovery logic ↗</a></div>
-              <div class="depth-art"><div class="halo"></div><div class="sig">RESTORE</div></div>
-            </article>
-            <article class="depth-card d3" data-depth="2">
-              <div class="depth-info"><div class="index">03 / INTEGRITY</div><div><h3>Trust needs<br>evidence.</h3><p>SHA-256、signed manifest、offline signing key、fail-closed tamper detection——安全不是 UI 上放一個盾牌，而是信任鏈真的能被驗證。</p></div><a class="depth-link" href="https://github.com/Ray20123315/youtube-speed-studio" target="_blank" rel="noopener">Explore integrity model ↗</a></div>
-              <div class="depth-art"><div class="halo"></div><div class="sig">VERIFY</div></div>
-            </article>
-            <article class="depth-card d4" data-depth="3">
-              <div class="depth-info"><div class="index">04 / ITERATION</div><div><h3>Ship.<br>Measure. Repeat.</h3><p>我把 GitHub repository、release、workflow、測試、文件與部署當成同一條迭代鏈。不是「做完」，而是每一版都更接近可維護的系統。</p></div><a class="depth-link" href="https://github.com/Ray20123315" target="_blank" rel="noopener">View the build history ↗</a></div>
-              <div class="depth-art"><div class="halo"></div><div class="sig">SHIP</div></div>
-            </article>
-          </div>
-        </div>
+    <section class="capabilities shell" id="capabilities">
+      <div class="capabilities__head reveal"><div><div class="eyebrow">02 / Capabilities</div><h2>做的不只一種東西。</h2></div><p>領域不同，但我反覆處理的問題很一致：狀態、資料、可靠性、介面、部署，以及失敗之後怎麼回來。</p></div>
+      <div class="cap-list">
+        <a class="cap-row" href="https://github.com/Ray20123315/qqaibot" target="_blank" rel="noopener"><span class="cap-row__num">01</span><h3>AI & Realtime Systems</h3><p>Model routing、WebSocket、D1、Vectorize、Durable Objects、多人 state machine。</p><span class="cap-row__arrow">↗</span></a>
+        <a class="cap-row" href="https://github.com/Ray20123315/RayLingo-translate" target="_blank" rel="noopener"><span class="cap-row__num">02</span><h3>Browser Extensions</h3><p>Chrome / Edge / Brave / Firefox / Safari，多語 UI、runtime recovery 與更新安全。</p><span class="cap-row__arrow">↗</span></a>
+        <a class="cap-row" href="https://github.com/Ray20123315/Memory_manager" target="_blank" rel="noopener"><span class="cap-row__num">03</span><h3>Windows Utilities</h3><p>Telemetry、diagnostics、installer、rollback、process behavior 與安全邊界。</p><span class="cap-row__arrow">↗</span></a>
+        <a class="cap-row" href="https://github.com/Ray20123315/delta_ops_hazardzone_Alpha" target="_blank" rel="noopener"><span class="cap-row__num">04</span><h3>Game Systems</h3><p>Minecraft Fabric / Forge、經濟、多人交換、UI、server-authoritative gameplay。</p><span class="cap-row__arrow">↗</span></a>
       </div>
     </section>
 
-    <section class="repo-section shell" id="repos" data-scene="repos">
-      <div class="repo-head reveal">
-        <div><div class="scene-kicker">04 / Live Repository Index</div><h2>全部公開<br>作品。</h2></div>
-        <p>這一區直接讀 GitHub public API。你之後新增公開 repository，不需要重新改這頁，也會自動出現在這裡。</p>
-      </div>
-      <div class="repo-panel reveal">
-        <div class="repo-bar"><div class="lights"><i></i><i></i><i></i></div><code>github://Ray20123315/public-repositories</code><code id="repoCount">22 repos</code></div>
+    <section class="repos shell" id="repos">
+      <div class="repos__head reveal"><div><div class="eyebrow">03 / Live GitHub Index</div><h2>全部公開<br>Repository。</h2></div><p>這裡會直接讀你的 GitHub public API。之後新增公開倉庫，不用重新改網站，也會自動出現在清單裡。</p></div>
+      <div class="repo-browser reveal">
+        <div class="repo-browser__bar"><div class="repo-browser__lights"><i></i><i></i><i></i></div><code>github://Ray20123315/public</code><code id="repoCount">22 repos</code></div>
         <div class="repo-tools">
-          <div class="filters">
-            <button class="filter-btn active" type="button" data-filter="all">All</button>
-            <button class="filter-btn" type="button" data-filter="AI">AI</button>
-            <button class="filter-btn" type="button" data-filter="Tools">Tools</button>
-            <button class="filter-btn" type="button" data-filter="Minecraft">Minecraft</button>
-            <button class="filter-btn" type="button" data-filter="Web">Web</button>
-            <button class="filter-btn" type="button" data-filter="Media">Media</button>
-          </div>
-          <label class="search-wrap"><input id="repoSearch" type="search" placeholder="Search repositories…" aria-label="Search repositories"></label>
+          <div class="filters"><button class="filter active" type="button" data-filter="all">All</button><button class="filter" type="button" data-filter="AI">AI</button><button class="filter" type="button" data-filter="Tools">Tools</button><button class="filter" type="button" data-filter="Minecraft">Minecraft</button><button class="filter" type="button" data-filter="Web">Web</button><button class="filter" type="button" data-filter="Media">Media</button></div>
+          <label class="repo-search"><input id="repoSearch" type="search" placeholder="Search repositories…" aria-label="Search repositories"></label>
         </div>
-        <div class="repo-grid" id="repoGrid"><div class="empty">Loading public repositories…</div></div>
+        <div class="repo-list" id="repoList"><div class="empty">Loading public repositories…</div></div>
       </div>
     </section>
 
-    <section class="scene final-scene" id="final" data-scene="final">
-      <div class="sticky-stage final-stage">
-        <div class="final-rings" id="finalRings"></div>
-        <div class="final-copy" id="finalCopy">
-          <small>05 / End of page — not end of build</small>
-          <h2><span>MAKE</span><span class="outline">IT REAL.</span></h2>
-          <p>Repository 裡面才是完整版本。這個網站只是入口；真正的內容是每一次 commit、release、bug、rollback、重構與下一版。</p>
-          <div class="hero-actions">
-            <a class="btn primary" href="https://github.com/Ray20123315" target="_blank" rel="noopener">Open GitHub <span class="mono">↗</span></a>
-            <a class="btn" href="../">Memory Manager Site <span class="mono">↗</span></a>
-          </div>
-        </div>
+    <section class="final" id="final">
+      <div class="final__orb"></div>
+      <div class="final__content">
+        <div class="eyebrow" style="justify-content:center">04 / Keep Building</div>
+        <h2><span>MAKE</span><span>IT REAL.</span></h2>
+        <p>這裡是入口。真正的作品在 commit、issue、release、測試、重構、失敗與下一版裡。</p>
+        <div class="hero__actions"><a class="btn btn--solid" href="https://github.com/Ray20123315" target="_blank" rel="noopener">Open GitHub <span class="mono">↗</span></a><a class="btn" href="../">Memory Manager Site <span class="mono">↗</span></a></div>
       </div>
     </section>
   </main>
 
-  <footer class="shell footer"><span>© <span id="year"></span> Ray20123315 / BUILD LAB</span><span>Cinematic scroll portfolio · GitHub Pages</span></footer>
+  <footer class="shell footer"><span>© <span id="year"></span> Ray20123315 / Portfolio</span><span>Built for motion · GitHub Pages</span></footer>
 
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/ScrollTrigger.min.js"></script>
   <script>
     (function(){
-      if(window.__rayPortfolioV2) return;
-      window.__rayPortfolioV2 = true;
+      if(window.__rayPortfolioV3) return;
+      window.__rayPortfolioV3=true;
 
-      var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      var root = document.documentElement;
-      var progressBar = document.getElementById('progress');
-      var heroContent = document.getElementById('heroContent');
-      var heroGlow = document.getElementById('heroGlow');
-      var heroGrid = document.getElementById('heroGrid');
-      var heroOrbits = Array.prototype.slice.call(document.querySelectorAll('.hero-orbit'));
-      var universeCore = document.getElementById('universeCore');
-      var orbitLines = Array.prototype.slice.call(document.querySelectorAll('.orbit-line'));
-      var orbitCards = Array.prototype.slice.call(document.querySelectorAll('.orbit-card'));
-      var railTrack = document.getElementById('railTrack');
-      var railViewport = document.getElementById('railViewport');
-      var depthCards = Array.prototype.slice.call(document.querySelectorAll('.depth-card'));
-      var depthCounter = document.getElementById('depthCounter');
-      var finalCopy = document.getElementById('finalCopy');
-      var finalRings = document.getElementById('finalRings');
-      var sceneDots = Array.prototype.slice.call(document.querySelectorAll('.scene-dot'));
-      var scenes = Array.prototype.slice.call(document.querySelectorAll('[data-scene]'));
-      var dirty = true;
+      var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var progress=document.getElementById('progress');
+      var revealEls=Array.prototype.slice.call(document.querySelectorAll('.reveal'));
+      var capRows=Array.prototype.slice.call(document.querySelectorAll('.cap-row'));
+      var workCards=Array.prototype.slice.call(document.querySelectorAll('.work-card'));
+      var workDots=Array.prototype.slice.call(document.querySelectorAll('.work__dot'));
+      var workCount=document.getElementById('workCount');
 
-      document.getElementById('year').textContent = String(new Date().getFullYear());
+      document.getElementById('year').textContent=String(new Date().getFullYear());
 
-      window.addEventListener('pointermove',function(e){
-        root.style.setProperty('--mx',e.clientX+'px');
-        root.style.setProperty('--my',e.clientY+'px');
+      var io=new IntersectionObserver(function(entries){
+        entries.forEach(function(entry){
+          if(entry.isIntersecting){
+            entry.target.classList.add('is-visible');
+            io.unobserve(entry.target);
+          }
+        });
+      },{threshold:.12,rootMargin:'0px 0px -6% 0px'});
+      revealEls.forEach(function(el){io.observe(el)});
+
+      window.addEventListener('scroll',function(){
+        var max=Math.max(1,document.documentElement.scrollHeight-window.innerHeight);
+        progress.style.transform='scaleX('+(window.scrollY/max)+')';
       },{passive:true});
 
-      function clamp(v,a,b){return Math.min(b,Math.max(a,v))}
-      function range(v,a,b){return clamp((v-a)/(b-a),0,1)}
-      function sceneProgress(el){
-        var rect=el.getBoundingClientRect();
-        var travel=Math.max(1,rect.height-window.innerHeight);
-        return clamp((-rect.top)/travel,0,1);
-      }
+      function setupGsap(){
+        if(reduce||!window.gsap||!window.ScrollTrigger) return false;
+        gsap.registerPlugin(ScrollTrigger);
 
-      function markDirty(){dirty=true}
-      window.addEventListener('scroll',markDirty,{passive:true});
-      window.addEventListener('resize',markDirty,{passive:true});
+        gsap.from('.hero__eyebrow',{autoAlpha:0,y:18,duration:.75,ease:'power3.out'});
+        gsap.from('.hero__word--ray',{autoAlpha:0,yPercent:18,scale:.94,filter:'blur(14px)',duration:1.05,ease:'power4.out',delay:.05});
+        gsap.from('.hero__word--lab',{autoAlpha:0,y:24,letterSpacing:'.55em',filter:'blur(8px)',duration:1,ease:'power3.out',delay:.14});
+        gsap.from('.hero__body',{autoAlpha:0,y:20,duration:.8,ease:'power3.out',delay:.28});
+        gsap.from('.hero__actions',{autoAlpha:0,y:14,duration:.7,ease:'power3.out',delay:.38});
 
-      sceneDots.forEach(function(btn){
-        btn.addEventListener('click',function(){
-          var id=btn.getAttribute('data-target');
-          var el=document.getElementById(id);
-          if(el) el.scrollIntoView({behavior:reduceMotion?'auto':'smooth',block:'start'});
+        var heroTl=gsap.timeline({
+          scrollTrigger:{
+            trigger:'#hero',
+            start:'top top',
+            end:'+=110%',
+            pin:'.hero__frame',
+            scrub:.75,
+            anticipatePin:1,
+            invalidateOnRefresh:true
+          }
         });
-      });
+        heroTl
+          .to('.hero__word--ray',{xPercent:-10,scale:.91,autoAlpha:.1,filter:'blur(12px)',ease:'none'},0)
+          .to('.hero__word--lab',{xPercent:12,autoAlpha:0,filter:'blur(8px)',ease:'none'},0)
+          .to('.hero__body,.hero__actions,.hero__eyebrow',{y:-70,autoAlpha:0,ease:'none'},0)
+          .to('.hero__aurora',{scale:1.55,autoAlpha:.25,ease:'none'},0)
+          .to('.hero__grid',{yPercent:-9,scale:1.08,autoAlpha:.08,ease:'none'},0)
+          .to('.hero__ring:nth-child(1)',{scale:1.25,rotation:34,autoAlpha:.15,ease:'none'},0)
+          .to('.hero__ring:nth-child(2)',{scale:1.18,rotation:-24,autoAlpha:.09,ease:'none'},0)
+          .to('.hero__ring:nth-child(3)',{scale:1.12,rotation:18,autoAlpha:.06,ease:'none'},0);
 
-      var revealObserver = new IntersectionObserver(function(entries){
-        entries.forEach(function(entry){
-          if(entry.isIntersecting){entry.target.classList.add('visible');revealObserver.unobserve(entry.target)}
+        gsap.set(workCards.slice(1),{autoAlpha:0,y:70,scale:.985,filter:'blur(12px)'});
+        gsap.set(workCards[0],{autoAlpha:1,y:0,scale:1,filter:'blur(0px)'});
+
+        var workTl=gsap.timeline({
+          scrollTrigger:{
+            trigger:'#work',
+            start:'top top',
+            end:function(){return '+='+(window.innerHeight*Math.max(4.2,workCards.length*.95));},
+            pin:'.work__frame',
+            scrub:.65,
+            anticipatePin:1,
+            invalidateOnRefresh:true,
+            onUpdate:function(self){
+              var idx=Math.min(workCards.length-1,Math.round(self.progress*(workCards.length-1)));
+              workCount.textContent=String(idx+1).padStart(2,'0')+' / '+String(workCards.length).padStart(2,'0');
+            }
+          }
         });
-      },{threshold:.13});
-      document.querySelectorAll('.reveal').forEach(function(el){revealObserver.observe(el)});
 
-      function updateSceneNav(){
-        var best=null,bestDistance=Infinity;
-        scenes.forEach(function(s){
-          var r=s.getBoundingClientRect();
-          var d=Math.abs((r.top+r.bottom)/2-window.innerHeight/2);
-          if(r.bottom>0&&r.top<window.innerHeight&&d<bestDistance){best=s;bestDistance=d}
+        workCards.forEach(function(card,i){
+          if(i===0) return;
+          var prev=workCards[i-1];
+          var label='p'+i;
+          workTl
+            .to(prev,{autoAlpha:0,y:-58,scale:.965,filter:'blur(14px)',duration:.52,ease:'power2.inOut'},label)
+            .fromTo(card,{autoAlpha:0,y:82,scale:1.02,filter:'blur(16px)'},{autoAlpha:1,y:0,scale:1,filter:'blur(0px)',duration:.68,ease:'power3.out'},label+'+=0.14')
+            .to(workDots[i-1],{backgroundColor:'#2c2c32',duration:.15},label)
+            .to(workDots[i],{backgroundColor:'#8be9ff',duration:.15},label+'+=0.14');
         });
-        if(!best) return;
-        var id=best.id;
-        sceneDots.forEach(function(b){b.classList.toggle('active',b.getAttribute('data-target')===id)})
-      }
 
-      function updateHero(p){
-        var fade=range(p,.52,1);
-        var scale=1-p*.11;
-        heroContent.style.transform='translate3d(0,'+(-70*p)+'px,0) scale('+scale+')';
-        heroContent.style.opacity=String(1-fade*.93);
-        heroContent.style.filter='blur('+(fade*9)+'px)';
-        heroGlow.style.transform='translate(-50%,-50%) scale('+(1+p*1.3)+')';
-        heroGlow.style.opacity=String(1-p*.72);
-        heroGrid.style.transform='perspective(900px) rotateX('+(64-10*p)+'deg) translateY('+(28-18*p)+'%) scale('+(1.35+p*.22)+')';
-        heroOrbits.forEach(function(o,i){
-          o.style.transform='translate(-50%,-50%) rotate('+(p*(22+i*15)*(i%2?-1:1))+'deg) scale('+(1+p*(.18+i*.08))+')';
-          o.style.opacity=String(1-p*.66);
+        capRows.forEach(function(row,i){
+          gsap.from(row,{
+            scrollTrigger:{trigger:row,start:'top 86%',toggleActions:'play none none reverse'},
+            autoAlpha:0,
+            y:44,
+            x:i%2?28:-28,
+            duration:.72,
+            ease:'power3.out'
+          });
         });
-      }
 
-      function updateUniverse(p){
-        universeCore.style.transform='translate(-50%,-50%) scale('+(0.72+range(p,.03,.86)*1.05)+') rotate('+(p*24)+'deg)';
-        universeCore.style.opacity=String(1-range(p,.82,1)*.8);
-        orbitLines.forEach(function(line,i){
-          var base=[-12,17,-5][i]||0;
-          line.style.transform='translate(-50%,-50%) rotate('+(base+p*(i%2?36:-30))+'deg) scale('+(0.82+p*.24)+')';
+        gsap.from('.repos__head>*',{
+          scrollTrigger:{trigger:'.repos__head',start:'top 82%',toggleActions:'play none none reverse'},
+          autoAlpha:0,y:40,stagger:.1,duration:.8,ease:'power3.out'
         });
-        orbitCards.forEach(function(card,i){
-          var at=parseFloat(card.getAttribute('data-at')||'0');
-          var local=range(p,at,at+.16);
-          var leave=range(p,.82+i*.012,.98);
-          var dir=i%2===0?-1:1;
-          card.style.opacity=String(local*(1-leave*.8));
-          card.style.transform='translate3d('+(dir*(1-local)*38)+'px,'+((1-local)*78-leave*45)+'px,0) scale('+(0.78+local*.22-leave*.05)+') rotate('+(dir*(1-local)*5)+'deg)';
-          card.style.filter='blur('+((1-local)*8+leave*3)+'px)';
+
+        var finalTl=gsap.timeline({
+          scrollTrigger:{trigger:'#final',start:'top 78%',end:'center center',scrub:.55}
         });
+        finalTl
+          .fromTo('.final__orb',{scale:.72,rotation:-20,autoAlpha:.2},{scale:1.04,rotation:28,autoAlpha:1,ease:'none'},0)
+          .fromTo('.final__content',{y:70,autoAlpha:0,filter:'blur(12px)'},{y:0,autoAlpha:1,filter:'blur(0px)',ease:'none'},0);
+
+        window.addEventListener('load',function(){ScrollTrigger.refresh();},{once:true});
+        return true;
       }
 
-      function updateRail(p){
-        if(!railTrack||!railViewport) return;
-        var max=Math.max(0,railTrack.scrollWidth-railViewport.clientWidth);
-        railTrack.style.transform='translate3d('+(-max*p)+'px,0,0)';
-      }
+      setupGsap();
 
-      function updateDepth(p){
-        var n=depthCards.length;
-        var segment=1/n;
-        var active=0;
-        depthCards.forEach(function(card,i){
-          var start=i*segment;
-          var enter=range(p,start,start+segment*.32);
-          var exit=range(p,start+segment*.7,start+segment);
-          var opacity=enter*(1-exit*.88);
-          if(opacity>.35) active=i;
-          var y=(1-enter)*135-exit*105;
-          var scale=.88+enter*.12-exit*.07;
-          var rx=(1-enter)*10-exit*5;
-          card.style.opacity=String(opacity);
-          card.style.transform='translate3d(0,'+y+'px,0) scale('+scale+') rotateX('+rx+'deg)';
-          card.style.filter='blur('+((1-enter)*8+exit*5)+'px)';
-          card.style.zIndex=String(10+i);
-        });
-        depthCounter.textContent=String(active+1).padStart(2,'0')+' / '+String(n).padStart(2,'0');
-      }
-
-      function updateFinal(p){
-        var enter=range(p,0,.44),leave=range(p,.72,1);
-        finalCopy.style.opacity=String(enter*(1-leave*.65));
-        finalCopy.style.transform='translate3d(0,'+((1-enter)*70-leave*55)+'px,0) scale('+(0.86+enter*.14+leave*.06)+')';
-        finalCopy.style.filter='blur('+((1-enter)*9)+'px)';
-        finalRings.style.transform='translate(-50%,-50%) rotate('+(p*90)+'deg) scale('+(0.72+enter*.46+leave*.28)+')';
-        finalRings.style.opacity=String(.35+enter*.65);
-      }
-
-      function render(){
-        if(dirty&&!reduceMotion){
-          dirty=false;
-          var max=Math.max(1,document.documentElement.scrollHeight-window.innerHeight);
-          progressBar.style.width=((window.scrollY/max)*100)+'%';
-          var intro=document.querySelector('[data-scene="intro"]');
-          var universe=document.querySelector('[data-scene="universe"]');
-          var work=document.querySelector('[data-scene="work"]');
-          var depth=document.querySelector('[data-scene="depth"]');
-          var final=document.querySelector('[data-scene="final"]');
-          if(intro) updateHero(sceneProgress(intro));
-          if(universe) updateUniverse(sceneProgress(universe));
-          if(work) updateRail(sceneProgress(work));
-          if(depth) updateDepth(sceneProgress(depth));
-          if(final) updateFinal(sceneProgress(final));
-          updateSceneNav();
-        }
-        requestAnimationFrame(render);
-      }
-      if(reduceMotion){
-        progressBar.style.display='none';
-        orbitCards.forEach(function(c){c.style.opacity='1'});
-        depthCards.forEach(function(c){c.style.opacity='1'});
-      }else{
-        render();
-      }
-
-      var repoGrid=document.getElementById('repoGrid');
+      var repoList=document.getElementById('repoList');
       var repoSearch=document.getElementById('repoSearch');
       var repoCount=document.getElementById('repoCount');
-      var filterBtns=Array.prototype.slice.call(document.querySelectorAll('.filter-btn'));
-      var currentFilter='all';
+      var filters=Array.prototype.slice.call(document.querySelectorAll('.filter'));
+      var activeFilter='all';
       var repos=[];
 
-      var fallbackNames=[
-        '-','AyeAI','cc-switch','Compression-software','delta_ops_hazardzone','delta_ops_hazardzone_Alpha',
-        'FTB-Ultimine','html','joyflix','LibreTV','LINE-Data-integration','LINE_Data_integration','Memory_manager',
-        'Minecraft-ZoneSnapshot-Logistics','minecraft_key_random_scramble_mod','MoonTV',
-        'object-detection-opencv-master-Chinese-culture-','pubgm-site','qqaibot','RayLingo-translate',
-        'werewolf-ai-worker','youtube-speed-studio'
-      ];
-      var fallback=fallbackNames.map(function(name){
-        return {name:name,html_url:'https://github.com/Ray20123315/'+encodeURIComponent(name),description:'Public GitHub repository',language:null,stargazers_count:0,fork:false,updated_at:null};
-      });
+      var fallbackNames=['-','AyeAI','cc-switch','Compression-software','delta_ops_hazardzone','delta_ops_hazardzone_Alpha','FTB-Ultimine','html','joyflix','LibreTV','LINE-Data-integration','LINE_Data_integration','Memory_manager','Minecraft-ZoneSnapshot-Logistics','minecraft_key_random_scramble_mod','MoonTV','object-detection-opencv-master-Chinese-culture-','pubgm-site','qqaibot','RayLingo-translate','werewolf-ai-worker','youtube-speed-studio'];
+      var fallback=fallbackNames.map(function(name){return{name:name,html_url:'https://github.com/Ray20123315/'+encodeURIComponent(name),description:'Public GitHub repository',language:null,stargazers_count:0,fork:false,updated_at:null};});
 
       function category(repo){
         var hay=((repo.name||'')+' '+(repo.description||'')).toLowerCase();
-        if(/minecraft|forge|fabric|ftb|hazardzone/.test(hay)) return 'Minecraft';
-        if(/ai|bot|gemini|deepseek|werewolf|translate|llm/.test(hay)) return 'AI';
-        if(/youtube|tv|video|media|pubgm|joyflix/.test(hay)) return 'Media';
-        if(/html|line|web|worker|cloudflare|site/.test(hay)) return 'Web';
-        if(/memory|compression|switch|studio|tool|pack/.test(hay)) return 'Tools';
-        return 'Other';
+        if(/minecraft|forge|fabric|ftb|hazardzone/.test(hay))return'Minecraft';
+        if(/ai|bot|gemini|deepseek|werewolf|translate|llm/.test(hay))return'AI';
+        if(/youtube|tv|video|media|pubgm|joyflix/.test(hay))return'Media';
+        if(/html|line|web|worker|cloudflare|site/.test(hay))return'Web';
+        if(/memory|compression|switch|studio|tool|pack/.test(hay))return'Tools';
+        return'Other';
       }
-      function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
-      function relDate(v){
-        if(!v) return 'public';
-        var days=Math.max(0,Math.floor((Date.now()-new Date(v).getTime())/86400000));
-        if(days<1)return 'today';if(days<30)return days+'d ago';if(days<365)return Math.floor(days/30)+'mo ago';return Math.floor(days/365)+'y ago';
+      function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+      function when(v){
+        if(!v)return'public';
+        var d=Math.max(0,Math.floor((Date.now()-new Date(v).getTime())/86400000));
+        if(d<1)return'today';if(d<30)return d+'d ago';if(d<365)return Math.floor(d/30)+'mo ago';return Math.floor(d/365)+'y ago';
+      }
+      function animateRows(){
+        if(reduce||!window.gsap||!window.ScrollTrigger)return;
+        var rows=gsap.utils.toArray('.repo');
+        rows.forEach(function(row){
+          gsap.from(row,{scrollTrigger:{trigger:row,start:'top 94%'},autoAlpha:0,y:18,duration:.42,ease:'power2.out'});
+        });
+        ScrollTrigger.refresh();
       }
       function renderRepos(){
         var q=(repoSearch.value||'').trim().toLowerCase();
         var list=repos.filter(function(r){
-          var c=category(r);var hay=((r.name||'')+' '+(r.description||'')+' '+(r.language||'')).toLowerCase();
-          return (currentFilter==='all'||c===currentFilter)&&(!q||hay.indexOf(q)>=0);
+          var c=category(r);
+          var hay=((r.name||'')+' '+(r.description||'')+' '+(r.language||'')).toLowerCase();
+          return(activeFilter==='all'||c===activeFilter)&&(!q||hay.indexOf(q)>=0);
         });
-        if(!list.length){repoGrid.innerHTML='<div class="empty">No repositories match this filter.</div>';return}
-        repoGrid.innerHTML=list.map(function(r){
-          return '<a class="repo-card" href="'+esc(r.html_url)+'" target="_blank" rel="noopener">'+
-            '<div class="repo-top"><span class="repo-cat">'+esc(category(r))+'</span><span class="repo-time">'+esc(relDate(r.updated_at))+(r.fork?' · fork':'')+'</span></div>'+
-            '<h3>'+esc(r.name)+'</h3><p>'+esc(r.description||'Public repository on GitHub.')+'</p>'+
-            '<div class="repo-bottom"><span><i class="lang-dot"></i>'+esc(r.language||'Mixed')+'</span><span>★ '+Number(r.stargazers_count||0)+' ↗</span></div></a>';
+        if(!list.length){repoList.innerHTML='<div class="empty">No repositories match this filter.</div>';return;}
+        repoList.innerHTML=list.map(function(r,i){
+          return'<a class="repo" href="'+esc(r.html_url)+'" target="_blank" rel="noopener">'+
+            '<span class="repo__index">'+String(i+1).padStart(2,'0')+'</span>'+
+            '<strong class="repo__name">'+esc(r.name)+'</strong>'+
+            '<span class="repo__desc">'+esc(r.description||'Public repository on GitHub.')+'</span>'+
+            '<span class="repo__meta">'+esc(category(r))+' · '+esc(r.language||'Mixed')+' · '+esc(when(r.updated_at))+'</span>'+
+            '<span class="repo__arrow">↗</span></a>';
         }).join('');
+        requestAnimationFrame(animateRows);
       }
-      filterBtns.forEach(function(btn){
+      filters.forEach(function(btn){
         btn.addEventListener('click',function(){
-          currentFilter=btn.getAttribute('data-filter');
-          filterBtns.forEach(function(b){b.classList.toggle('active',b===btn)});
+          activeFilter=btn.getAttribute('data-filter');
+          filters.forEach(function(b){b.classList.toggle('active',b===btn);});
           renderRepos();
         });
       });
       repoSearch.addEventListener('input',renderRepos);
+
       fetch('https://api.github.com/users/Ray20123315/repos?per_page=100&sort=updated&type=public',{headers:{Accept:'application/vnd.github+json'}})
-        .then(function(r){if(!r.ok)throw new Error('GitHub API '+r.status);return r.json()})
-        .then(function(data){repos=data.filter(function(r){return !r.private});repoCount.textContent=repos.length+' repos';renderRepos()})
-        .catch(function(){repos=fallback;repoCount.textContent=fallback.length+' repos · fallback';renderRepos()});
+        .then(function(r){if(!r.ok)throw new Error('GitHub API '+r.status);return r.json();})
+        .then(function(data){repos=data.filter(function(r){return!r.private;});repoCount.textContent=repos.length+' repos';renderRepos();})
+        .catch(function(){repos=fallback;repoCount.textContent=fallback.length+' repos · fallback';renderRepos();});
     })();
   </script>
 </body>
