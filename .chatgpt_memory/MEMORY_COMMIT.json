@@ -1,1 +1,1 @@
-{"topic":"portfolio-v2","revision":2,"status":"CLEAN","main_commit":"b8085ea11a262b2a5127afd98a6b5fbadc5518ec","content_blob":"f8b8249e8bae99b30357bc72946a1caf067c8273","verification":{"js_syntax":"pass","pages_workflow":"success","pages_deployment":"success"},"next_action":null}
+{"topic":"portfolio-v2","revision":3,"status":"DIRTY","supersedes_main_commit":"b8085ea11a262b2a5127afd98a6b5fbadc5518ec","reason":"user reports degraded design and missing animation","next_action":"replace portfolio/index.html with GSAP ScrollTrigger version and verify"}
