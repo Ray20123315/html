@@ -2,15 +2,14 @@
 
 Verified current state:
 - Repository: `Ray20123315/html`.
-- Portfolio v3 source: `portfolio/index.html`.
-- Current blob: `dfd858a86a49d6561242c3edf3314bba493310e9`.
-- Current main commit: `ef456e98a712b43f25049e9e1f1d068c3359a509`.
-- Animation architecture: GSAP 3.15.0 + ScrollTrigger pin/scrub; native IntersectionObserver fallback.
-- Hero scene: pinned scroll-linked exit.
-- Selected Work scene: pinned five-project sequential transitions.
-- Capability rows: triggered entry animation.
-- Final scene: scroll-linked orb/text reveal.
+- Portfolio revision 4 source: `portfolio/index.html`.
+- Current main commit: `405afa2c9558d380614a3ac390fb779a48a721ec`.
+- Current blob: `d392ee0ceb83f846bab1389a4d7720dd4af072a1`.
+- Hero now contains a central glass core `#heroCore`.
+- Hero outer frame is pinned with ScrollTrigger; the inner core moves right/up and scales down continuously with scrubbed scroll.
+- After docking, `#heroDockCopy` reveals on the left.
+- Selected Work pinned five-project sequence remains intact.
 - GitHub repository explorer remains dynamic with static fallback.
 - Inline JavaScript syntax compilation: PASS.
-- GitHub Pages workflow/deployment: PASS.
+- Custom Pages deployment workflow: completed/success.
 - Root Memory Manager site remains unchanged.
