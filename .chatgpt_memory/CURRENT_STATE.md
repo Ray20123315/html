@@ -2,14 +2,16 @@
 
 Verified current state:
 - Repository: `Ray20123315/html`.
-- Portfolio revision 4 source: `portfolio/index.html`.
-- Current main commit: `405afa2c9558d380614a3ac390fb779a48a721ec`.
-- Current blob: `d392ee0ceb83f846bab1389a4d7720dd4af072a1`.
-- Hero now contains a central glass core `#heroCore`.
-- Hero outer frame is pinned with ScrollTrigger; the inner core moves right/up and scales down continuously with scrubbed scroll.
-- After docking, `#heroDockCopy` reveals on the left.
-- Selected Work pinned five-project sequence remains intact.
+- Portfolio revision 5 source: `portfolio/index.html`.
+- Current main commit: `549ee43763fc81e5cc1099c27db1f710b3ea4e98`.
+- Current blob: `1874b8e0231c316fb7a90edd4bf5e81dec4a862a`.
+- No GSAP or ScrollTrigger dependency remains.
+- Motion architecture: CSS sticky scenes + native requestAnimationFrame scroll progress.
+- Hero core moves continuously from center to upper-right and scales down as scroll progresses.
+- Dock-state copy reveals progressively.
+- Selected Work transitions natively between five projects.
+- Progressive no-JS fallback keeps work cards visible in normal flow.
 - GitHub repository explorer remains dynamic with static fallback.
-- Inline JavaScript syntax compilation: PASS.
-- Custom Pages deployment workflow: completed/success.
+- Inline JavaScript syntax: PASS.
+- Both Pages workflows: completed/success.
 - Root Memory Manager site remains unchanged.
