@@ -3,593 +3,792 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#050506">
-  <meta name="description" content="Ray20123315 — GitHub project portfolio, experiments, tools, AI, web and Minecraft projects.">
-  <title>Ray / Build Lab — GitHub Portfolio</title>
+  <meta name="theme-color" content="#030304">
+  <meta name="description" content="Ray20123315 — cinematic scroll-driven GitHub portfolio. AI, web, systems, browser tools and Minecraft projects.">
+  <title>Ray / Build Lab — Motion Portfolio</title>
   <style>
     :root{
-      --bg:#050506;
-      --bg-2:#09090b;
-      --surface:rgba(16,16,19,.72);
-      --surface-2:rgba(22,22,27,.82);
-      --line:rgba(255,255,255,.10);
-      --line-strong:rgba(255,255,255,.18);
-      --text:#f7f7f4;
-      --muted:#9b9ba5;
-      --cyan:#58e7ff;
-      --violet:#9b87ff;
-      --lime:#b8ff66;
-      --pink:#ff72cb;
-      --orange:#ffb15a;
-      --max:1240px;
-      --radius:26px;
-      --mono:"Cascadia Mono","SFMono-Regular",Consolas,monospace;
+      --bg:#030304;
+      --panel:#0a0a0d;
+      --panel-2:#101014;
+      --text:#f8f8f5;
+      --muted:#9898a4;
+      --line:rgba(255,255,255,.11);
+      --line-strong:rgba(255,255,255,.22);
+      --cyan:#68e8ff;
+      --violet:#9a82ff;
+      --pink:#ff78cb;
+      --lime:#c0ff70;
+      --orange:#ffb05d;
+      --max:1320px;
       --sans:Inter,"Noto Sans TC","Segoe UI","Microsoft JhengHei",system-ui,sans-serif;
+      --mono:"Cascadia Mono","SFMono-Regular",Consolas,monospace;
       --mx:50vw;
-      --my:20vh;
+      --my:50vh;
     }
     *{box-sizing:border-box}
     html{scroll-behavior:smooth;background:var(--bg)}
     body{
-      margin:0;
-      min-height:100vh;
-      color:var(--text);
-      background:
-        radial-gradient(circle at 18% -10%,rgba(88,231,255,.08),transparent 32%),
-        radial-gradient(circle at 92% 22%,rgba(155,135,255,.08),transparent 30%),
-        var(--bg);
-      font-family:var(--sans);
-      line-height:1.55;
-      overflow-x:hidden;
+      margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.55;
+      overflow-x:hidden;letter-spacing:-.012em
     }
     body::before{
-      content:"";
-      position:fixed;inset:0;z-index:-3;pointer-events:none;
-      background-image:
-        linear-gradient(rgba(255,255,255,.024) 1px,transparent 1px),
-        linear-gradient(90deg,rgba(255,255,255,.024) 1px,transparent 1px);
-      background-size:44px 44px;
-      mask-image:linear-gradient(to bottom,black,transparent 88%);
+      content:"";position:fixed;inset:0;pointer-events:none;z-index:-20;
+      background:
+        radial-gradient(700px circle at var(--mx) var(--my),rgba(104,232,255,.07),transparent 62%),
+        radial-gradient(900px circle at 82% -10%,rgba(154,130,255,.09),transparent 58%),
+        radial-gradient(750px circle at -8% 68%,rgba(255,120,203,.055),transparent 60%),
+        #030304;
+    }
+    body::after{
+      content:"";position:fixed;inset:0;pointer-events:none;z-index:120;opacity:.055;mix-blend-mode:screen;
+      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 220 220' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.33'/%3E%3C/svg%3E");
+      background-size:180px 180px;
     }
     a{color:inherit;text-decoration:none}
     button,input{font:inherit}
     button{color:inherit}
-    ::selection{background:rgba(88,231,255,.28);color:white}
-    .shell{width:min(var(--max),calc(100% - 40px));margin-inline:auto}
-    .spotlight{
-      position:fixed;inset:0;z-index:-2;pointer-events:none;
-      background:radial-gradient(520px circle at var(--mx) var(--my),rgba(88,231,255,.08),transparent 58%);
-      transition:opacity .2s ease;
+    ::selection{background:rgba(104,232,255,.3);color:#fff}
+    .shell{width:min(var(--max),calc(100% - 52px));margin-inline:auto}
+    .mono{font-family:var(--mono)}
+    .progress{position:fixed;left:0;top:0;height:2px;width:0;background:linear-gradient(90deg,var(--cyan),var(--violet),var(--pink));z-index:200;transform-origin:left}
+    .site-nav{
+      position:fixed;left:50%;top:18px;transform:translateX(-50%);width:min(1100px,calc(100% - 28px));
+      height:58px;display:flex;align-items:center;justify-content:space-between;gap:18px;padding:0 12px 0 15px;
+      border:1px solid rgba(255,255,255,.09);border-radius:18px;background:rgba(6,6,8,.62);
+      backdrop-filter:blur(20px) saturate(145%);z-index:100;
+      box-shadow:0 18px 60px rgba(0,0,0,.2)
     }
-    .orb{position:fixed;border-radius:999px;filter:blur(110px);opacity:.16;z-index:-4;pointer-events:none}
-    .orb.a{width:460px;height:460px;background:var(--violet);right:-180px;top:8vh;animation:driftA 13s ease-in-out infinite alternate}
-    .orb.b{width:380px;height:380px;background:var(--cyan);left:-190px;top:52vh;animation:driftB 16s ease-in-out infinite alternate}
-    .orb.c{width:280px;height:280px;background:var(--pink);left:44vw;bottom:-170px;animation:driftA 18s ease-in-out infinite alternate-reverse}
-    @keyframes driftA{to{transform:translate3d(-70px,70px,0) scale(1.15)}}
-    @keyframes driftB{to{transform:translate3d(90px,-65px,0) scale(.88)}}
-    .progress{position:fixed;left:0;top:0;height:2px;width:0;background:linear-gradient(90deg,var(--cyan),var(--violet),var(--pink));z-index:100}
-    .nav-wrap{
-      position:sticky;top:0;z-index:50;
-      backdrop-filter:blur(18px) saturate(140%);
-      background:linear-gradient(to bottom,rgba(5,5,6,.82),rgba(5,5,6,.48));
-      border-bottom:1px solid rgba(255,255,255,.055);
-    }
-    nav{height:72px;display:flex;align-items:center;justify-content:space-between;gap:24px}
-    .brand{display:flex;align-items:center;gap:11px;font-weight:760;letter-spacing:-.02em}
+    .brand{display:flex;align-items:center;gap:10px;font-weight:780;letter-spacing:-.035em}
     .brand-mark{
-      width:34px;height:34px;display:grid;place-items:center;border:1px solid var(--line-strong);
-      border-radius:11px;background:linear-gradient(145deg,rgba(255,255,255,.09),rgba(255,255,255,.02));
-      box-shadow:inset 0 1px rgba(255,255,255,.12),0 8px 28px rgba(0,0,0,.2);
-      font-family:var(--mono);font-size:13px;color:var(--cyan)
+      width:34px;height:34px;display:grid;place-items:center;border-radius:11px;border:1px solid var(--line-strong);
+      background:linear-gradient(145deg,rgba(255,255,255,.1),rgba(255,255,255,.025));
+      font:700 12px var(--mono);color:var(--cyan)
     }
-    .nav-links{display:flex;align-items:center;gap:7px;color:#c6c6cc;font-size:14px}
-    .nav-links a{padding:9px 12px;border-radius:11px;transition:.2s ease}
-    .nav-links a:hover{background:rgba(255,255,255,.055);color:white}
-    .github-pill{
-      display:flex;align-items:center;gap:9px;padding:9px 13px;border:1px solid var(--line);
-      border-radius:999px;background:rgba(255,255,255,.035);transition:.2s ease
+    .nav-links{display:flex;align-items:center;gap:4px;color:#b9b9c2;font-size:12px}
+    .nav-links a{padding:9px 10px;border-radius:10px;transition:.2s ease}
+    .nav-links a:hover{background:rgba(255,255,255,.06);color:#fff}
+    .nav-github{
+      display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:12px;
+      background:#f3f3ef;color:#0a0a0b;font-weight:760;font-size:12px
     }
-    .github-pill:hover{border-color:rgba(88,231,255,.42);background:rgba(88,231,255,.07)}
-    .github-pill svg{width:17px;height:17px}
-    .hero{
-      min-height:calc(100svh - 72px);display:grid;grid-template-columns:1.08fr .92fr;
-      align-items:center;gap:72px;padding:92px 0 72px;position:relative
+    .nav-github svg{width:15px;height:15px}
+    .scene-nav{
+      position:fixed;right:20px;top:50%;transform:translateY(-50%);z-index:90;
+      display:flex;flex-direction:column;align-items:flex-end;gap:10px
     }
+    .scene-dot{
+      border:0;background:transparent;padding:0;display:flex;align-items:center;gap:8px;cursor:pointer;opacity:.36;transition:.25s ease
+    }
+    .scene-dot span{font:10px var(--mono);letter-spacing:.08em;text-transform:uppercase;max-width:0;overflow:hidden;white-space:nowrap;transition:.3s ease}
+    .scene-dot i{width:6px;height:6px;border-radius:50%;background:#fff;display:block;transition:.25s ease}
+    .scene-dot.active{opacity:1}
+    .scene-dot.active span,.scene-dot:hover span{max-width:120px}
+    .scene-dot.active i{background:var(--cyan);box-shadow:0 0 18px rgba(104,232,255,.7);transform:scale(1.35)}
+    .sticky-stage{
+      position:sticky;top:0;height:100svh;min-height:680px;overflow:hidden;
+      display:flex;align-items:center;will-change:transform
+    }
+    .scene{position:relative}
+    .hero-scene{height:190svh}
+    .universe-scene{height:235svh}
+    .rail-scene{height:310svh}
+    .depth-scene{height:330svh}
+    .final-scene{height:175svh}
     .eyebrow{
-      display:inline-flex;align-items:center;gap:10px;color:#d1d1d8;font-family:var(--mono);
-      font-size:12px;letter-spacing:.14em;text-transform:uppercase
+      display:inline-flex;align-items:center;gap:10px;font:11px var(--mono);letter-spacing:.15em;
+      text-transform:uppercase;color:#c9c9d1
     }
-    .eyebrow i{display:block;width:7px;height:7px;border-radius:50%;background:var(--lime);box-shadow:0 0 18px var(--lime)}
-    .hero h1{
-      font-size:clamp(58px,8vw,114px);line-height:.87;letter-spacing:-.075em;
-      margin:22px 0 28px;font-weight:860;max-width:820px
+    .eyebrow i{display:block;width:7px;height:7px;border-radius:50%;background:var(--lime);box-shadow:0 0 18px rgba(192,255,112,.8)}
+    .hero-stage{justify-content:center;isolation:isolate}
+    .hero-grid{
+      position:absolute;inset:-10%;z-index:-6;opacity:.45;
+      background-image:
+        linear-gradient(rgba(255,255,255,.038) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(255,255,255,.038) 1px,transparent 1px);
+      background-size:66px 66px;
+      mask-image:radial-gradient(circle at center,black,transparent 72%);
+      transform:perspective(900px) rotateX(64deg) translateY(28%) scale(1.35);
+      transform-origin:center 65%
     }
-    .hero h1 .ghost{
-      display:block;color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.34);
-      text-shadow:0 0 50px rgba(155,135,255,.06)
+    .hero-orbit{position:absolute;left:50%;top:50%;border:1px solid rgba(255,255,255,.08);border-radius:50%;z-index:-4;will-change:transform}
+    .hero-orbit.o1{width:min(70vw,820px);aspect-ratio:1;transform:translate(-50%,-50%)}
+    .hero-orbit.o2{width:min(88vw,1080px);aspect-ratio:1;transform:translate(-50%,-50%)}
+    .hero-orbit.o3{width:min(108vw,1380px);aspect-ratio:1;transform:translate(-50%,-50%)}
+    .hero-glow{
+      position:absolute;left:50%;top:51%;width:min(50vw,640px);aspect-ratio:1;border-radius:50%;
+      transform:translate(-50%,-50%);background:
+        radial-gradient(circle at 40% 35%,rgba(255,255,255,.15),transparent 16%),
+        radial-gradient(circle,rgba(154,130,255,.17),rgba(104,232,255,.04) 42%,transparent 68%);
+      filter:blur(.3px);z-index:-5;box-shadow:0 0 160px rgba(104,232,255,.06),inset 0 0 100px rgba(255,255,255,.035)
     }
-    .hero h1 .glow{
-      display:block;background:linear-gradient(92deg,#fff 0%,#c9f9ff 30%,#a9a0ff 65%,#ffd0ef 100%);
-      color:transparent;background-clip:text;-webkit-background-clip:text
+    .hero-content{text-align:center;width:min(1160px,calc(100% - 38px));margin:auto;position:relative;z-index:4;will-change:transform,opacity,filter}
+    .hero-topline{display:flex;justify-content:center;margin-bottom:28px}
+    .hero-title{margin:0;line-height:.76;letter-spacing:-.09em;text-transform:uppercase}
+    .hero-title .ray{
+      display:block;font-size:clamp(116px,21vw,310px);font-weight:930;
+      background:linear-gradient(180deg,#fff 0%,#d7d7df 45%,#777781 100%);
+      -webkit-background-clip:text;background-clip:text;color:transparent;
+      text-shadow:0 24px 90px rgba(0,0,0,.36)
     }
-    .lede{max-width:690px;font-size:clamp(17px,1.7vw,21px);color:#b6b6c0;letter-spacing:-.018em;margin:0}
-    .lede strong{color:#f0f0f2;font-weight:650}
-    .hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
+    .hero-title .lab{
+      display:block;font:500 clamp(23px,3.4vw,52px)/1 var(--mono);letter-spacing:.43em;
+      margin-left:.43em;color:#b8b8c3;margin-top:26px
+    }
+    .hero-lead{
+      width:min(680px,92%);margin:34px auto 0;color:#a8a8b2;font-size:clamp(15px,1.4vw,19px);
+      letter-spacing:-.018em
+    }
+    .hero-lead b{color:#eeeef1;font-weight:620}
+    .hero-actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:28px}
     .btn{
-      display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:48px;padding:0 18px;
-      border-radius:14px;border:1px solid var(--line);font-weight:650;font-size:14px;
-      background:rgba(255,255,255,.04);transition:transform .2s ease,border-color .2s ease,background .2s ease
+      min-height:46px;padding:0 16px;display:inline-flex;align-items:center;justify-content:center;gap:9px;
+      border:1px solid var(--line);border-radius:13px;background:rgba(255,255,255,.035);
+      font-size:12px;font-weight:720;transition:.2s ease;backdrop-filter:blur(12px)
     }
-    .btn:hover{transform:translateY(-2px);border-color:rgba(255,255,255,.24);background:rgba(255,255,255,.07)}
-    .btn.primary{background:#f5f5f2;color:#0b0b0d;border-color:#f5f5f2}
-    .btn.primary:hover{background:#fff}
-    .btn .arrow{font-family:var(--mono);font-size:13px}
-    .stat-row{display:flex;gap:26px;flex-wrap:wrap;margin-top:42px}
-    .stat{display:flex;flex-direction:column;gap:2px}
-    .stat b{font-family:var(--mono);font-size:20px;letter-spacing:-.04em}
-    .stat span{font-size:12px;color:#7f7f8a;text-transform:uppercase;letter-spacing:.1em}
-    .visual{
-      min-height:560px;position:relative;display:grid;place-items:center;
-      perspective:1200px
+    .btn:hover{transform:translateY(-2px);background:rgba(255,255,255,.075);border-color:rgba(255,255,255,.24)}
+    .btn.primary{background:#f5f5f1;color:#09090a;border-color:#f5f5f1}
+    .scroll-cue{
+      position:absolute;left:50%;bottom:32px;transform:translateX(-50%);display:flex;align-items:center;gap:10px;
+      font:10px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:#6f6f7a
     }
-    #network{position:absolute;inset:0;width:100%;height:100%;opacity:.86}
-    .core{
-      position:relative;width:min(360px,78vw);aspect-ratio:1;border-radius:50%;
-      display:grid;place-items:center;
-      background:
-        radial-gradient(circle at 42% 38%,rgba(255,255,255,.12),transparent 32%),
-        radial-gradient(circle,rgba(155,135,255,.16),rgba(9,9,12,.75) 58%,rgba(5,5,6,.9) 72%);
-      border:1px solid rgba(255,255,255,.13);
-      box-shadow:inset 0 0 90px rgba(88,231,255,.05),0 50px 130px rgba(0,0,0,.52);
-      animation:floatCore 6s ease-in-out infinite
+    .scroll-cue i{height:34px;width:1px;background:linear-gradient(#fff,transparent);animation:cue 1.7s ease-in-out infinite}
+    @keyframes cue{0%,100%{transform:scaleY(.4);transform-origin:top;opacity:.35}50%{transform:scaleY(1);opacity:1}}
+    .scene-kicker{font:10px var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--cyan)}
+    .scene-number{font:10px var(--mono);color:#5f5f68}
+    .scene-heading{
+      font-size:clamp(52px,8vw,122px);line-height:.87;letter-spacing:-.075em;margin:12px 0 0;
+      max-width:1000px
     }
-    .core::before,.core::after{content:"";position:absolute;border-radius:50%;border:1px solid rgba(255,255,255,.09)}
-    .core::before{inset:14%;border-style:dashed;animation:spin 28s linear infinite}
-    .core::after{inset:-13%;border-color:rgba(88,231,255,.08);animation:spin 38s linear infinite reverse}
-    @keyframes floatCore{50%{transform:translateY(-10px) rotateX(2deg)}}
-    @keyframes spin{to{transform:rotate(360deg)}}
-    .core-copy{text-align:center;position:relative;z-index:2}
-    .core-copy small{font-family:var(--mono);color:var(--muted);letter-spacing:.14em;text-transform:uppercase}
-    .core-copy strong{display:block;font-size:48px;letter-spacing:-.08em;margin:2px 0 4px}
-    .core-copy span{font-family:var(--mono);font-size:12px;color:var(--cyan)}
-    .float-chip{
-      position:absolute;display:flex;align-items:center;gap:10px;padding:10px 13px;
-      background:rgba(10,10,13,.77);backdrop-filter:blur(13px);border:1px solid var(--line);
-      border-radius:14px;box-shadow:0 18px 50px rgba(0,0,0,.32);
-      font-size:12px;color:#d9d9df;animation:chipFloat 5s ease-in-out infinite
+    .scene-heading .outline{color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.32)}
+    .universe-stage{padding:98px 0 34px;align-items:stretch}
+    .universe-stage .shell{position:relative;height:100%;display:flex;flex-direction:column}
+    .universe-copy{display:flex;justify-content:space-between;align-items:flex-start;gap:30px;position:relative;z-index:8}
+    .universe-copy p{width:min(430px,38vw);color:#8d8d98;font-size:13px;margin:10px 0 0}
+    .universe-map{position:relative;flex:1;min-height:430px;margin-top:20px}
+    .universe-core{
+      position:absolute;left:50%;top:54%;width:180px;aspect-ratio:1;border-radius:50%;
+      transform:translate(-50%,-50%);display:grid;place-items:center;text-align:center;
+      border:1px solid rgba(255,255,255,.15);background:
+        radial-gradient(circle at 35% 28%,rgba(255,255,255,.16),transparent 20%),
+        radial-gradient(circle,rgba(104,232,255,.10),rgba(8,8,11,.88) 66%);
+      box-shadow:0 0 120px rgba(104,232,255,.08),inset 0 0 55px rgba(255,255,255,.025);
+      will-change:transform
     }
-    .float-chip i{width:8px;height:8px;border-radius:50%;background:var(--cyan);box-shadow:0 0 15px currentColor}
-    .float-chip:nth-of-type(1){top:12%;left:1%;animation-delay:-1s}
-    .float-chip:nth-of-type(2){right:-2%;top:24%;animation-delay:-3.1s}
-    .float-chip:nth-of-type(3){left:3%;bottom:19%;animation-delay:-2.2s}
-    .float-chip:nth-of-type(4){right:2%;bottom:11%;animation-delay:-4.4s}
-    .float-chip.violet i{background:var(--violet)}
-    .float-chip.pink i{background:var(--pink)}
-    .float-chip.lime i{background:var(--lime)}
-    @keyframes chipFloat{50%{transform:translateY(-9px)}}
-    .section{padding:110px 0}
-    .section-head{display:flex;align-items:end;justify-content:space-between;gap:40px;margin-bottom:34px}
-    .section-head h2{font-size:clamp(34px,4vw,58px);letter-spacing:-.055em;line-height:1;margin:10px 0 0}
-    .section-head p{max-width:520px;color:var(--muted);margin:0;font-size:15px}
-    .featured{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
-    .project-card{
-      position:relative;overflow:hidden;min-height:330px;padding:26px;border-radius:var(--radius);
-      border:1px solid var(--line);background:linear-gradient(145deg,rgba(255,255,255,.055),rgba(255,255,255,.018));
-      transform-style:preserve-3d;transition:transform .18s ease,border-color .25s ease,box-shadow .25s ease;
-      --rx:0deg;--ry:0deg;--gx:50%;--gy:50%;
-      transform:perspective(1000px) rotateX(var(--rx)) rotateY(var(--ry))
+    .universe-core strong{font-size:28px;letter-spacing:-.06em}
+    .universe-core small{display:block;font:9px var(--mono);letter-spacing:.13em;color:#888894;margin-top:5px}
+    .orbit-line{position:absolute;left:50%;top:54%;border:1px solid rgba(255,255,255,.075);border-radius:50%;transform:translate(-50%,-50%)}
+    .orbit-line.a{width:min(54vw,700px);height:min(29vw,380px);transform:translate(-50%,-50%) rotate(-12deg)}
+    .orbit-line.b{width:min(74vw,950px);height:min(43vw,560px);transform:translate(-50%,-50%) rotate(17deg)}
+    .orbit-line.c{width:min(88vw,1130px);height:min(51vw,660px);transform:translate(-50%,-50%) rotate(-5deg)}
+    .orbit-card{
+      position:absolute;width:min(280px,24vw);min-height:136px;padding:17px 18px;border:1px solid var(--line);
+      border-radius:18px;background:rgba(11,11,15,.78);backdrop-filter:blur(18px);
+      box-shadow:0 18px 60px rgba(0,0,0,.28);opacity:0;will-change:transform,opacity,filter
     }
-    .project-card::before{
-      content:"";position:absolute;inset:0;pointer-events:none;
-      background:radial-gradient(520px circle at var(--gx) var(--gy),rgba(88,231,255,.10),transparent 42%);
-      opacity:0;transition:opacity .2s ease
+    .orbit-card::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;background:linear-gradient(125deg,rgba(255,255,255,.18),transparent 42%,rgba(104,232,255,.13));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
+    .orbit-card .oc-top{display:flex;align-items:center;justify-content:space-between;gap:12px;font:9px var(--mono);text-transform:uppercase;letter-spacing:.09em;color:#71717d}
+    .orbit-card .dot{width:7px;height:7px;border-radius:50%;background:var(--cyan);box-shadow:0 0 16px currentColor}
+    .orbit-card h3{font-size:20px;margin:24px 0 7px;letter-spacing:-.04em}
+    .orbit-card p{font-size:11px;color:#8f8f99;margin:0}
+    .oc1{left:4%;top:14%}.oc2{right:2%;top:13%}.oc3{right:5%;bottom:10%}.oc4{left:2%;bottom:11%}.oc5{left:37%;top:0}.oc6{right:34%;bottom:0}
+    .orbit-card.violet .dot{background:var(--violet)}.orbit-card.pink .dot{background:var(--pink)}.orbit-card.lime .dot{background:var(--lime)}.orbit-card.orange .dot{background:var(--orange)}
+    .rail-stage{align-items:stretch;padding:96px 0 32px}
+    .rail-stage-inner{width:100%;display:flex;flex-direction:column;min-width:0}
+    .rail-head{width:min(var(--max),calc(100% - 52px));margin:0 auto 24px;display:flex;justify-content:space-between;align-items:end;gap:30px}
+    .rail-head h2{font-size:clamp(46px,7vw,100px);line-height:.9;letter-spacing:-.07em;margin:10px 0 0}
+    .rail-head p{max-width:390px;color:#878792;font-size:12px;margin:0}
+    .rail-viewport{flex:1;overflow:hidden;min-height:0;display:flex;align-items:center}
+    .rail-track{display:flex;gap:18px;width:max-content;padding:0 max(26px,calc((100vw - min(var(--max),calc(100vw - 52px)))/2));will-change:transform}
+    .rail-card{
+      width:min(76vw,950px);height:min(55vh,560px);min-height:390px;position:relative;border-radius:28px;
+      border:1px solid var(--line);overflow:hidden;background:#0b0b0e;display:grid;grid-template-columns:.86fr 1.14fr;
+      box-shadow:0 34px 100px rgba(0,0,0,.32)
     }
-    .project-card:hover{border-color:rgba(255,255,255,.21);box-shadow:0 28px 70px rgba(0,0,0,.26)}
-    .project-card:hover::before{opacity:1}
-    .project-card.big{grid-column:span 7}
-    .project-card.medium{grid-column:span 5}
-    .project-card.third{grid-column:span 4}
-    .project-card .top{display:flex;align-items:center;justify-content:space-between;gap:18px;position:relative;z-index:2}
-    .tag{font-family:var(--mono);font-size:10px;letter-spacing:.11em;text-transform:uppercase;color:#a9a9b3}
-    .repo-link{
-      width:35px;height:35px;display:grid;place-items:center;border-radius:11px;border:1px solid var(--line);
-      background:rgba(255,255,255,.035);transition:.2s ease
+    .rail-copy{padding:30px;display:flex;flex-direction:column;justify-content:space-between;min-width:0;position:relative;z-index:5}
+    .rail-index{font:10px var(--mono);letter-spacing:.12em;color:#777782}
+    .rail-copy h3{font-size:clamp(35px,4.4vw,68px);line-height:.92;letter-spacing:-.065em;margin:0}
+    .rail-copy p{font-size:12px;color:#92929d;max-width:420px}
+    .rail-tags{display:flex;gap:6px;flex-wrap:wrap}
+    .rail-tags span{font:9px var(--mono);padding:5px 8px;border:1px solid var(--line);border-radius:999px;color:#b7b7c0}
+    .rail-visual{position:relative;overflow:hidden;background:linear-gradient(145deg,#101017,#070709)}
+    .mesh{position:absolute;inset:-20%;background-image:linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px);background-size:38px 38px;transform:perspective(700px) rotateX(62deg) rotateZ(-11deg) scale(1.3);opacity:.5}
+    .mock-window{
+      position:absolute;left:10%;right:8%;top:13%;bottom:12%;border:1px solid rgba(255,255,255,.13);border-radius:20px;
+      background:rgba(5,5,8,.78);backdrop-filter:blur(16px);box-shadow:0 30px 70px rgba(0,0,0,.4);overflow:hidden
     }
-    .repo-link:hover{background:rgba(255,255,255,.09);transform:translateY(-2px)}
-    .project-card h3{font-size:clamp(26px,3vw,43px);letter-spacing:-.05em;margin:72px 0 12px;line-height:1.02;position:relative;z-index:2}
-    .project-card p{color:#a8a8b2;margin:0;max-width:670px;font-size:14px;position:relative;z-index:2}
-    .project-card .stack{display:flex;flex-wrap:wrap;gap:7px;margin-top:22px;position:relative;z-index:2}
-    .stack span{font-family:var(--mono);font-size:10px;color:#c5c5cd;border:1px solid var(--line);border-radius:999px;padding:5px 8px;background:rgba(255,255,255,.025)}
-    .accent-orb{position:absolute;width:190px;height:190px;border-radius:50%;filter:blur(55px);right:-60px;bottom:-80px;opacity:.2;background:var(--cyan)}
-    .violet .accent-orb{background:var(--violet)}
-    .pink .accent-orb{background:var(--pink)}
-    .lime .accent-orb{background:var(--lime)}
-    .orange .accent-orb{background:var(--orange)}
-    .lab-panel{
-      border:1px solid var(--line);border-radius:28px;background:rgba(11,11,14,.65);overflow:hidden;
-      box-shadow:0 36px 100px rgba(0,0,0,.22)
+    .mock-bar{height:38px;border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 14px;gap:6px}
+    .mock-bar i{width:7px;height:7px;border-radius:50%;background:#42424a}
+    .mock-body{position:absolute;inset:38px 0 0;display:grid;grid-template-columns:58px 1fr}
+    .mock-side{border-right:1px solid var(--line);display:flex;flex-direction:column;gap:12px;padding:13px}
+    .mock-side span{height:28px;border-radius:8px;background:rgba(255,255,255,.045)}
+    .mock-main{padding:18px;display:grid;gap:12px}
+    .metric-row{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+    .metric-row div,.mock-block{border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.025)}
+    .metric-row div{height:68px}.mock-block{min-height:100px}
+    .mock-chart{height:130px;border:1px solid var(--line);border-radius:12px;position:relative;overflow:hidden}
+    .mock-chart::before{content:"";position:absolute;inset:18px 10px 15px;background:linear-gradient(150deg,transparent 49%,rgba(104,232,255,.5) 50%,transparent 51%) 0 0/35px 25px;opacity:.5}
+    .visual-glow{position:absolute;width:320px;height:320px;border-radius:50%;filter:blur(70px);right:-100px;bottom:-130px;background:var(--cyan);opacity:.16}
+    .rc2 .visual-glow{background:var(--violet)}.rc3 .visual-glow{background:var(--pink)}.rc4 .visual-glow{background:var(--lime)}.rc5 .visual-glow{background:var(--orange)}
+    .terminal{position:absolute;left:10%;right:8%;top:13%;bottom:12%;padding:24px;border-radius:20px;border:1px solid var(--line);background:#07080a;font:11px/1.8 var(--mono);color:#8c8d96;box-shadow:0 30px 70px rgba(0,0,0,.4);overflow:hidden}
+    .terminal b{color:var(--lime);font-weight:600}.terminal em{color:var(--cyan);font-style:normal}.terminal strong{color:#eeeef2}
+    .translator-ui{position:absolute;inset:12%;display:grid;grid-template-columns:1fr 1fr;gap:10px;transform:rotate(-3deg)}
+    .translator-ui article{border:1px solid var(--line);border-radius:18px;background:rgba(10,10,14,.85);padding:18px;box-shadow:0 25px 70px rgba(0,0,0,.35)}
+    .translator-ui article:first-child{transform:translateY(-20px)}.translator-ui article:last-child{transform:translateY(30px)}
+    .translator-ui small{font:9px var(--mono);color:#777783}.translator-ui strong{display:block;font-size:22px;margin:26px 0 8px}.translator-ui p{font-size:11px;color:#8e8e98}
+    .game-grid{position:absolute;inset:8%;display:grid;grid-template-columns:repeat(6,1fr);grid-template-rows:repeat(5,1fr);gap:7px;transform:perspective(800px) rotateX(58deg) rotateZ(25deg) scale(.98)}
+    .game-grid i{border:1px solid rgba(255,255,255,.08);border-radius:8px;background:rgba(192,255,112,.03)}
+    .game-grid i:nth-child(4n){background:rgba(192,255,112,.15);box-shadow:0 0 30px rgba(192,255,112,.08)}
+    .depth-stage{padding:96px 0 30px;align-items:stretch}
+    .depth-shell{height:100%;position:relative}
+    .depth-head{position:absolute;left:0;top:0;z-index:20}
+    .depth-head h2{font-size:clamp(50px,7vw,104px);line-height:.9;letter-spacing:-.075em;margin:10px 0 0}
+    .depth-counter{position:absolute;right:0;top:16px;font:10px var(--mono);letter-spacing:.12em;color:#767681}
+    .depth-deck{position:absolute;left:0;right:0;top:30%;bottom:5%;perspective:1200px}
+    .depth-card{
+      position:absolute;inset:0;border:1px solid var(--line);border-radius:30px;background:linear-gradient(145deg,#0d0d11,#08080b);
+      overflow:hidden;display:grid;grid-template-columns:1fr 1fr;box-shadow:0 42px 130px rgba(0,0,0,.4);
+      opacity:0;will-change:transform,opacity,filter;transform-origin:center 65%
     }
-    .lab-bar{display:flex;align-items:center;gap:7px;height:48px;padding:0 18px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.018)}
-    .lab-bar i{width:8px;height:8px;border-radius:50%;background:#44444c}
-    .lab-bar span{margin-left:8px;font-family:var(--mono);font-size:11px;color:#7f7f8a}
-    .explorer-tools{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:20px;border-bottom:1px solid var(--line);flex-wrap:wrap}
-    .filters{display:flex;gap:7px;flex-wrap:wrap}
-    .filter-btn{
-      border:1px solid var(--line);background:rgba(255,255,255,.025);border-radius:999px;padding:8px 11px;
-      font-family:var(--mono);font-size:11px;cursor:pointer;transition:.18s ease
-    }
-    .filter-btn:hover,.filter-btn.active{background:#f2f2ef;color:#0c0c0e;border-color:#f2f2ef}
-    .search-wrap{position:relative;min-width:min(100%,280px)}
-    .search-wrap input{
-      width:100%;height:38px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.025);
-      color:white;outline:none;padding:0 13px 0 34px;font-size:13px
-    }
-    .search-wrap input:focus{border-color:rgba(88,231,255,.44)}
-    .search-wrap::before{content:"⌕";position:absolute;left:12px;top:7px;color:#777782;font-family:var(--mono)}
-    .repo-grid{display:grid;grid-template-columns:repeat(3,1fr)}
-    .repo{
-      min-height:210px;padding:21px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);
-      transition:background .18s ease;position:relative
-    }
-    .repo:nth-child(3n){border-right:0}
-    .repo:hover{background:rgba(255,255,255,.026)}
-    .repo .repo-top{display:flex;justify-content:space-between;gap:16px}
-    .repo .category{font-family:var(--mono);font-size:10px;text-transform:uppercase;color:var(--cyan);letter-spacing:.09em}
-    .repo .meta{font-family:var(--mono);font-size:10px;color:#757580}
-    .repo h3{font-size:18px;line-height:1.15;letter-spacing:-.025em;margin:32px 0 9px;overflow-wrap:anywhere}
-    .repo p{font-size:12px;color:#868692;margin:0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-    .repo-footer{position:absolute;left:21px;right:21px;bottom:18px;display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);font-size:10px;color:#74747f}
-    .lang{display:flex;align-items:center;gap:7px}
-    .lang i{width:7px;height:7px;border-radius:50%;background:var(--violet)}
-    .empty{grid-column:1/-1;padding:56px;text-align:center;color:var(--muted)}
-    .manifesto{
-      display:grid;grid-template-columns:.9fr 1.1fr;gap:60px;align-items:start;
-      border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:90px 0
-    }
-    .manifesto h2{font-size:clamp(40px,5.8vw,82px);letter-spacing:-.07em;line-height:.93;margin:0}
-    .manifesto-copy{display:grid;gap:22px}
-    .manifesto-copy article{padding-top:20px;border-top:1px solid var(--line);display:grid;grid-template-columns:76px 1fr;gap:18px}
-    .manifesto-copy b{font-family:var(--mono);font-size:11px;color:var(--cyan)}
-    .manifesto-copy h3{font-size:20px;margin:0 0 6px;letter-spacing:-.025em}
-    .manifesto-copy p{margin:0;color:var(--muted);font-size:14px}
-    .cta-final{
-      padding:130px 0 120px;text-align:center;position:relative
-    }
-    .cta-final h2{font-size:clamp(50px,7vw,102px);letter-spacing:-.075em;line-height:.9;margin:0}
-    .cta-final p{color:var(--muted);font-size:16px;max-width:590px;margin:26px auto 0}
-    .cta-final .hero-actions{justify-content:center}
-    footer{
-      min-height:92px;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;
-      gap:20px;color:#777782;font-size:12px;font-family:var(--mono)
-    }
-    .reveal{opacity:0;transform:translateY(26px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1)}
+    .depth-info{padding:34px;display:flex;flex-direction:column;justify-content:space-between;min-width:0}
+    .depth-info .index{font:10px var(--mono);color:#74747f}
+    .depth-info h3{font-size:clamp(40px,5.5vw,82px);line-height:.9;letter-spacing:-.07em;margin:0}
+    .depth-info p{font-size:13px;color:#8f8f99;max-width:520px}
+    .depth-link{font:11px var(--mono);color:#d8d8df}
+    .depth-art{position:relative;overflow:hidden;border-left:1px solid var(--line)}
+    .depth-art .halo{position:absolute;left:50%;top:50%;width:58%;aspect-ratio:1;border:1px solid rgba(255,255,255,.12);border-radius:50%;transform:translate(-50%,-50%);box-shadow:0 0 120px rgba(104,232,255,.12),inset 0 0 80px rgba(255,255,255,.035)}
+    .depth-art .halo::before,.depth-art .halo::after{content:"";position:absolute;border:1px solid rgba(255,255,255,.08);border-radius:50%;inset:-22%}
+    .depth-art .halo::after{inset:18%;border-style:dashed}
+    .depth-art .sig{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font:800 clamp(42px,6vw,88px) var(--mono);letter-spacing:-.08em}
+    .d2 .halo{box-shadow:0 0 120px rgba(154,130,255,.13)}.d2 .sig{color:#c6baff}
+    .d3 .halo{box-shadow:0 0 120px rgba(255,120,203,.13)}.d3 .sig{color:#ffb7e2}
+    .d4 .halo{box-shadow:0 0 120px rgba(192,255,112,.11)}.d4 .sig{color:#d8ffa8}
+    .repo-section{padding:130px 0 150px;position:relative}
+    .repo-head{display:flex;justify-content:space-between;align-items:end;gap:40px;margin-bottom:38px}
+    .repo-head h2{font-size:clamp(48px,7vw,104px);line-height:.9;letter-spacing:-.075em;margin:10px 0 0}
+    .repo-head p{max-width:430px;color:#85858f;font-size:13px;margin:0}
+    .repo-panel{border:1px solid var(--line);border-radius:28px;overflow:hidden;background:rgba(9,9,12,.72);backdrop-filter:blur(18px)}
+    .repo-bar{height:50px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 18px;gap:18px}
+    .repo-bar .lights{display:flex;gap:6px}.repo-bar .lights i{width:7px;height:7px;border-radius:50%;background:#42424b}
+    .repo-bar code{font:9px var(--mono);color:#70707b}
+    .repo-tools{padding:16px 18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+    .filters{display:flex;gap:6px;flex-wrap:wrap}
+    .filter-btn{border:1px solid var(--line);background:rgba(255,255,255,.025);border-radius:999px;padding:8px 10px;font:10px var(--mono);cursor:pointer;transition:.18s ease}
+    .filter-btn:hover,.filter-btn.active{background:#f2f2ef;color:#09090a;border-color:#f2f2ef}
+    .search-wrap{position:relative;width:min(290px,100%)}
+    .search-wrap::before{content:"⌕";position:absolute;left:12px;top:7px;color:#73737d;font-family:var(--mono)}
+    .search-wrap input{width:100%;height:36px;border:1px solid var(--line);border-radius:11px;background:rgba(255,255,255,.025);color:#fff;outline:none;padding:0 12px 0 32px;font-size:12px}
+    .search-wrap input:focus{border-color:rgba(104,232,255,.45)}
+    .repo-grid{display:grid;grid-template-columns:repeat(4,1fr)}
+    .repo-card{min-height:220px;padding:19px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);position:relative;transition:background .18s ease;overflow:hidden}
+    .repo-card:nth-child(4n){border-right:0}
+    .repo-card:hover{background:rgba(255,255,255,.03)}
+    .repo-card::after{content:"";position:absolute;width:160px;height:160px;border-radius:50%;right:-90px;bottom:-100px;background:var(--cyan);opacity:0;filter:blur(60px);transition:.25s ease}
+    .repo-card:hover::after{opacity:.15}
+    .repo-top{display:flex;justify-content:space-between;gap:12px;font:9px var(--mono);text-transform:uppercase;letter-spacing:.08em}
+    .repo-cat{color:var(--cyan)}.repo-time{color:#666672}
+    .repo-card h3{font-size:18px;line-height:1.12;letter-spacing:-.035em;margin:34px 0 9px;overflow-wrap:anywhere}
+    .repo-card p{font-size:11px;color:#80808b;margin:0;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+    .repo-bottom{position:absolute;left:19px;right:19px;bottom:17px;display:flex;justify-content:space-between;gap:12px;font:9px var(--mono);color:#6e6e79}
+    .lang-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--violet);margin-right:6px}
+    .empty{grid-column:1/-1;padding:70px;text-align:center;color:#84848e}
+    .reveal{opacity:0;transform:translateY(26px);transition:opacity .75s cubic-bezier(.2,.72,.2,1),transform .75s cubic-bezier(.2,.72,.2,1)}
     .reveal.visible{opacity:1;transform:none}
-    .mobile-only{display:none}
-    @media (max-width:980px){
-      .hero{grid-template-columns:1fr;gap:20px;padding-top:72px}
-      .visual{min-height:470px}
-      .section{padding:84px 0}
-      .project-card.big,.project-card.medium{grid-column:span 12}
-      .project-card.third{grid-column:span 6}
-      .repo-grid{grid-template-columns:repeat(2,1fr)}
-      .repo:nth-child(3n){border-right:1px solid var(--line)}
-      .repo:nth-child(2n){border-right:0}
-      .manifesto{grid-template-columns:1fr;gap:44px}
+    .final-stage{justify-content:center;text-align:center}
+    .final-rings{position:absolute;left:50%;top:50%;width:min(74vw,920px);aspect-ratio:1;transform:translate(-50%,-50%);border:1px solid rgba(255,255,255,.08);border-radius:50%;will-change:transform}
+    .final-rings::before,.final-rings::after{content:"";position:absolute;border:1px solid rgba(255,255,255,.07);border-radius:50%;inset:14%}
+    .final-rings::after{inset:-18%;border-style:dashed}
+    .final-copy{position:relative;z-index:4;will-change:transform,opacity,filter}
+    .final-copy small{font:10px var(--mono);letter-spacing:.16em;text-transform:uppercase;color:#8b8b96}
+    .final-copy h2{font-size:clamp(72px,14vw,210px);line-height:.76;letter-spacing:-.095em;margin:24px 0;text-transform:uppercase}
+    .final-copy h2 span{display:block}
+    .final-copy h2 .outline{color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.34)}
+    .final-copy p{max-width:600px;margin:26px auto 0;color:#8b8b95;font-size:13px}
+    .footer{height:90px;display:flex;align-items:center;justify-content:space-between;gap:20px;border-top:1px solid var(--line);font:9px var(--mono);color:#696974;letter-spacing:.07em;text-transform:uppercase}
+    @media(max-width:1100px){
+      .scene-nav{display:none}
+      .repo-grid{grid-template-columns:repeat(3,1fr)}
+      .repo-card:nth-child(4n){border-right:1px solid var(--line)}
+      .repo-card:nth-child(3n){border-right:0}
+      .orbit-card{width:250px}
+      .oc5,.oc6{display:none}
+      .rail-card{width:84vw}
     }
-    @media (max-width:680px){
+    @media(max-width:760px){
       .shell{width:min(100% - 24px,var(--max))}
-      nav{height:64px}
+      .site-nav{top:10px;height:54px}
       .nav-links{display:none}
-      .github-pill span{display:none}
-      .hero{min-height:auto;padding:70px 0 52px}
-      .hero h1{font-size:clamp(54px,20vw,86px)}
-      .lede{font-size:16px}
-      .stat-row{gap:20px}
-      .visual{min-height:410px}
-      .core{width:245px}
-      .core-copy strong{font-size:36px}
-      .float-chip{font-size:10px}
-      .float-chip:nth-of-type(2){right:0}
-      .section-head{display:block}
-      .section-head p{margin-top:18px}
-      .project-card.third{grid-column:span 12}
-      .project-card{min-height:300px;padding:21px}
-      .project-card h3{margin-top:58px}
-      .explorer-tools{align-items:stretch}
-      .search-wrap{width:100%}
-      .repo-grid{grid-template-columns:1fr}
-      .repo,.repo:nth-child(2n),.repo:nth-child(3n){border-right:0}
-      .manifesto-copy article{grid-template-columns:55px 1fr}
-      footer{padding:22px 0;align-items:flex-start;flex-direction:column}
-      .mobile-only{display:inline}
+      .nav-github span{display:none}
+      .sticky-stage{min-height:620px}
+      .hero-scene{height:155svh}.universe-scene{height:200svh}.rail-scene{height:260svh}.depth-scene{height:285svh}.final-scene{height:150svh}
+      .hero-title .ray{font-size:clamp(104px,36vw,170px)}
+      .hero-title .lab{font-size:18px;letter-spacing:.28em;margin-left:.28em}
+      .hero-lead{font-size:14px}
+      .hero-grid{background-size:42px 42px}
+      .universe-stage,.rail-stage,.depth-stage{padding-top:82px}
+      .universe-copy{display:block}
+      .universe-copy p{width:auto;margin-top:14px}
+      .scene-heading{font-size:50px}
+      .universe-map{min-height:460px}
+      .orbit-line.a{width:88vw;height:48vw}.orbit-line.b{width:112vw;height:78vw}.orbit-line.c{width:140vw;height:100vw}
+      .universe-core{width:120px;top:54%}
+      .orbit-card{width:46%;min-height:118px;padding:13px}
+      .orbit-card h3{font-size:15px;margin-top:16px}
+      .orbit-card p{font-size:9px}
+      .oc1{left:0;top:18%}.oc2{right:0;top:18%}.oc3{right:0;bottom:12%}.oc4{left:0;bottom:12%}
+      .rail-head{width:calc(100% - 24px);display:block}
+      .rail-head p{margin-top:14px}
+      .rail-track{padding-inline:12px}
+      .rail-card{width:88vw;height:58vh;min-height:430px;grid-template-columns:1fr}
+      .rail-copy{padding:21px;min-height:48%}
+      .rail-visual{min-height:52%}
+      .rail-copy h3{font-size:42px}
+      .depth-head{top:0}
+      .depth-head h2{font-size:50px}
+      .depth-deck{top:25%;bottom:4%}
+      .depth-card{grid-template-columns:1fr;grid-template-rows:1fr .72fr}
+      .depth-info{padding:22px}
+      .depth-info h3{font-size:44px}
+      .depth-art{border-left:0;border-top:1px solid var(--line)}
+      .repo-section{padding:100px 0}
+      .repo-head{display:block}
+      .repo-head p{margin-top:15px}
+      .repo-grid{grid-template-columns:1fr 1fr}
+      .repo-card,.repo-card:nth-child(3n),.repo-card:nth-child(4n){border-right:1px solid var(--line)}
+      .repo-card:nth-child(2n){border-right:0}
+      .final-copy h2{font-size:22vw}
+      .footer{height:auto;padding:24px 0;flex-direction:column;align-items:flex-start}
     }
-    @media (prefers-reduced-motion:reduce){
-      *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.001ms!important}
+    @media(max-width:500px){
+      .repo-grid{grid-template-columns:1fr}
+      .repo-card,.repo-card:nth-child(2n),.repo-card:nth-child(3n),.repo-card:nth-child(4n){border-right:0}
+      .hero-actions .btn{width:100%}
+      .orbit-card{width:48%}
+    }
+    @media(prefers-reduced-motion:reduce){
+      html{scroll-behavior:auto}
+      *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+      .hero-scene,.universe-scene,.rail-scene,.depth-scene,.final-scene{height:auto}
+      .sticky-stage{position:relative;height:auto;min-height:auto;overflow:visible;padding-block:110px}
+      .hero-stage{min-height:760px}
+      .hero-content,.final-copy{transform:none!important;opacity:1!important;filter:none!important}
+      .hero-orbit,.final-rings,.universe-core,.rail-track{transform:none!important}
+      .universe-map{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:36px}
+      .orbit-line,.universe-core{display:none}
+      .orbit-card{position:relative;inset:auto!important;width:auto;opacity:1!important;transform:none!important;filter:none!important}
+      .rail-viewport{overflow:auto}
+      .rail-track{transform:none!important}
+      .depth-deck{position:relative;top:auto;bottom:auto;display:grid;gap:14px;padding-top:180px}
+      .depth-card{position:relative;inset:auto;min-height:560px;opacity:1!important;transform:none!important;filter:none!important}
+      .final-rings{display:none}
       .reveal{opacity:1;transform:none}
-      .spotlight{display:none}
     }
   </style>
 </head>
 <body>
   <div class="progress" id="progress"></div>
-  <div class="spotlight"></div>
-  <div class="orb a"></div><div class="orb b"></div><div class="orb c"></div>
 
-  <div class="nav-wrap">
-    <nav class="shell">
-      <a class="brand" href="#top">
-        <span class="brand-mark">R/</span>
-        <span>Ray Build Lab</span>
-      </a>
-      <div class="nav-links">
-        <a href="#projects">Projects</a>
-        <a href="#explorer">Explorer</a>
-        <a href="#principles">Principles</a>
-        <a href="../">Memory Manager</a>
-      </div>
-      <a class="github-pill" href="https://github.com/Ray20123315" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .7a11.3 11.3 0 0 0-3.57 22c.56.1.77-.24.77-.54v-2.2c-3.13.68-3.79-1.33-3.79-1.33-.51-1.3-1.25-1.65-1.25-1.65-1.02-.7.08-.69.08-.69 1.13.08 1.72 1.16 1.72 1.16 1 1.72 2.63 1.22 3.27.93.1-.73.39-1.22.71-1.5-2.5-.28-5.13-1.25-5.13-5.58 0-1.23.44-2.24 1.16-3.03-.12-.28-.5-1.43.11-2.98 0 0 .95-.3 3.11 1.16A10.8 10.8 0 0 1 12 6.07c.96 0 1.92.13 2.82.38 2.16-1.46 3.1-1.16 3.1-1.16.62 1.55.23 2.7.12 2.98.72.79 1.15 1.8 1.15 3.03 0 4.34-2.64 5.29-5.15 5.57.4.35.76 1.04.76 2.1v3.2c0 .3.2.65.78.54A11.3 11.3 0 0 0 12 .7Z"/></svg>
-        <span>@Ray20123315</span>
-      </a>
-    </nav>
-  </div>
+  <nav class="site-nav">
+    <a class="brand" href="#top"><span class="brand-mark">R/</span><span>Ray Build Lab</span></a>
+    <div class="nav-links">
+      <a href="#universe">Universe</a>
+      <a href="#work">Work</a>
+      <a href="#depth">Systems</a>
+      <a href="#repos">Repos</a>
+    </div>
+    <a class="nav-github" href="https://github.com/Ray20123315" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .7a11.3 11.3 0 0 0-3.57 22c.56.1.77-.24.77-.54v-2.2c-3.13.68-3.79-1.33-3.79-1.33-.51-1.3-1.25-1.65-1.25-1.65-1.02-.7.08-.69.08-.69 1.13.08 1.72 1.16 1.72 1.16 1 1.72 2.63 1.22 3.27.93.1-.73.39-1.22.71-1.5-2.5-.28-5.13-1.25-5.13-5.58 0-1.23.44-2.24 1.16-3.03-.12-.28-.5-1.43.11-2.98 0 0 .95-.3 3.11 1.16A10.8 10.8 0 0 1 12 6.07c.96 0 1.92.13 2.82.38 2.16-1.46 3.1-1.16 3.1-1.16.62 1.55.23 2.7.12 2.98.72.79 1.15 1.8 1.15 3.03 0 4.34-2.64 5.29-5.15 5.57.4.35.76 1.04.76 2.1v3.2c0 .3.2.65.78.54A11.3 11.3 0 0 0 12 .7Z"/></svg>
+      <span>@Ray20123315</span>
+    </a>
+  </nav>
 
-  <main id="top">
-    <section class="hero shell">
-      <div class="reveal">
-        <div class="eyebrow"><i></i><span>Public projects / tools / experiments</span></div>
-        <h1>
-          <span class="glow">BUILD.</span>
-          <span class="ghost">SHIP.</span>
-          <span class="glow">REPEAT.</span>
-        </h1>
-        <p class="lede">
-          我是 <strong>Ray</strong>。把想法快速做成可以跑、可以測、可以繼續迭代的東西：
-          AI Bot、瀏覽器擴充、Windows 工具、Cloudflare Workers、Minecraft Mod 與各種實驗性專案。
-        </p>
-        <div class="hero-actions">
-          <a class="btn primary" href="#projects">看精選專案 <span class="arrow">↓</span></a>
-          <a class="btn" href="https://github.com/Ray20123315?tab=repositories" target="_blank" rel="noopener">GitHub repositories <span class="arrow">↗</span></a>
-        </div>
-        <div class="stat-row">
-          <div class="stat"><b id="repoCount">22</b><span>public repos</span></div>
-          <div class="stat"><b>6+</b><span>project domains</span></div>
-          <div class="stat"><b>2026</b><span>still building</span></div>
-        </div>
-      </div>
+  <aside class="scene-nav" aria-label="Page sections">
+    <button class="scene-dot active" type="button" data-target="top"><span>Intro</span><i></i></button>
+    <button class="scene-dot" type="button" data-target="universe"><span>Universe</span><i></i></button>
+    <button class="scene-dot" type="button" data-target="work"><span>Work</span><i></i></button>
+    <button class="scene-dot" type="button" data-target="depth"><span>Systems</span><i></i></button>
+    <button class="scene-dot" type="button" data-target="repos"><span>Repos</span><i></i></button>
+    <button class="scene-dot" type="button" data-target="final"><span>End</span><i></i></button>
+  </aside>
 
-      <div class="visual reveal">
-        <canvas id="network" aria-hidden="true"></canvas>
-        <div class="core">
-          <div class="core-copy">
-            <small>ray20123315</small>
-            <strong>R/LAB</strong>
-            <span id="rotatingRole">AI × Web × Tools</span>
+  <main>
+    <section class="scene hero-scene" id="top" data-scene="intro">
+      <div class="sticky-stage hero-stage">
+        <div class="hero-grid" id="heroGrid"></div>
+        <div class="hero-orbit o1"></div>
+        <div class="hero-orbit o2"></div>
+        <div class="hero-orbit o3"></div>
+        <div class="hero-glow" id="heroGlow"></div>
+
+        <div class="hero-content" id="heroContent">
+          <div class="hero-topline"><span class="eyebrow"><i></i>Public projects / motion portfolio / 2026</span></div>
+          <h1 class="hero-title"><span class="ray">RAY</span><span class="lab">BUILD / LAB</span></h1>
+          <p class="hero-lead">把想法做成可以真的跑的東西。<b>AI、Web、Windows、Browser Tools、Cloudflare、Minecraft</b>——每一層往下，都會進入下一個作品世界。</p>
+          <div class="hero-actions">
+            <a class="btn primary" href="#universe">開始往下看 <span class="mono">↓</span></a>
+            <a class="btn" href="https://github.com/Ray20123315?tab=repositories" target="_blank" rel="noopener">GitHub Repositories <span class="mono">↗</span></a>
           </div>
         </div>
-        <div class="float-chip"><i></i><span>Memory Manager</span></div>
-        <div class="float-chip violet"><i></i><span>RayLingo</span></div>
-        <div class="float-chip pink"><i></i><span>QQ AI Bot</span></div>
-        <div class="float-chip lime"><i></i><span>Minecraft Mods</span></div>
+
+        <div class="scroll-cue"><i></i><span>Scroll to enter</span></div>
       </div>
     </section>
 
-    <section class="section shell" id="projects">
-      <div class="section-head reveal">
-        <div>
-          <div class="eyebrow"><i></i><span>Selected work</span></div>
-          <h2>我在做的東西。</h2>
-        </div>
-        <p>不是把 repo 名稱排成一排，而是把每個專案的問題、系統與技術方向整理成可以快速理解的作品牆。</p>
-      </div>
-
-      <div class="featured">
-        <article class="project-card big reveal">
-          <span class="accent-orb"></span>
-          <div class="top"><span class="tag">Windows / systems / observability</span><a class="repo-link" href="https://github.com/Ray20123315/Memory_manager" target="_blank" rel="noopener" aria-label="Open Memory Manager repository">↗</a></div>
-          <h3>Memory Manager</h3>
-          <p>Windows 11 記憶體觀測與事故分析工具。重點放在 Commit、Process Commit、Headroom、事故時間線與可回復規則，而不是單純「一鍵清 RAM」。</p>
-          <div class="stack"><span>Windows</span><span>Telemetry</span><span>Diagnostics</span><span>Safety-first</span></div>
-        </article>
-
-        <article class="project-card medium violet reveal">
-          <span class="accent-orb"></span>
-          <div class="top"><span class="tag">Browser extension / translation</span><a class="repo-link" href="https://github.com/Ray20123315/RayLingo-translate" target="_blank" rel="noopener" aria-label="Open RayLingo repository">↗</a></div>
-          <h3>RayLingo</h3>
-          <p>跨瀏覽器即時翻譯擴充套件，包含 Popup、Workspace、TTS、反白翻譯、多語 UI、更新檢查與安全診斷。</p>
-          <div class="stack"><span>MV3</span><span>Firefox</span><span>Safari</span><span>Translator API</span></div>
-        </article>
-
-        <article class="project-card third pink reveal">
-          <span class="accent-orb"></span>
-          <div class="top"><span class="tag">AI / Cloudflare / realtime</span><a class="repo-link" href="https://github.com/Ray20123315/qqaibot" target="_blank" rel="noopener" aria-label="Open QQ AI Bot repository">↗</a></div>
-          <h3>QQ AI Bot</h3>
-          <p>部署於 Cloudflare Workers 的 QQ 群聊 AI Bot，整合多模型、D1、Vectorize、Durable Objects、排程、群管與 Portal。</p>
-          <div class="stack"><span>Workers</span><span>Gemini</span><span>D1</span><span>Vectorize</span></div>
-        </article>
-
-        <article class="project-card third lime reveal">
-          <span class="accent-orb"></span>
-          <div class="top"><span class="tag">Realtime game / state machine</span><a class="repo-link" href="https://github.com/Ray20123315/werewolf-ai-worker" target="_blank" rel="noopener" aria-label="Open Werewolf AI Worker repository">↗</a></div>
-          <h3>Werewolf AI Worker</h3>
-          <p>Cloudflare Workers 即時多人狼人殺 Web App，以 Durable Object 維護 authoritative state，WebSocket 做即時同步。</p>
-          <div class="stack"><span>WebSocket</span><span>Durable Object</span><span>State Machine</span></div>
-        </article>
-
-        <article class="project-card third orange reveal">
-          <span class="accent-orb"></span>
-          <div class="top"><span class="tag">Desktop utility / compression</span><a class="repo-link" href="https://github.com/Ray20123315/Compression-software" target="_blank" rel="noopener" aria-label="Open RayPack repository">↗</a></div>
-          <h3>RayPack</h3>
-          <p>Windows 壓縮／解壓縮工具，提供 Exact、AutoBest、LZMA2、Zstd 與 Smart Media 等模式，兼顧完整還原與媒體體積。</p>
-          <div class="stack"><span>Compression</span><span>CLI</span><span>GUI</span><span>SHA-256</span></div>
-        </article>
-
-        <article class="project-card big violet reveal">
-          <span class="accent-orb"></span>
-          <div class="top"><span class="tag">Browser tooling / media workflow</span><a class="repo-link" href="https://github.com/Ray20123315/youtube-speed-studio" target="_blank" rel="noopener" aria-label="Open YouTube Speed Studio repository">↗</a></div>
-          <h3>YouTube Speed Studio</h3>
-          <p>瀏覽器影片控制與媒體工作流工具，具多語 UI、可調整 accent、runtime recovery、更新檢查與 signed anti-tamper integrity lock。</p>
-          <div class="stack"><span>Browser Extension</span><span>Runtime Recovery</span><span>RSA-3072</span><span>Integrity</span></div>
-        </article>
-
-        <article class="project-card medium lime reveal">
-          <span class="accent-orb"></span>
-          <div class="top"><span class="tag">Minecraft / Fabric + Forge</span><a class="repo-link" href="https://github.com/Ray20123315/minecraft_key_random_scramble_mod" target="_blank" rel="noopener" aria-label="Open Random Keys Survival repository">↗</a></div>
-          <h3>Random Keys Survival</h3>
-          <p>Minecraft 1.20.1 Fabric + Forge Mod。玩家每次有效扣血會重新抽選按鍵配置，並由 Server 保存 authoritative layout 與多人交換狀態。</p>
-          <div class="stack"><span>Minecraft 1.20.1</span><span>Fabric</span><span>Forge</span><span>Java 17</span></div>
-        </article>
-
-        <article class="project-card medium pink reveal">
-          <span class="accent-orb"></span>
-          <div class="top"><span class="tag">Minecraft / tactical extraction</span><a class="repo-link" href="https://github.com/Ray20123315/delta_ops_hazardzone_Alpha" target="_blank" rel="noopener" aria-label="Open Delta Ops repository">↗</a></div>
-          <h3>Delta Ops: Hazard Zone</h3>
-          <p>Forge 1.20.1 戰術撤離玩法模組，包含撤離、經濟、安全箱、小隊、戰利品容器、部位傷害，以及完整性校驗與安全診斷。</p>
-          <div class="stack"><span>Forge</span><span>Economy</span><span>Squad</span><span>Integrity</span></div>
-        </article>
-      </div>
-    </section>
-
-    <section class="section shell" id="explorer">
-      <div class="section-head reveal">
-        <div>
-          <div class="eyebrow"><i></i><span>Live GitHub explorer</span></div>
-          <h2>全部公開倉庫。</h2>
-        </div>
-        <p>這一區直接讀取 GitHub 的公開 API，所以未來新增的 public repository 也會自動出現在這裡。</p>
-      </div>
-
-      <div class="lab-panel reveal">
-        <div class="lab-bar"><i></i><i></i><i></i><span>github://Ray20123315/public-repositories</span></div>
-        <div class="explorer-tools">
-          <div class="filters" id="filters">
-            <button class="filter-btn active" data-filter="all">All</button>
-            <button class="filter-btn" data-filter="AI">AI</button>
-            <button class="filter-btn" data-filter="Tools">Tools</button>
-            <button class="filter-btn" data-filter="Minecraft">Minecraft</button>
-            <button class="filter-btn" data-filter="Web">Web</button>
-            <button class="filter-btn" data-filter="Media">Media</button>
+    <section class="scene universe-scene" id="universe" data-scene="universe">
+      <div class="sticky-stage universe-stage">
+        <div class="shell">
+          <div class="universe-copy">
+            <div>
+              <div class="scene-kicker">01 / Project Universe</div>
+              <h2 class="scene-heading">不同領域，<br><span class="outline">同一個核心。</span></h2>
+            </div>
+            <p>每個專案看起來很不一樣，但底層都在處理相同的事：state、data、interface、failure、recovery。往下滑，專案會一個一個進場。</p>
           </div>
-          <label class="search-wrap">
-            <input id="search" type="search" placeholder="Search repositories…" aria-label="Search repositories">
-          </label>
-        </div>
-        <div class="repo-grid" id="repoGrid">
-          <div class="empty">Loading public repositories…</div>
+
+          <div class="universe-map">
+            <div class="orbit-line a"></div><div class="orbit-line b"></div><div class="orbit-line c"></div>
+            <div class="universe-core" id="universeCore"><div><strong>R/LAB</strong><small>SYSTEMS IN ORBIT</small></div></div>
+
+            <a class="orbit-card oc1" data-at=".06" href="https://github.com/Ray20123315/Memory_manager" target="_blank" rel="noopener">
+              <div class="oc-top"><span>Windows / Systems</span><span class="dot"></span></div><h3>Memory Manager</h3><p>Commit、process telemetry、incident timeline、reversible rules。</p>
+            </a>
+            <a class="orbit-card oc2 violet" data-at=".16" href="https://github.com/Ray20123315/RayLingo-translate" target="_blank" rel="noopener">
+              <div class="oc-top"><span>Browser / Translate</span><span class="dot"></span></div><h3>RayLingo</h3><p>跨瀏覽器即時翻譯、TTS、Workspace 與安全診斷。</p>
+            </a>
+            <a class="orbit-card oc3 pink" data-at=".29" href="https://github.com/Ray20123315/qqaibot" target="_blank" rel="noopener">
+              <div class="oc-top"><span>AI / Cloudflare</span><span class="dot"></span></div><h3>QQ AI Bot</h3><p>多模型、D1、Vectorize、Durable Objects、群組自動化。</p>
+            </a>
+            <a class="orbit-card oc4 lime" data-at=".42" href="https://github.com/Ray20123315/minecraft_key_random_scramble_mod" target="_blank" rel="noopener">
+              <div class="oc-top"><span>Minecraft / Java</span><span class="dot"></span></div><h3>Random Keys</h3><p>Fabric + Forge，多人 authoritative key-layout gameplay。</p>
+            </a>
+            <a class="orbit-card oc5 orange" data-at=".54" href="https://github.com/Ray20123315/youtube-speed-studio" target="_blank" rel="noopener">
+              <div class="oc-top"><span>Extension / Media</span><span class="dot"></span></div><h3>Speed Studio</h3><p>影片控制、runtime recovery 與 signed integrity lock。</p>
+            </a>
+            <a class="orbit-card oc6 violet" data-at=".66" href="https://github.com/Ray20123315/werewolf-ai-worker" target="_blank" rel="noopener">
+              <div class="oc-top"><span>Realtime / Game</span><span class="dot"></span></div><h3>Werewolf Worker</h3><p>WebSocket + Durable Object 的多人狀態機。</p>
+            </a>
+          </div>
         </div>
       </div>
     </section>
 
-    <section class="shell" id="principles">
-      <div class="manifesto">
-        <div class="reveal">
-          <div class="eyebrow"><i></i><span>Build principles</span></div>
-          <h2>做出來，<br>再把它<br>做對。</h2>
-        </div>
-        <div class="manifesto-copy">
-          <article class="reveal"><b>01</b><div><h3>先讓系統可運作</h3><p>從最小可用版本開始，把資料流、狀態與失敗模式跑通，再做外觀與擴充。</p></div></article>
-          <article class="reveal"><b>02</b><div><h3>把風險寫成邊界</h3><p>更新、完整性、回復、權限、外部 API 與平台限制，都應該能被清楚看到，而不是藏在 UI 後面。</p></div></article>
-          <article class="reveal"><b>03</b><div><h3>跨領域不是亂做</h3><p>AI、Web、Windows 與 Minecraft 看起來很遠，但核心其實都是 state、data、interface 與可靠性。</p></div></article>
-          <article class="reveal"><b>04</b><div><h3>讓作品自己說話</h3><p>Repository、Release、文件與可執行成果比抽象形容更有說服力；這個網站只是把入口整理得更清楚。</p></div></article>
+    <section class="scene rail-scene" id="work" data-scene="work">
+      <div class="sticky-stage rail-stage">
+        <div class="rail-stage-inner">
+          <div class="rail-head">
+            <div><div class="scene-kicker">02 / Selected Work</div><h2>往右穿過<br>我的作品。</h2></div>
+            <p>這一段不是自己播放；你的滾輪就是時間軸。往下滑，整個作品軌道會橫向推進。</p>
+          </div>
+          <div class="rail-viewport" id="railViewport">
+            <div class="rail-track" id="railTrack">
+              <article class="rail-card rc1">
+                <div class="rail-copy">
+                  <div><div class="rail-index">01 / SYSTEM OBSERVABILITY</div></div>
+                  <div><h3>Memory<br>Manager</h3><p>把「RAM 很高」拆成可以被量測與驗證的狀態：Commit、Process Commit、Headroom、Event Log、heartbeat 與事故證據。</p></div>
+                  <div class="rail-tags"><span>Windows</span><span>Telemetry</span><span>Recovery</span></div>
+                </div>
+                <div class="rail-visual">
+                  <div class="mesh"></div><div class="visual-glow"></div>
+                  <div class="mock-window"><div class="mock-bar"><i></i><i></i><i></i></div><div class="mock-body"><div class="mock-side"><span></span><span></span><span></span><span></span></div><div class="mock-main"><div class="metric-row"><div></div><div></div><div></div></div><div class="mock-chart"></div><div class="mock-block"></div></div></div></div>
+                </div>
+              </article>
+
+              <article class="rail-card rc2">
+                <div class="rail-copy">
+                  <div><div class="rail-index">02 / LANGUAGE INTERFACE</div></div>
+                  <div><h3>RayLingo</h3><p>把翻譯做成真正能長期使用的瀏覽器工具：多語 UI、反白翻譯、TTS、history、update verification 與跨瀏覽器能力差異。</p></div>
+                  <div class="rail-tags"><span>MV3</span><span>Firefox</span><span>Safari</span><span>TTS</span></div>
+                </div>
+                <div class="rail-visual"><div class="visual-glow"></div><div class="translator-ui"><article><small>SOURCE / ZH-TW</small><strong>讓語言<br>不要擋路。</strong><p>Selected text → Translator → TTS → History</p></article><article><small>TARGET / EN</small><strong>Make language<br>disappear.</strong><p>Workspace · runtime · browser capability</p></article></div></div>
+              </article>
+
+              <article class="rail-card rc3">
+                <div class="rail-copy">
+                  <div><div class="rail-index">03 / REALTIME AI</div></div>
+                  <div><h3>QQ AI<br>Bot</h3><p>單一 Cloudflare Worker 整合群聊、模型路由、D1、Vectorize、Durable Objects、排程、群規、活動與管理 Portal。</p></div>
+                  <div class="rail-tags"><span>Workers</span><span>Gemini</span><span>D1</span><span>Vectorize</span></div>
+                </div>
+                <div class="rail-visual"><div class="visual-glow"></div><div class="terminal"><b>$ worker boot</b><br><strong>OneBotHub</strong> → websocket connected<br><em>AI Router</em> → Gemini / Gemma / DeepSeek<br>D1 → memory + configuration<br>Vectorize → semantic context<br>Durable Object → queue / rpc / state<br><br><b>✓ realtime pipeline ready</b><br><em>→ waiting for next event...</em></div></div>
+              </article>
+
+              <article class="rail-card rc4">
+                <div class="rail-copy">
+                  <div><div class="rail-index">04 / GAME STATE</div></div>
+                  <div><h3>Random Keys<br>Survival</h3><p>每次有效扣血都可能改變控制方式；Server 保存唯一 authoritative layout，並處理多人交換、維度共享、重登與死亡狀態。</p></div>
+                  <div class="rail-tags"><span>Minecraft 1.20.1</span><span>Fabric</span><span>Forge</span><span>Java 17</span></div>
+                </div>
+                <div class="rail-visual"><div class="visual-glow"></div><div class="game-grid"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+              </article>
+
+              <article class="rail-card rc5">
+                <div class="rail-copy">
+                  <div><div class="rail-index">05 / COMPRESSION</div></div>
+                  <div><h3>RayPack</h3><p>Windows 壓縮與解壓縮工具。Exact、AutoBest、LZMA2、Zstd、Smart Media 以不同策略在完整還原、速度與體積之間取捨。</p></div>
+                  <div class="rail-tags"><span>LZMA2</span><span>Zstd</span><span>Brotli</span><span>SHA-256</span></div>
+                </div>
+                <div class="rail-visual"><div class="mesh"></div><div class="visual-glow"></div><div class="universe-core" style="top:50%;"><div><strong>RAYZ</strong><small>COMPRESS / VERIFY / RESTORE</small></div></div></div>
+              </article>
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
-    <section class="cta-final shell reveal">
-      <div class="eyebrow"><i></i><span>Keep exploring</span></div>
-      <h2>See the code.<br>Break the box.</h2>
-      <p>想看完整實作、版本歷史、Release 與 README，直接進 GitHub。這裡只負責把整個 project universe 串起來。</p>
-      <div class="hero-actions">
-        <a class="btn primary" href="https://github.com/Ray20123315" target="_blank" rel="noopener">Open GitHub <span class="arrow">↗</span></a>
-        <a class="btn" href="../">Memory Manager site <span class="arrow">↗</span></a>
+    <section class="scene depth-scene" id="depth" data-scene="depth">
+      <div class="sticky-stage depth-stage">
+        <div class="shell depth-shell">
+          <div class="depth-head"><div class="scene-kicker">03 / Under the Surface</div><h2>真正難的，<br>都在下面。</h2></div>
+          <div class="depth-counter" id="depthCounter">01 / 04</div>
+
+          <div class="depth-deck">
+            <article class="depth-card d1" data-depth="0">
+              <div class="depth-info"><div class="index">01 / STATE</div><div><h3>Authoritative<br>State</h3><p>多人遊戲、Bot、桌面工具或瀏覽器擴充，只要狀態來源不清楚，最後都會變成同步問題。把唯一權威寫清楚，比堆功能更重要。</p></div><a class="depth-link" href="https://github.com/Ray20123315/werewolf-ai-worker" target="_blank" rel="noopener">Explore state machine ↗</a></div>
+              <div class="depth-art"><div class="halo"></div><div class="sig">STATE</div></div>
+            </article>
+            <article class="depth-card d2" data-depth="1">
+              <div class="depth-info"><div class="index">02 / RECOVERY</div><div><h3>Recover,<br>don’t guess.</h3><p>Runtime context 失效、事故發生、設定被修改時，系統應該知道怎麼重建、怎麼回復、怎麼留下證據，而不是假裝一切沒事。</p></div><a class="depth-link" href="https://github.com/Ray20123315/Memory_manager" target="_blank" rel="noopener">Explore recovery logic ↗</a></div>
+              <div class="depth-art"><div class="halo"></div><div class="sig">RESTORE</div></div>
+            </article>
+            <article class="depth-card d3" data-depth="2">
+              <div class="depth-info"><div class="index">03 / INTEGRITY</div><div><h3>Trust needs<br>evidence.</h3><p>SHA-256、signed manifest、offline signing key、fail-closed tamper detection——安全不是 UI 上放一個盾牌，而是信任鏈真的能被驗證。</p></div><a class="depth-link" href="https://github.com/Ray20123315/youtube-speed-studio" target="_blank" rel="noopener">Explore integrity model ↗</a></div>
+              <div class="depth-art"><div class="halo"></div><div class="sig">VERIFY</div></div>
+            </article>
+            <article class="depth-card d4" data-depth="3">
+              <div class="depth-info"><div class="index">04 / ITERATION</div><div><h3>Ship.<br>Measure. Repeat.</h3><p>我把 GitHub repository、release、workflow、測試、文件與部署當成同一條迭代鏈。不是「做完」，而是每一版都更接近可維護的系統。</p></div><a class="depth-link" href="https://github.com/Ray20123315" target="_blank" rel="noopener">View the build history ↗</a></div>
+              <div class="depth-art"><div class="halo"></div><div class="sig">SHIP</div></div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="repo-section shell" id="repos" data-scene="repos">
+      <div class="repo-head reveal">
+        <div><div class="scene-kicker">04 / Live Repository Index</div><h2>全部公開<br>作品。</h2></div>
+        <p>這一區直接讀 GitHub public API。你之後新增公開 repository，不需要重新改這頁，也會自動出現在這裡。</p>
+      </div>
+      <div class="repo-panel reveal">
+        <div class="repo-bar"><div class="lights"><i></i><i></i><i></i></div><code>github://Ray20123315/public-repositories</code><code id="repoCount">22 repos</code></div>
+        <div class="repo-tools">
+          <div class="filters">
+            <button class="filter-btn active" type="button" data-filter="all">All</button>
+            <button class="filter-btn" type="button" data-filter="AI">AI</button>
+            <button class="filter-btn" type="button" data-filter="Tools">Tools</button>
+            <button class="filter-btn" type="button" data-filter="Minecraft">Minecraft</button>
+            <button class="filter-btn" type="button" data-filter="Web">Web</button>
+            <button class="filter-btn" type="button" data-filter="Media">Media</button>
+          </div>
+          <label class="search-wrap"><input id="repoSearch" type="search" placeholder="Search repositories…" aria-label="Search repositories"></label>
+        </div>
+        <div class="repo-grid" id="repoGrid"><div class="empty">Loading public repositories…</div></div>
+      </div>
+    </section>
+
+    <section class="scene final-scene" id="final" data-scene="final">
+      <div class="sticky-stage final-stage">
+        <div class="final-rings" id="finalRings"></div>
+        <div class="final-copy" id="finalCopy">
+          <small>05 / End of page — not end of build</small>
+          <h2><span>MAKE</span><span class="outline">IT REAL.</span></h2>
+          <p>Repository 裡面才是完整版本。這個網站只是入口；真正的內容是每一次 commit、release、bug、rollback、重構與下一版。</p>
+          <div class="hero-actions">
+            <a class="btn primary" href="https://github.com/Ray20123315" target="_blank" rel="noopener">Open GitHub <span class="mono">↗</span></a>
+            <a class="btn" href="../">Memory Manager Site <span class="mono">↗</span></a>
+          </div>
+        </div>
       </div>
     </section>
   </main>
 
-  <footer class="shell">
-    <span>© <span id="year"></span> Ray20123315 / BUILD LAB</span>
-    <span>GitHub public projects · live index</span>
-  </footer>
+  <footer class="shell footer"><span>© <span id="year"></span> Ray20123315 / BUILD LAB</span><span>Cinematic scroll portfolio · GitHub Pages</span></footer>
 
   <script>
     (function(){
-      var root = document.documentElement;
+      if(window.__rayPortfolioV2) return;
+      window.__rayPortfolioV2 = true;
+
       var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      var progress = document.getElementById('progress');
-      var repoGrid = document.getElementById('repoGrid');
-      var repoCount = document.getElementById('repoCount');
-      var search = document.getElementById('search');
-      var filterButtons = Array.prototype.slice.call(document.querySelectorAll('.filter-btn'));
-      var activeFilter = 'all';
-      var repos = [];
+      var root = document.documentElement;
+      var progressBar = document.getElementById('progress');
+      var heroContent = document.getElementById('heroContent');
+      var heroGlow = document.getElementById('heroGlow');
+      var heroGrid = document.getElementById('heroGrid');
+      var heroOrbits = Array.prototype.slice.call(document.querySelectorAll('.hero-orbit'));
+      var universeCore = document.getElementById('universeCore');
+      var orbitLines = Array.prototype.slice.call(document.querySelectorAll('.orbit-line'));
+      var orbitCards = Array.prototype.slice.call(document.querySelectorAll('.orbit-card'));
+      var railTrack = document.getElementById('railTrack');
+      var railViewport = document.getElementById('railViewport');
+      var depthCards = Array.prototype.slice.call(document.querySelectorAll('.depth-card'));
+      var depthCounter = document.getElementById('depthCounter');
+      var finalCopy = document.getElementById('finalCopy');
+      var finalRings = document.getElementById('finalRings');
+      var sceneDots = Array.prototype.slice.call(document.querySelectorAll('.scene-dot'));
+      var scenes = Array.prototype.slice.call(document.querySelectorAll('[data-scene]'));
+      var dirty = true;
 
-      document.getElementById('year').textContent = new Date().getFullYear();
+      document.getElementById('year').textContent = String(new Date().getFullYear());
 
-      window.addEventListener('pointermove', function(e){
-        root.style.setProperty('--mx', e.clientX + 'px');
-        root.style.setProperty('--my', e.clientY + 'px');
-      }, {passive:true});
+      window.addEventListener('pointermove',function(e){
+        root.style.setProperty('--mx',e.clientX+'px');
+        root.style.setProperty('--my',e.clientY+'px');
+      },{passive:true});
 
-      function updateProgress(){
-        var max = document.documentElement.scrollHeight - window.innerHeight;
-        var p = max > 0 ? (window.scrollY / max) * 100 : 0;
-        progress.style.width = p + '%';
+      function clamp(v,a,b){return Math.min(b,Math.max(a,v))}
+      function range(v,a,b){return clamp((v-a)/(b-a),0,1)}
+      function sceneProgress(el){
+        var rect=el.getBoundingClientRect();
+        var travel=Math.max(1,rect.height-window.innerHeight);
+        return clamp((-rect.top)/travel,0,1);
       }
-      updateProgress();
-      window.addEventListener('scroll', updateProgress, {passive:true});
 
-      var io = new IntersectionObserver(function(entries){
-        entries.forEach(function(entry){
-          if(entry.isIntersecting){
-            entry.target.classList.add('visible');
-            io.unobserve(entry.target);
-          }
-        });
-      }, {threshold:.12});
-      document.querySelectorAll('.reveal').forEach(function(el){io.observe(el)});
+      function markDirty(){dirty=true}
+      window.addEventListener('scroll',markDirty,{passive:true});
+      window.addEventListener('resize',markDirty,{passive:true});
 
-      document.querySelectorAll('.project-card').forEach(function(card){
-        card.addEventListener('pointermove', function(e){
-          if(reduceMotion) return;
-          var r = card.getBoundingClientRect();
-          var x = (e.clientX - r.left) / r.width;
-          var y = (e.clientY - r.top) / r.height;
-          card.style.setProperty('--ry', ((x - .5) * 7) + 'deg');
-          card.style.setProperty('--rx', ((.5 - y) * 7) + 'deg');
-          card.style.setProperty('--gx', (x * 100) + '%');
-          card.style.setProperty('--gy', (y * 100) + '%');
-        });
-        card.addEventListener('pointerleave', function(){
-          card.style.setProperty('--ry','0deg');
-          card.style.setProperty('--rx','0deg');
+      sceneDots.forEach(function(btn){
+        btn.addEventListener('click',function(){
+          var id=btn.getAttribute('data-target');
+          var el=document.getElementById(id);
+          if(el) el.scrollIntoView({behavior:reduceMotion?'auto':'smooth',block:'start'});
         });
       });
 
-      var roles = ['AI × Web × Tools','Workers × Realtime','Windows × Systems','Minecraft × Mods','Ship × Learn × Repeat'];
-      var roleIndex = 0;
-      var roleEl = document.getElementById('rotatingRole');
-      if(!reduceMotion){
-        setInterval(function(){
-          roleIndex = (roleIndex + 1) % roles.length;
-          roleEl.animate([{opacity:1,transform:'translateY(0)'},{opacity:0,transform:'translateY(-5px)'}],{duration:180,fill:'forwards'}).onfinish = function(){
-            roleEl.textContent = roles[roleIndex];
-            roleEl.animate([{opacity:0,transform:'translateY(5px)'},{opacity:1,transform:'translateY(0)'}],{duration:220,fill:'forwards'});
-          };
-        },2600);
+      var revealObserver = new IntersectionObserver(function(entries){
+        entries.forEach(function(entry){
+          if(entry.isIntersecting){entry.target.classList.add('visible');revealObserver.unobserve(entry.target)}
+        });
+      },{threshold:.13});
+      document.querySelectorAll('.reveal').forEach(function(el){revealObserver.observe(el)});
+
+      function updateSceneNav(){
+        var best=null,bestDistance=Infinity;
+        scenes.forEach(function(s){
+          var r=s.getBoundingClientRect();
+          var d=Math.abs((r.top+r.bottom)/2-window.innerHeight/2);
+          if(r.bottom>0&&r.top<window.innerHeight&&d<bestDistance){best=s;bestDistance=d}
+        });
+        if(!best) return;
+        var id=best.id;
+        sceneDots.forEach(function(b){b.classList.toggle('active',b.getAttribute('data-target')===id)})
       }
 
-      var fallback = [
+      function updateHero(p){
+        var fade=range(p,.52,1);
+        var scale=1-p*.11;
+        heroContent.style.transform='translate3d(0,'+(-70*p)+'px,0) scale('+scale+')';
+        heroContent.style.opacity=String(1-fade*.93);
+        heroContent.style.filter='blur('+(fade*9)+'px)';
+        heroGlow.style.transform='translate(-50%,-50%) scale('+(1+p*1.3)+')';
+        heroGlow.style.opacity=String(1-p*.72);
+        heroGrid.style.transform='perspective(900px) rotateX('+(64-10*p)+'deg) translateY('+(28-18*p)+'%) scale('+(1.35+p*.22)+')';
+        heroOrbits.forEach(function(o,i){
+          o.style.transform='translate(-50%,-50%) rotate('+(p*(22+i*15)*(i%2?-1:1))+'deg) scale('+(1+p*(.18+i*.08))+')';
+          o.style.opacity=String(1-p*.66);
+        });
+      }
+
+      function updateUniverse(p){
+        universeCore.style.transform='translate(-50%,-50%) scale('+(0.72+range(p,.03,.86)*1.05)+') rotate('+(p*24)+'deg)';
+        universeCore.style.opacity=String(1-range(p,.82,1)*.8);
+        orbitLines.forEach(function(line,i){
+          var base=[-12,17,-5][i]||0;
+          line.style.transform='translate(-50%,-50%) rotate('+(base+p*(i%2?36:-30))+'deg) scale('+(0.82+p*.24)+')';
+        });
+        orbitCards.forEach(function(card,i){
+          var at=parseFloat(card.getAttribute('data-at')||'0');
+          var local=range(p,at,at+.16);
+          var leave=range(p,.82+i*.012,.98);
+          var dir=i%2===0?-1:1;
+          card.style.opacity=String(local*(1-leave*.8));
+          card.style.transform='translate3d('+(dir*(1-local)*38)+'px,'+((1-local)*78-leave*45)+'px,0) scale('+(0.78+local*.22-leave*.05)+') rotate('+(dir*(1-local)*5)+'deg)';
+          card.style.filter='blur('+((1-local)*8+leave*3)+'px)';
+        });
+      }
+
+      function updateRail(p){
+        if(!railTrack||!railViewport) return;
+        var max=Math.max(0,railTrack.scrollWidth-railViewport.clientWidth);
+        railTrack.style.transform='translate3d('+(-max*p)+'px,0,0)';
+      }
+
+      function updateDepth(p){
+        var n=depthCards.length;
+        var segment=1/n;
+        var active=0;
+        depthCards.forEach(function(card,i){
+          var start=i*segment;
+          var enter=range(p,start,start+segment*.32);
+          var exit=range(p,start+segment*.7,start+segment);
+          var opacity=enter*(1-exit*.88);
+          if(opacity>.35) active=i;
+          var y=(1-enter)*135-exit*105;
+          var scale=.88+enter*.12-exit*.07;
+          var rx=(1-enter)*10-exit*5;
+          card.style.opacity=String(opacity);
+          card.style.transform='translate3d(0,'+y+'px,0) scale('+scale+') rotateX('+rx+'deg)';
+          card.style.filter='blur('+((1-enter)*8+exit*5)+'px)';
+          card.style.zIndex=String(10+i);
+        });
+        depthCounter.textContent=String(active+1).padStart(2,'0')+' / '+String(n).padStart(2,'0');
+      }
+
+      function updateFinal(p){
+        var enter=range(p,0,.44),leave=range(p,.72,1);
+        finalCopy.style.opacity=String(enter*(1-leave*.65));
+        finalCopy.style.transform='translate3d(0,'+((1-enter)*70-leave*55)+'px,0) scale('+(0.86+enter*.14+leave*.06)+')';
+        finalCopy.style.filter='blur('+((1-enter)*9)+'px)';
+        finalRings.style.transform='translate(-50%,-50%) rotate('+(p*90)+'deg) scale('+(0.72+enter*.46+leave*.28)+')';
+        finalRings.style.opacity=String(.35+enter*.65);
+      }
+
+      function render(){
+        if(dirty&&!reduceMotion){
+          dirty=false;
+          var max=Math.max(1,document.documentElement.scrollHeight-window.innerHeight);
+          progressBar.style.width=((window.scrollY/max)*100)+'%';
+          var intro=document.querySelector('[data-scene="intro"]');
+          var universe=document.querySelector('[data-scene="universe"]');
+          var work=document.querySelector('[data-scene="work"]');
+          var depth=document.querySelector('[data-scene="depth"]');
+          var final=document.querySelector('[data-scene="final"]');
+          if(intro) updateHero(sceneProgress(intro));
+          if(universe) updateUniverse(sceneProgress(universe));
+          if(work) updateRail(sceneProgress(work));
+          if(depth) updateDepth(sceneProgress(depth));
+          if(final) updateFinal(sceneProgress(final));
+          updateSceneNav();
+        }
+        requestAnimationFrame(render);
+      }
+      if(reduceMotion){
+        progressBar.style.display='none';
+        orbitCards.forEach(function(c){c.style.opacity='1'});
+        depthCards.forEach(function(c){c.style.opacity='1'});
+      }else{
+        render();
+      }
+
+      var repoGrid=document.getElementById('repoGrid');
+      var repoSearch=document.getElementById('repoSearch');
+      var repoCount=document.getElementById('repoCount');
+      var filterBtns=Array.prototype.slice.call(document.querySelectorAll('.filter-btn'));
+      var currentFilter='all';
+      var repos=[];
+
+      var fallbackNames=[
         '-','AyeAI','cc-switch','Compression-software','delta_ops_hazardzone','delta_ops_hazardzone_Alpha',
         'FTB-Ultimine','html','joyflix','LibreTV','LINE-Data-integration','LINE_Data_integration','Memory_manager',
         'Minecraft-ZoneSnapshot-Logistics','minecraft_key_random_scramble_mod','MoonTV',
         'object-detection-opencv-master-Chinese-culture-','pubgm-site','qqaibot','RayLingo-translate',
         'werewolf-ai-worker','youtube-speed-studio'
-      ].map(function(name){
-        return {name:name,html_url:'https://github.com/Ray20123315/' + encodeURIComponent(name),description:'Public GitHub repository',language:null,stargazers_count:0,fork:false,updated_at:null};
+      ];
+      var fallback=fallbackNames.map(function(name){
+        return {name:name,html_url:'https://github.com/Ray20123315/'+encodeURIComponent(name),description:'Public GitHub repository',language:null,stargazers_count:0,fork:false,updated_at:null};
       });
 
       function category(repo){
-        var hay = ((repo.name || '') + ' ' + (repo.description || '')).toLowerCase();
+        var hay=((repo.name||'')+' '+(repo.description||'')).toLowerCase();
         if(/minecraft|forge|fabric|ftb|hazardzone/.test(hay)) return 'Minecraft';
         if(/ai|bot|gemini|deepseek|werewolf|translate|llm/.test(hay)) return 'AI';
         if(/youtube|tv|video|media|pubgm|joyflix/.test(hay)) return 'Media';
@@ -597,133 +796,38 @@
         if(/memory|compression|switch|studio|tool|pack/.test(hay)) return 'Tools';
         return 'Other';
       }
-
-      function escapeHtml(s){
-        return String(s == null ? '' : s).replace(/[&<>"']/g,function(c){
-          return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
-        });
+      function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+      function relDate(v){
+        if(!v) return 'public';
+        var days=Math.max(0,Math.floor((Date.now()-new Date(v).getTime())/86400000));
+        if(days<1)return 'today';if(days<30)return days+'d ago';if(days<365)return Math.floor(days/30)+'mo ago';return Math.floor(days/365)+'y ago';
       }
-
-      function relativeDate(value){
-        if(!value) return 'public';
-        var d = new Date(value);
-        var days = Math.max(0,Math.floor((Date.now() - d.getTime()) / 86400000));
-        if(days < 1) return 'today';
-        if(days < 30) return days + 'd ago';
-        if(days < 365) return Math.floor(days / 30) + 'mo ago';
-        return Math.floor(days / 365) + 'y ago';
-      }
-
-      function render(){
-        var q = search.value.trim().toLowerCase();
-        var items = repos.filter(function(repo){
-          var cat = category(repo);
-          var passesFilter = activeFilter === 'all' || cat === activeFilter;
-          var hay = ((repo.name || '') + ' ' + (repo.description || '') + ' ' + (repo.language || '')).toLowerCase();
-          return passesFilter && (!q || hay.indexOf(q) >= 0);
+      function renderRepos(){
+        var q=(repoSearch.value||'').trim().toLowerCase();
+        var list=repos.filter(function(r){
+          var c=category(r);var hay=((r.name||'')+' '+(r.description||'')+' '+(r.language||'')).toLowerCase();
+          return (currentFilter==='all'||c===currentFilter)&&(!q||hay.indexOf(q)>=0);
         });
-        if(!items.length){
-          repoGrid.innerHTML = '<div class="empty">No repositories match this filter.</div>';
-          return;
-        }
-        repoGrid.innerHTML = items.map(function(repo){
-          var cat = category(repo);
-          var lang = repo.language || 'Mixed';
-          var desc = repo.description || 'Public repository on GitHub.';
-          var fork = repo.fork ? ' · fork' : '';
-          return '<a class="repo" href="' + escapeHtml(repo.html_url) + '" target="_blank" rel="noopener">' +
-            '<div class="repo-top"><span class="category">' + escapeHtml(cat) + '</span><span class="meta">' + escapeHtml(relativeDate(repo.updated_at)) + fork + '</span></div>' +
-            '<h3>' + escapeHtml(repo.name) + '</h3>' +
-            '<p>' + escapeHtml(desc) + '</p>' +
-            '<div class="repo-footer"><span class="lang"><i></i>' + escapeHtml(lang) + '</span><span>★ ' + Number(repo.stargazers_count || 0) + ' ↗</span></div>' +
-          '</a>';
+        if(!list.length){repoGrid.innerHTML='<div class="empty">No repositories match this filter.</div>';return}
+        repoGrid.innerHTML=list.map(function(r){
+          return '<a class="repo-card" href="'+esc(r.html_url)+'" target="_blank" rel="noopener">'+
+            '<div class="repo-top"><span class="repo-cat">'+esc(category(r))+'</span><span class="repo-time">'+esc(relDate(r.updated_at))+(r.fork?' · fork':'')+'</span></div>'+
+            '<h3>'+esc(r.name)+'</h3><p>'+esc(r.description||'Public repository on GitHub.')+'</p>'+
+            '<div class="repo-bottom"><span><i class="lang-dot"></i>'+esc(r.language||'Mixed')+'</span><span>★ '+Number(r.stargazers_count||0)+' ↗</span></div></a>';
         }).join('');
       }
-
-      filterButtons.forEach(function(btn){
+      filterBtns.forEach(function(btn){
         btn.addEventListener('click',function(){
-          activeFilter = btn.getAttribute('data-filter');
-          filterButtons.forEach(function(b){b.classList.toggle('active', b === btn)});
-          render();
+          currentFilter=btn.getAttribute('data-filter');
+          filterBtns.forEach(function(b){b.classList.toggle('active',b===btn)});
+          renderRepos();
         });
       });
-      search.addEventListener('input',render);
-
-      fetch('https://api.github.com/users/Ray20123315/repos?per_page=100&sort=updated&type=public', {headers:{'Accept':'application/vnd.github+json'}})
-        .then(function(r){if(!r.ok) throw new Error('GitHub API ' + r.status);return r.json()})
-        .then(function(data){
-          repos = data.filter(function(r){return !r.private});
-          repoCount.textContent = String(repos.length);
-          render();
-        })
-        .catch(function(){
-          repos = fallback;
-          repoCount.textContent = String(fallback.length);
-          render();
-        });
-
-      var canvas = document.getElementById('network');
-      var ctx = canvas.getContext('2d');
-      var host = canvas.parentElement;
-      var points = [];
-      var pointer = {x:-9999,y:-9999};
-
-      function resizeCanvas(){
-        var rect = host.getBoundingClientRect();
-        var dpr = Math.min(window.devicePixelRatio || 1,2);
-        canvas.width = Math.max(1,Math.floor(rect.width * dpr));
-        canvas.height = Math.max(1,Math.floor(rect.height * dpr));
-        canvas.style.width = rect.width + 'px';
-        canvas.style.height = rect.height + 'px';
-        ctx.setTransform(dpr,0,0,dpr,0,0);
-        points = [];
-        var count = rect.width < 500 ? 24 : 38;
-        for(var i=0;i<count;i++){
-          points.push({
-            x:Math.random()*rect.width,
-            y:Math.random()*rect.height,
-            vx:(Math.random()-.5)*.18,
-            vy:(Math.random()-.5)*.18,
-            r:Math.random()*1.4+.5
-          });
-        }
-      }
-      host.addEventListener('pointermove',function(e){
-        var r = host.getBoundingClientRect();
-        pointer.x = e.clientX-r.left;
-        pointer.y = e.clientY-r.top;
-      });
-      host.addEventListener('pointerleave',function(){pointer.x=-9999;pointer.y=-9999});
-      window.addEventListener('resize',resizeCanvas,{passive:true});
-      resizeCanvas();
-
-      function drawNetwork(){
-        var w = host.clientWidth, h = host.clientHeight;
-        ctx.clearRect(0,0,w,h);
-        for(var i=0;i<points.length;i++){
-          var p = points[i];
-          if(!reduceMotion){p.x+=p.vx;p.y+=p.vy}
-          if(p.x<0||p.x>w)p.vx*=-1;
-          if(p.y<0||p.y>h)p.vy*=-1;
-          var dx=p.x-pointer.x,dy=p.y-pointer.y,dist=Math.sqrt(dx*dx+dy*dy);
-          if(dist<120 && dist>0 && !reduceMotion){p.x+=dx/dist*.22;p.y+=dy/dist*.22}
-          ctx.beginPath();
-          ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-          ctx.fillStyle='rgba(210,238,255,.58)';
-          ctx.fill();
-          for(var j=i+1;j<points.length;j++){
-            var q=points[j],ddx=p.x-q.x,ddy=p.y-q.y,d=Math.sqrt(ddx*ddx+ddy*ddy);
-            if(d<110){
-              ctx.beginPath();
-              ctx.moveTo(p.x,p.y);ctx.lineTo(q.x,q.y);
-              ctx.strokeStyle='rgba(126,184,220,' + ((1-d/110)*.18) + ')';
-              ctx.lineWidth=.7;ctx.stroke();
-            }
-          }
-        }
-        requestAnimationFrame(drawNetwork);
-      }
-      drawNetwork();
+      repoSearch.addEventListener('input',renderRepos);
+      fetch('https://api.github.com/users/Ray20123315/repos?per_page=100&sort=updated&type=public',{headers:{Accept:'application/vnd.github+json'}})
+        .then(function(r){if(!r.ok)throw new Error('GitHub API '+r.status);return r.json()})
+        .then(function(data){repos=data.filter(function(r){return !r.private});repoCount.textContent=repos.length+' repos';renderRepos()})
+        .catch(function(){repos=fallback;repoCount.textContent=fallback.length+' repos · fallback';renderRepos()});
     })();
   </script>
 </body>
