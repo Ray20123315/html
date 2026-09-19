@@ -1,19 +1,22 @@
 # ACTIVE_TASK
 
-task_status: completed
-revision: 2
+task_status: active
+revision: 3
 
 ## Goal
-Upgrade the public portfolio so each scroll layer visibly transitions into the next and the overall visual quality is substantially higher.
+Replace portfolio v2 because user reports the design is worse and the expected scroll animation is effectively absent. Rebuild with a cleaner premium visual system and reliable scroll-driven animation.
 
 ## Acceptance
-- [x] Rebuild portfolio with cinematic scroll-driven scenes. Evidence: main commit `b8085ea11a262b2a5127afd98a6b5fbadc5518ec`.
-- [x] Keep GitHub live repository explorer and fallback data. Evidence: source verification found GitHub API and fallback code.
-- [x] Preserve original Memory Manager root site. Evidence: only `portfolio/index.html` changed on main.
-- [x] Verify committed file, JavaScript syntax, GitHub Pages workflow success. Evidence: blob `f8b8249e8bae99b30357bc72946a1caf067c8273`; V8 syntax pass; workflow runs 35459491480 and 35459491035 succeeded.
+- [~] Replace custom sticky/requestAnimationFrame choreography with GSAP ScrollTrigger pin/scrub timelines plus a no-library reveal fallback.
+- [ ] Every major scroll layer must visibly enter/exit; selected projects must transition one-by-one in a pinned stage.
+- [ ] Reduce visual noise: one controlled accent family, stronger whitespace, fewer decorative circles/cards.
+- [ ] Preserve live GitHub public repository explorer and root Memory Manager site.
+- [ ] Verify source, JavaScript syntax, external animation library URLs, and GitHub Pages deployment.
 
-## Result
-Cinematic portfolio v2 deployed through GitHub Pages.
+## Evidence / rationale
+- User directly reported v2 looked worse and animations were absent.
+- GSAP official ScrollTrigger docs support pin + scrub timelines for scroll-linked scenes.
+- GSAP community guidance identifies position:sticky/custom transforms as a source of pin/measurement problems; v3 will use ScrollTrigger pinning instead.
 
 ## Next action
-None.
+Replace `portfolio/index.html` on main, then verify runtime-critical structure and deployment.
