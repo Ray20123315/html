@@ -89,6 +89,44 @@
     .hero__ring:nth-child(1){width:min(62vw,780px);aspect-ratio:1}
     .hero__ring:nth-child(2){width:min(83vw,1040px);aspect-ratio:1;border-style:dashed}
     .hero__ring:nth-child(3){width:min(106vw,1340px);aspect-ratio:1}
+    .hero__core{
+      position:absolute;left:50%;top:48%;z-index:7;width:clamp(260px,27vw,390px);aspect-ratio:1;border-radius:50%;
+      transform:translate(-50%,-50%);display:grid;place-items:center;pointer-events:none;
+      border:1px solid rgba(255,255,255,.18);
+      background:
+        radial-gradient(circle at 33% 27%,rgba(255,255,255,.22),transparent 18%),
+        radial-gradient(circle at 64% 68%,rgba(139,233,255,.10),transparent 36%),
+        linear-gradient(145deg,rgba(24,24,30,.88),rgba(6,6,8,.74));
+      box-shadow:
+        inset 0 0 80px rgba(255,255,255,.035),
+        inset 0 0 36px rgba(139,233,255,.035),
+        0 0 0 1px rgba(255,255,255,.025),
+        0 38px 120px rgba(0,0,0,.48),
+        0 0 120px rgba(139,233,255,.09);
+      backdrop-filter:blur(22px) saturate(130%);
+      will-change:transform,filter,opacity
+    }
+    .hero__core::before,.hero__core::after{
+      content:"";position:absolute;border-radius:50%;border:1px solid rgba(255,255,255,.105)
+    }
+    .hero__core::before{inset:12%;border-style:dashed}
+    .hero__core::after{inset:-9%;border-color:rgba(139,233,255,.09)}
+    .hero__core-inner{text-align:center;position:relative;z-index:2}
+    .hero__core-inner strong{display:block;font-size:clamp(52px,6vw,82px);line-height:.88;letter-spacing:-.085em}
+    .hero__core-inner small{display:block;margin-top:12px;font:9px var(--mono);letter-spacing:.18em;text-transform:uppercase;color:#83838e}
+    .hero__core-pulse{position:absolute;inset:27%;border-radius:50%;border:1px solid rgba(139,233,255,.22);box-shadow:0 0 44px rgba(139,233,255,.12)}
+    .hero__core-node{position:absolute;width:9px;height:9px;border-radius:50%;background:var(--accent);box-shadow:0 0 22px rgba(139,233,255,.75)}
+    .hero__core-node--a{left:13%;top:43%}.hero__core-node--b{right:17%;top:25%}.hero__core-node--c{right:23%;bottom:17%;width:6px;height:6px}
+    .hero__dock-copy{
+      position:absolute;left:max(28px,calc((100vw - min(var(--max),calc(100vw - 48px)))/2));top:50%;
+      z-index:6;width:min(590px,46vw);opacity:0;visibility:hidden;transform:translateY(-38%);
+      text-align:left
+    }
+    .hero__dock-copy .eyebrow{margin-bottom:18px}
+    .hero__dock-copy h2{font-size:clamp(42px,6vw,84px);line-height:.92;letter-spacing:-.07em;margin:0}
+    .hero__dock-copy h2 span{color:#696973}
+    .hero__dock-copy p{max-width:500px;margin:22px 0 0;color:#8c8c96;font-size:13px}
+    .hero__dock-line{margin-top:30px;width:min(360px,80%);height:1px;background:linear-gradient(90deg,var(--accent),rgba(255,255,255,.08),transparent);transform-origin:left}
     .hero__content{position:relative;z-index:3;text-align:center}
     .hero__eyebrow{justify-content:center;margin-bottom:22px}
     .hero__title{margin:0;text-transform:uppercase;line-height:.76;letter-spacing:-.092em}
@@ -254,6 +292,10 @@
       .shell{width:min(var(--max),calc(100% - 24px))}
       .nav{top:10px;height:54px}.nav__links{display:none}.nav__github span{display:none}
       .hero__frame{padding-top:105px}.hero__word--ray{font-size:clamp(104px,37vw,178px)}.hero__word--lab{font-size:17px;letter-spacing:.25em;margin-left:.25em}
+      .hero__core{width:clamp(210px,62vw,290px)}
+      .hero__dock-copy{left:20px;right:20px;top:57%;width:auto}
+      .hero__dock-copy h2{font-size:clamp(36px,10vw,54px)}
+      .hero__dock-copy p{font-size:11px;max-width:72%}
       .hero__body{font-size:14px}.hero__footer{bottom:18px}
       .intro{padding:110px 0 92px}.intro__statement{font-size:47px}
       .work__frame{padding:84px 0 18px}.work__header{display:block}.work__header p{margin-top:14px}.work__header h2{font-size:48px}
@@ -273,6 +315,9 @@
       .progress{display:none}
       .reveal{opacity:1;transform:none;filter:none}
       .hero__frame,.work__frame{min-height:auto}
+      .hero__core{position:relative;left:auto;top:auto;transform:none!important;margin:50px auto 26px;width:min(62vw,300px)}
+      .hero__dock-copy{position:relative;left:auto;top:auto;width:min(680px,100%);margin:56px auto 0;opacity:1!important;visibility:visible!important;transform:none!important;text-align:center}
+      .hero__dock-copy .eyebrow{justify-content:center}.hero__dock-copy p{margin-inline:auto}.hero__dock-line{margin-inline:auto}
       .work{padding:80px 0}.work__frame{overflow:visible}.work__stage{display:grid;gap:14px;min-height:auto}
       .work-card{position:relative;inset:auto;visibility:visible!important;opacity:1!important;min-height:660px;transform:none!important;filter:none!important}
     }
@@ -296,6 +341,19 @@
         <div class="hero__grid"></div>
         <div class="hero__aurora"></div>
         <div class="hero__rings"><i class="hero__ring"></i><i class="hero__ring"></i><i class="hero__ring"></i></div>
+        <div class="hero__core" id="heroCore" aria-hidden="true">
+          <i class="hero__core-pulse"></i>
+          <i class="hero__core-node hero__core-node--a"></i>
+          <i class="hero__core-node hero__core-node--b"></i>
+          <i class="hero__core-node hero__core-node--c"></i>
+          <div class="hero__core-inner"><strong>R/</strong><small>idea → system</small></div>
+        </div>
+        <div class="hero__dock-copy" id="heroDockCopy">
+          <div class="eyebrow">Scroll / Transform / Dock</div>
+          <h2>一開始，<br>讓想法佔滿畫面。<br><span>往下後，它退到旁邊。</span></h2>
+          <p>主物件會跟著你的滾動連續縮小並移到右側，畫面重新騰出空間，下一段內容才進來。不是切頁，是同一個東西一路變形到下一個狀態。</p>
+          <div class="hero__dock-line"></div>
+        </div>
         <div class="hero__content shell">
           <div class="eyebrow hero__eyebrow">Designer by instinct · builder by habit</div>
           <h1 class="hero__title"><span class="hero__word hero__word--ray">RAY</span><span class="hero__word hero__word--lab">BUILD / LAB</span></h1>
@@ -473,32 +531,55 @@
         if(reduce||!window.gsap||!window.ScrollTrigger) return false;
         gsap.registerPlugin(ScrollTrigger);
 
-        gsap.from('.hero__eyebrow',{autoAlpha:0,y:18,duration:.75,ease:'power3.out'});
-        gsap.from('.hero__word--ray',{autoAlpha:0,yPercent:18,scale:.94,filter:'blur(14px)',duration:1.05,ease:'power4.out',delay:.05});
-        gsap.from('.hero__word--lab',{autoAlpha:0,y:24,letterSpacing:'.55em',filter:'blur(8px)',duration:1,ease:'power3.out',delay:.14});
-        gsap.from('.hero__body',{autoAlpha:0,y:20,duration:.8,ease:'power3.out',delay:.28});
-        gsap.from('.hero__actions',{autoAlpha:0,y:14,duration:.7,ease:'power3.out',delay:.38});
+        gsap.set('#heroDockCopy',{autoAlpha:0,y:60,filter:'blur(14px)'});
+        gsap.from('.hero__eyebrow',{autoAlpha:0,y:18,duration:.65,ease:'power3.out'});
+        gsap.from('.hero__word--ray',{autoAlpha:0,yPercent:16,scale:.96,filter:'blur(12px)',duration:.95,ease:'power4.out',delay:.04});
+        gsap.from('.hero__word--lab',{autoAlpha:0,y:22,filter:'blur(7px)',duration:.85,ease:'power3.out',delay:.12});
+        gsap.from('.hero__body',{autoAlpha:0,y:18,duration:.72,ease:'power3.out',delay:.22});
+        gsap.from('.hero__actions',{autoAlpha:0,y:12,duration:.65,ease:'power3.out',delay:.3});
+        gsap.from('#heroCore',{autoAlpha:0,scale:.72,filter:'blur(16px)',duration:1.05,ease:'power4.out',delay:.12});
 
         var heroTl=gsap.timeline({
           scrollTrigger:{
             trigger:'#hero',
             start:'top top',
-            end:'+=110%',
+            end:'+=190%',
             pin:'.hero__frame',
-            scrub:.75,
+            scrub:.85,
             anticipatePin:1,
             invalidateOnRefresh:true
           }
         });
+
         heroTl
-          .to('.hero__word--ray',{xPercent:-10,scale:.91,autoAlpha:.1,filter:'blur(12px)',ease:'none'},0)
-          .to('.hero__word--lab',{xPercent:12,autoAlpha:0,filter:'blur(8px)',ease:'none'},0)
-          .to('.hero__body,.hero__actions,.hero__eyebrow',{y:-70,autoAlpha:0,ease:'none'},0)
-          .to('.hero__aurora',{scale:1.55,autoAlpha:.25,ease:'none'},0)
-          .to('.hero__grid',{yPercent:-9,scale:1.08,autoAlpha:.08,ease:'none'},0)
-          .to('.hero__ring:nth-child(1)',{scale:1.25,rotation:34,autoAlpha:.15,ease:'none'},0)
-          .to('.hero__ring:nth-child(2)',{scale:1.18,rotation:-24,autoAlpha:.09,ease:'none'},0)
-          .to('.hero__ring:nth-child(3)',{scale:1.12,rotation:18,autoAlpha:.06,ease:'none'},0);
+          .to('.hero__content',{
+            xPercent:-16,
+            scale:.92,
+            autoAlpha:.06,
+            filter:'blur(12px)',
+            ease:'none',
+            duration:.72
+          },0)
+          .to('#heroCore',{
+            x:function(){return window.innerWidth<720?window.innerWidth*.29:Math.min(window.innerWidth*.33,470);},
+            y:function(){return window.innerWidth<720?-Math.min(window.innerHeight*.27,190):-Math.min(window.innerHeight*.25,220);},
+            scale:function(){return window.innerWidth<720?.30:.34;},
+            rotation:16,
+            ease:'none',
+            duration:1.18
+          },0.04)
+          .to('.hero__core-pulse',{scale:1.32,autoAlpha:.35,ease:'none',duration:.8},0.04)
+          .to('.hero__core::before',{rotation:95,ease:'none',duration:1.1},0.04)
+          .to('.hero__aurora',{xPercent:18,yPercent:-8,scale:.68,autoAlpha:.16,ease:'none',duration:1.05},0)
+          .to('.hero__ring:nth-child(1)',{xPercent:30,yPercent:-18,scale:.54,rotation:26,autoAlpha:.15,ease:'none',duration:1.05},0)
+          .to('.hero__ring:nth-child(2)',{xPercent:27,yPercent:-17,scale:.47,rotation:-20,autoAlpha:.09,ease:'none',duration:1.05},0)
+          .to('.hero__ring:nth-child(3)',{xPercent:24,yPercent:-15,scale:.42,rotation:16,autoAlpha:.055,ease:'none',duration:1.05},0)
+          .to('.hero__grid',{yPercent:-8,scale:1.06,autoAlpha:.11,ease:'none',duration:1.0},0)
+          .to('#heroDockCopy',{autoAlpha:1,y:0,filter:'blur(0px)',ease:'power2.out',duration:.58},0.56)
+          .fromTo('.hero__dock-line',{scaleX:0},{scaleX:1,ease:'none',duration:.42},0.68)
+          .to('#heroCore',{rotation:23,ease:'none',duration:.28},1.04)
+          .to('.hero__core-node--a',{x:11,y:-7,ease:'none',duration:.28},1.04)
+          .to('.hero__core-node--b',{x:-8,y:9,ease:'none',duration:.28},1.04);
 
         gsap.set(workCards.slice(1),{autoAlpha:0,y:70,scale:.985,filter:'blur(12px)'});
         gsap.set(workCards[0],{autoAlpha:1,y:0,scale:1,filter:'blur(0px)'});
