@@ -1,32 +1,30 @@
 # ACTIVE_TASK
 
 task_status: completed
-revision: 5
+revision: 6
 
 ## Goal
-Remove the fragile external animation dependency and rebuild the scroll motion with native browser APIs so the hero reliably performs the requested continuous transformation: one large central object slowly shrinks and moves to the side as the user scrolls.
+Fix the "nothing is visible" failure and make the hero's main object unmistakably visible.
 
-## Root cause fixed
-- Removed external GSAP/ScrollTrigger dependency from jsDelivr.
-- Animation no longer depends on third-party script loading.
-- Progressive fallback keeps work content visible if the motion engine does not initialize.
+## Root cause found
+- Revision 5 contained a literal backslash-n sequence inside the inline JavaScript variable declarations.
+- That produced a JavaScript SyntaxError and stopped the motion code from executing.
+- The previous abstract glass core was also too visually subtle for the user's intended "there is a thing" interaction.
 
-## Acceptance
-- [x] No external GSAP/ScrollTrigger scripts remain.
-- [x] Native requestAnimationFrame + CSS sticky drives the hero.
-- [x] Hero core continuously moves from center to upper-right and scales to ~34% desktop / ~30% mobile.
-- [x] Dock copy fades in continuously as the core docks.
-- [x] Selected Work uses the same native scroll progress engine.
-- [x] Live GitHub repo explorer and root Memory Manager site preserved.
-- [x] Inline JavaScript syntax passes.
-- [x] Both GitHub Pages workflows completed successfully.
+## Fix
+- Replaced the abstract core with a large, high-contrast product/app window in the center of the hero.
+- The object contains a visible title, metrics, chart, frame, toolbar, and badge.
+- Kept the native sticky + requestAnimationFrame scroll engine.
+- Repaired the inline JavaScript newline syntax issue.
 
-## Evidence
-- Main commit: `549ee43763fc81e5cc1099c27db1f710b3ea4e98`.
-- Portfolio blob: `1874b8e0231c316fb7a90edd4bf5e81dec4a862a`.
-- V8 inline JavaScript syntax: PASS.
-- Workflow 35460512804: completed/success.
-- Workflow 35460512490: completed/success.
+## Verification
+- Final main commit: `47609530ec1bfa73854c792abfa43877f7b1ebf9`.
+- Final blob: `2cb3ea5595863717e2c239fed617246db9c03c7b`.
+- Inline JavaScript V8 syntax: PASS.
+- No external animation dependency.
+- Hero product window exists.
+- Native requestAnimationFrame motion exists.
+- GitHub Pages run `35460825049`: completed/success.
 
 ## Next action
 None.
