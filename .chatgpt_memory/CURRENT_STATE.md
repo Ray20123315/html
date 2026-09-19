@@ -2,12 +2,15 @@
 
 Verified current state:
 - Repository: `Ray20123315/html`.
-- Portfolio source: `portfolio/index.html` blob `f8b8249e8bae99b30357bc72946a1caf067c8273`.
-- Main implementation commit: `b8085ea11a262b2a5127afd98a6b5fbadc5518ec`.
-- JavaScript syntax compilation: PASS in V8.
-- Scene markers verified: intro, universe, work, depth, repos, final.
-- GitHub live repository API and fallback data verified in source.
-- `prefers-reduced-motion` fallback verified in source.
-- GitHub Pages workflow run 35459491480: completed/success.
-- GitHub Pages deployment run 35459491035: completed/success.
-- Root Memory Manager website remains separate; main change was limited to `portfolio/index.html`.
+- Portfolio v3 source: `portfolio/index.html`.
+- Current blob: `dfd858a86a49d6561242c3edf3314bba493310e9`.
+- Current main commit: `ef456e98a712b43f25049e9e1f1d068c3359a509`.
+- Animation architecture: GSAP 3.15.0 + ScrollTrigger pin/scrub; native IntersectionObserver fallback.
+- Hero scene: pinned scroll-linked exit.
+- Selected Work scene: pinned five-project sequential transitions.
+- Capability rows: triggered entry animation.
+- Final scene: scroll-linked orb/text reveal.
+- GitHub repository explorer remains dynamic with static fallback.
+- Inline JavaScript syntax compilation: PASS.
+- GitHub Pages workflow/deployment: PASS.
+- Root Memory Manager site remains unchanged.
