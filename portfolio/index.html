@@ -1,0 +1,730 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#050506">
+  <meta name="description" content="Ray20123315 — GitHub project portfolio, experiments, tools, AI, web and Minecraft projects.">
+  <title>Ray / Build Lab — GitHub Portfolio</title>
+  <style>
+    :root{
+      --bg:#050506;
+      --bg-2:#09090b;
+      --surface:rgba(16,16,19,.72);
+      --surface-2:rgba(22,22,27,.82);
+      --line:rgba(255,255,255,.10);
+      --line-strong:rgba(255,255,255,.18);
+      --text:#f7f7f4;
+      --muted:#9b9ba5;
+      --cyan:#58e7ff;
+      --violet:#9b87ff;
+      --lime:#b8ff66;
+      --pink:#ff72cb;
+      --orange:#ffb15a;
+      --max:1240px;
+      --radius:26px;
+      --mono:"Cascadia Mono","SFMono-Regular",Consolas,monospace;
+      --sans:Inter,"Noto Sans TC","Segoe UI","Microsoft JhengHei",system-ui,sans-serif;
+      --mx:50vw;
+      --my:20vh;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth;background:var(--bg)}
+    body{
+      margin:0;
+      min-height:100vh;
+      color:var(--text);
+      background:
+        radial-gradient(circle at 18% -10%,rgba(88,231,255,.08),transparent 32%),
+        radial-gradient(circle at 92% 22%,rgba(155,135,255,.08),transparent 30%),
+        var(--bg);
+      font-family:var(--sans);
+      line-height:1.55;
+      overflow-x:hidden;
+    }
+    body::before{
+      content:"";
+      position:fixed;inset:0;z-index:-3;pointer-events:none;
+      background-image:
+        linear-gradient(rgba(255,255,255,.024) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(255,255,255,.024) 1px,transparent 1px);
+      background-size:44px 44px;
+      mask-image:linear-gradient(to bottom,black,transparent 88%);
+    }
+    a{color:inherit;text-decoration:none}
+    button,input{font:inherit}
+    button{color:inherit}
+    ::selection{background:rgba(88,231,255,.28);color:white}
+    .shell{width:min(var(--max),calc(100% - 40px));margin-inline:auto}
+    .spotlight{
+      position:fixed;inset:0;z-index:-2;pointer-events:none;
+      background:radial-gradient(520px circle at var(--mx) var(--my),rgba(88,231,255,.08),transparent 58%);
+      transition:opacity .2s ease;
+    }
+    .orb{position:fixed;border-radius:999px;filter:blur(110px);opacity:.16;z-index:-4;pointer-events:none}
+    .orb.a{width:460px;height:460px;background:var(--violet);right:-180px;top:8vh;animation:driftA 13s ease-in-out infinite alternate}
+    .orb.b{width:380px;height:380px;background:var(--cyan);left:-190px;top:52vh;animation:driftB 16s ease-in-out infinite alternate}
+    .orb.c{width:280px;height:280px;background:var(--pink);left:44vw;bottom:-170px;animation:driftA 18s ease-in-out infinite alternate-reverse}
+    @keyframes driftA{to{transform:translate3d(-70px,70px,0) scale(1.15)}}
+    @keyframes driftB{to{transform:translate3d(90px,-65px,0) scale(.88)}}
+    .progress{position:fixed;left:0;top:0;height:2px;width:0;background:linear-gradient(90deg,var(--cyan),var(--violet),var(--pink));z-index:100}
+    .nav-wrap{
+      position:sticky;top:0;z-index:50;
+      backdrop-filter:blur(18px) saturate(140%);
+      background:linear-gradient(to bottom,rgba(5,5,6,.82),rgba(5,5,6,.48));
+      border-bottom:1px solid rgba(255,255,255,.055);
+    }
+    nav{height:72px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+    .brand{display:flex;align-items:center;gap:11px;font-weight:760;letter-spacing:-.02em}
+    .brand-mark{
+      width:34px;height:34px;display:grid;place-items:center;border:1px solid var(--line-strong);
+      border-radius:11px;background:linear-gradient(145deg,rgba(255,255,255,.09),rgba(255,255,255,.02));
+      box-shadow:inset 0 1px rgba(255,255,255,.12),0 8px 28px rgba(0,0,0,.2);
+      font-family:var(--mono);font-size:13px;color:var(--cyan)
+    }
+    .nav-links{display:flex;align-items:center;gap:7px;color:#c6c6cc;font-size:14px}
+    .nav-links a{padding:9px 12px;border-radius:11px;transition:.2s ease}
+    .nav-links a:hover{background:rgba(255,255,255,.055);color:white}
+    .github-pill{
+      display:flex;align-items:center;gap:9px;padding:9px 13px;border:1px solid var(--line);
+      border-radius:999px;background:rgba(255,255,255,.035);transition:.2s ease
+    }
+    .github-pill:hover{border-color:rgba(88,231,255,.42);background:rgba(88,231,255,.07)}
+    .github-pill svg{width:17px;height:17px}
+    .hero{
+      min-height:calc(100svh - 72px);display:grid;grid-template-columns:1.08fr .92fr;
+      align-items:center;gap:72px;padding:92px 0 72px;position:relative
+    }
+    .eyebrow{
+      display:inline-flex;align-items:center;gap:10px;color:#d1d1d8;font-family:var(--mono);
+      font-size:12px;letter-spacing:.14em;text-transform:uppercase
+    }
+    .eyebrow i{display:block;width:7px;height:7px;border-radius:50%;background:var(--lime);box-shadow:0 0 18px var(--lime)}
+    .hero h1{
+      font-size:clamp(58px,8vw,114px);line-height:.87;letter-spacing:-.075em;
+      margin:22px 0 28px;font-weight:860;max-width:820px
+    }
+    .hero h1 .ghost{
+      display:block;color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.34);
+      text-shadow:0 0 50px rgba(155,135,255,.06)
+    }
+    .hero h1 .glow{
+      display:block;background:linear-gradient(92deg,#fff 0%,#c9f9ff 30%,#a9a0ff 65%,#ffd0ef 100%);
+      color:transparent;background-clip:text;-webkit-background-clip:text
+    }
+    .lede{max-width:690px;font-size:clamp(17px,1.7vw,21px);color:#b6b6c0;letter-spacing:-.018em;margin:0}
+    .lede strong{color:#f0f0f2;font-weight:650}
+    .hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
+    .btn{
+      display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:48px;padding:0 18px;
+      border-radius:14px;border:1px solid var(--line);font-weight:650;font-size:14px;
+      background:rgba(255,255,255,.04);transition:transform .2s ease,border-color .2s ease,background .2s ease
+    }
+    .btn:hover{transform:translateY(-2px);border-color:rgba(255,255,255,.24);background:rgba(255,255,255,.07)}
+    .btn.primary{background:#f5f5f2;color:#0b0b0d;border-color:#f5f5f2}
+    .btn.primary:hover{background:#fff}
+    .btn .arrow{font-family:var(--mono);font-size:13px}
+    .stat-row{display:flex;gap:26px;flex-wrap:wrap;margin-top:42px}
+    .stat{display:flex;flex-direction:column;gap:2px}
+    .stat b{font-family:var(--mono);font-size:20px;letter-spacing:-.04em}
+    .stat span{font-size:12px;color:#7f7f8a;text-transform:uppercase;letter-spacing:.1em}
+    .visual{
+      min-height:560px;position:relative;display:grid;place-items:center;
+      perspective:1200px
+    }
+    #network{position:absolute;inset:0;width:100%;height:100%;opacity:.86}
+    .core{
+      position:relative;width:min(360px,78vw);aspect-ratio:1;border-radius:50%;
+      display:grid;place-items:center;
+      background:
+        radial-gradient(circle at 42% 38%,rgba(255,255,255,.12),transparent 32%),
+        radial-gradient(circle,rgba(155,135,255,.16),rgba(9,9,12,.75) 58%,rgba(5,5,6,.9) 72%);
+      border:1px solid rgba(255,255,255,.13);
+      box-shadow:inset 0 0 90px rgba(88,231,255,.05),0 50px 130px rgba(0,0,0,.52);
+      animation:floatCore 6s ease-in-out infinite
+    }
+    .core::before,.core::after{content:"";position:absolute;border-radius:50%;border:1px solid rgba(255,255,255,.09)}
+    .core::before{inset:14%;border-style:dashed;animation:spin 28s linear infinite}
+    .core::after{inset:-13%;border-color:rgba(88,231,255,.08);animation:spin 38s linear infinite reverse}
+    @keyframes floatCore{50%{transform:translateY(-10px) rotateX(2deg)}}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .core-copy{text-align:center;position:relative;z-index:2}
+    .core-copy small{font-family:var(--mono);color:var(--muted);letter-spacing:.14em;text-transform:uppercase}
+    .core-copy strong{display:block;font-size:48px;letter-spacing:-.08em;margin:2px 0 4px}
+    .core-copy span{font-family:var(--mono);font-size:12px;color:var(--cyan)}
+    .float-chip{
+      position:absolute;display:flex;align-items:center;gap:10px;padding:10px 13px;
+      background:rgba(10,10,13,.77);backdrop-filter:blur(13px);border:1px solid var(--line);
+      border-radius:14px;box-shadow:0 18px 50px rgba(0,0,0,.32);
+      font-size:12px;color:#d9d9df;animation:chipFloat 5s ease-in-out infinite
+    }
+    .float-chip i{width:8px;height:8px;border-radius:50%;background:var(--cyan);box-shadow:0 0 15px currentColor}
+    .float-chip:nth-of-type(1){top:12%;left:1%;animation-delay:-1s}
+    .float-chip:nth-of-type(2){right:-2%;top:24%;animation-delay:-3.1s}
+    .float-chip:nth-of-type(3){left:3%;bottom:19%;animation-delay:-2.2s}
+    .float-chip:nth-of-type(4){right:2%;bottom:11%;animation-delay:-4.4s}
+    .float-chip.violet i{background:var(--violet)}
+    .float-chip.pink i{background:var(--pink)}
+    .float-chip.lime i{background:var(--lime)}
+    @keyframes chipFloat{50%{transform:translateY(-9px)}}
+    .section{padding:110px 0}
+    .section-head{display:flex;align-items:end;justify-content:space-between;gap:40px;margin-bottom:34px}
+    .section-head h2{font-size:clamp(34px,4vw,58px);letter-spacing:-.055em;line-height:1;margin:10px 0 0}
+    .section-head p{max-width:520px;color:var(--muted);margin:0;font-size:15px}
+    .featured{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
+    .project-card{
+      position:relative;overflow:hidden;min-height:330px;padding:26px;border-radius:var(--radius);
+      border:1px solid var(--line);background:linear-gradient(145deg,rgba(255,255,255,.055),rgba(255,255,255,.018));
+      transform-style:preserve-3d;transition:transform .18s ease,border-color .25s ease,box-shadow .25s ease;
+      --rx:0deg;--ry:0deg;--gx:50%;--gy:50%;
+      transform:perspective(1000px) rotateX(var(--rx)) rotateY(var(--ry))
+    }
+    .project-card::before{
+      content:"";position:absolute;inset:0;pointer-events:none;
+      background:radial-gradient(520px circle at var(--gx) var(--gy),rgba(88,231,255,.10),transparent 42%);
+      opacity:0;transition:opacity .2s ease
+    }
+    .project-card:hover{border-color:rgba(255,255,255,.21);box-shadow:0 28px 70px rgba(0,0,0,.26)}
+    .project-card:hover::before{opacity:1}
+    .project-card.big{grid-column:span 7}
+    .project-card.medium{grid-column:span 5}
+    .project-card.third{grid-column:span 4}
+    .project-card .top{display:flex;align-items:center;justify-content:space-between;gap:18px;position:relative;z-index:2}
+    .tag{font-family:var(--mono);font-size:10px;letter-spacing:.11em;text-transform:uppercase;color:#a9a9b3}
+    .repo-link{
+      width:35px;height:35px;display:grid;place-items:center;border-radius:11px;border:1px solid var(--line);
+      background:rgba(255,255,255,.035);transition:.2s ease
+    }
+    .repo-link:hover{background:rgba(255,255,255,.09);transform:translateY(-2px)}
+    .project-card h3{font-size:clamp(26px,3vw,43px);letter-spacing:-.05em;margin:72px 0 12px;line-height:1.02;position:relative;z-index:2}
+    .project-card p{color:#a8a8b2;margin:0;max-width:670px;font-size:14px;position:relative;z-index:2}
+    .project-card .stack{display:flex;flex-wrap:wrap;gap:7px;margin-top:22px;position:relative;z-index:2}
+    .stack span{font-family:var(--mono);font-size:10px;color:#c5c5cd;border:1px solid var(--line);border-radius:999px;padding:5px 8px;background:rgba(255,255,255,.025)}
+    .accent-orb{position:absolute;width:190px;height:190px;border-radius:50%;filter:blur(55px);right:-60px;bottom:-80px;opacity:.2;background:var(--cyan)}
+    .violet .accent-orb{background:var(--violet)}
+    .pink .accent-orb{background:var(--pink)}
+    .lime .accent-orb{background:var(--lime)}
+    .orange .accent-orb{background:var(--orange)}
+    .lab-panel{
+      border:1px solid var(--line);border-radius:28px;background:rgba(11,11,14,.65);overflow:hidden;
+      box-shadow:0 36px 100px rgba(0,0,0,.22)
+    }
+    .lab-bar{display:flex;align-items:center;gap:7px;height:48px;padding:0 18px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.018)}
+    .lab-bar i{width:8px;height:8px;border-radius:50%;background:#44444c}
+    .lab-bar span{margin-left:8px;font-family:var(--mono);font-size:11px;color:#7f7f8a}
+    .explorer-tools{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:20px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+    .filters{display:flex;gap:7px;flex-wrap:wrap}
+    .filter-btn{
+      border:1px solid var(--line);background:rgba(255,255,255,.025);border-radius:999px;padding:8px 11px;
+      font-family:var(--mono);font-size:11px;cursor:pointer;transition:.18s ease
+    }
+    .filter-btn:hover,.filter-btn.active{background:#f2f2ef;color:#0c0c0e;border-color:#f2f2ef}
+    .search-wrap{position:relative;min-width:min(100%,280px)}
+    .search-wrap input{
+      width:100%;height:38px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.025);
+      color:white;outline:none;padding:0 13px 0 34px;font-size:13px
+    }
+    .search-wrap input:focus{border-color:rgba(88,231,255,.44)}
+    .search-wrap::before{content:"⌕";position:absolute;left:12px;top:7px;color:#777782;font-family:var(--mono)}
+    .repo-grid{display:grid;grid-template-columns:repeat(3,1fr)}
+    .repo{
+      min-height:210px;padding:21px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);
+      transition:background .18s ease;position:relative
+    }
+    .repo:nth-child(3n){border-right:0}
+    .repo:hover{background:rgba(255,255,255,.026)}
+    .repo .repo-top{display:flex;justify-content:space-between;gap:16px}
+    .repo .category{font-family:var(--mono);font-size:10px;text-transform:uppercase;color:var(--cyan);letter-spacing:.09em}
+    .repo .meta{font-family:var(--mono);font-size:10px;color:#757580}
+    .repo h3{font-size:18px;line-height:1.15;letter-spacing:-.025em;margin:32px 0 9px;overflow-wrap:anywhere}
+    .repo p{font-size:12px;color:#868692;margin:0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+    .repo-footer{position:absolute;left:21px;right:21px;bottom:18px;display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);font-size:10px;color:#74747f}
+    .lang{display:flex;align-items:center;gap:7px}
+    .lang i{width:7px;height:7px;border-radius:50%;background:var(--violet)}
+    .empty{grid-column:1/-1;padding:56px;text-align:center;color:var(--muted)}
+    .manifesto{
+      display:grid;grid-template-columns:.9fr 1.1fr;gap:60px;align-items:start;
+      border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:90px 0
+    }
+    .manifesto h2{font-size:clamp(40px,5.8vw,82px);letter-spacing:-.07em;line-height:.93;margin:0}
+    .manifesto-copy{display:grid;gap:22px}
+    .manifesto-copy article{padding-top:20px;border-top:1px solid var(--line);display:grid;grid-template-columns:76px 1fr;gap:18px}
+    .manifesto-copy b{font-family:var(--mono);font-size:11px;color:var(--cyan)}
+    .manifesto-copy h3{font-size:20px;margin:0 0 6px;letter-spacing:-.025em}
+    .manifesto-copy p{margin:0;color:var(--muted);font-size:14px}
+    .cta-final{
+      padding:130px 0 120px;text-align:center;position:relative
+    }
+    .cta-final h2{font-size:clamp(50px,7vw,102px);letter-spacing:-.075em;line-height:.9;margin:0}
+    .cta-final p{color:var(--muted);font-size:16px;max-width:590px;margin:26px auto 0}
+    .cta-final .hero-actions{justify-content:center}
+    footer{
+      min-height:92px;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;
+      gap:20px;color:#777782;font-size:12px;font-family:var(--mono)
+    }
+    .reveal{opacity:0;transform:translateY(26px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1)}
+    .reveal.visible{opacity:1;transform:none}
+    .mobile-only{display:none}
+    @media (max-width:980px){
+      .hero{grid-template-columns:1fr;gap:20px;padding-top:72px}
+      .visual{min-height:470px}
+      .section{padding:84px 0}
+      .project-card.big,.project-card.medium{grid-column:span 12}
+      .project-card.third{grid-column:span 6}
+      .repo-grid{grid-template-columns:repeat(2,1fr)}
+      .repo:nth-child(3n){border-right:1px solid var(--line)}
+      .repo:nth-child(2n){border-right:0}
+      .manifesto{grid-template-columns:1fr;gap:44px}
+    }
+    @media (max-width:680px){
+      .shell{width:min(100% - 24px,var(--max))}
+      nav{height:64px}
+      .nav-links{display:none}
+      .github-pill span{display:none}
+      .hero{min-height:auto;padding:70px 0 52px}
+      .hero h1{font-size:clamp(54px,20vw,86px)}
+      .lede{font-size:16px}
+      .stat-row{gap:20px}
+      .visual{min-height:410px}
+      .core{width:245px}
+      .core-copy strong{font-size:36px}
+      .float-chip{font-size:10px}
+      .float-chip:nth-of-type(2){right:0}
+      .section-head{display:block}
+      .section-head p{margin-top:18px}
+      .project-card.third{grid-column:span 12}
+      .project-card{min-height:300px;padding:21px}
+      .project-card h3{margin-top:58px}
+      .explorer-tools{align-items:stretch}
+      .search-wrap{width:100%}
+      .repo-grid{grid-template-columns:1fr}
+      .repo,.repo:nth-child(2n),.repo:nth-child(3n){border-right:0}
+      .manifesto-copy article{grid-template-columns:55px 1fr}
+      footer{padding:22px 0;align-items:flex-start;flex-direction:column}
+      .mobile-only{display:inline}
+    }
+    @media (prefers-reduced-motion:reduce){
+      *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.001ms!important}
+      .reveal{opacity:1;transform:none}
+      .spotlight{display:none}
+    }
+  </style>
+</head>
+<body>
+  <div class="progress" id="progress"></div>
+  <div class="spotlight"></div>
+  <div class="orb a"></div><div class="orb b"></div><div class="orb c"></div>
+
+  <div class="nav-wrap">
+    <nav class="shell">
+      <a class="brand" href="#top">
+        <span class="brand-mark">R/</span>
+        <span>Ray Build Lab</span>
+      </a>
+      <div class="nav-links">
+        <a href="#projects">Projects</a>
+        <a href="#explorer">Explorer</a>
+        <a href="#principles">Principles</a>
+        <a href="../">Memory Manager</a>
+      </div>
+      <a class="github-pill" href="https://github.com/Ray20123315" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .7a11.3 11.3 0 0 0-3.57 22c.56.1.77-.24.77-.54v-2.2c-3.13.68-3.79-1.33-3.79-1.33-.51-1.3-1.25-1.65-1.25-1.65-1.02-.7.08-.69.08-.69 1.13.08 1.72 1.16 1.72 1.16 1 1.72 2.63 1.22 3.27.93.1-.73.39-1.22.71-1.5-2.5-.28-5.13-1.25-5.13-5.58 0-1.23.44-2.24 1.16-3.03-.12-.28-.5-1.43.11-2.98 0 0 .95-.3 3.11 1.16A10.8 10.8 0 0 1 12 6.07c.96 0 1.92.13 2.82.38 2.16-1.46 3.1-1.16 3.1-1.16.62 1.55.23 2.7.12 2.98.72.79 1.15 1.8 1.15 3.03 0 4.34-2.64 5.29-5.15 5.57.4.35.76 1.04.76 2.1v3.2c0 .3.2.65.78.54A11.3 11.3 0 0 0 12 .7Z"/></svg>
+        <span>@Ray20123315</span>
+      </a>
+    </nav>
+  </div>
+
+  <main id="top">
+    <section class="hero shell">
+      <div class="reveal">
+        <div class="eyebrow"><i></i><span>Public projects / tools / experiments</span></div>
+        <h1>
+          <span class="glow">BUILD.</span>
+          <span class="ghost">SHIP.</span>
+          <span class="glow">REPEAT.</span>
+        </h1>
+        <p class="lede">
+          我是 <strong>Ray</strong>。把想法快速做成可以跑、可以測、可以繼續迭代的東西：
+          AI Bot、瀏覽器擴充、Windows 工具、Cloudflare Workers、Minecraft Mod 與各種實驗性專案。
+        </p>
+        <div class="hero-actions">
+          <a class="btn primary" href="#projects">看精選專案 <span class="arrow">↓</span></a>
+          <a class="btn" href="https://github.com/Ray20123315?tab=repositories" target="_blank" rel="noopener">GitHub repositories <span class="arrow">↗</span></a>
+        </div>
+        <div class="stat-row">
+          <div class="stat"><b id="repoCount">22</b><span>public repos</span></div>
+          <div class="stat"><b>6+</b><span>project domains</span></div>
+          <div class="stat"><b>2026</b><span>still building</span></div>
+        </div>
+      </div>
+
+      <div class="visual reveal">
+        <canvas id="network" aria-hidden="true"></canvas>
+        <div class="core">
+          <div class="core-copy">
+            <small>ray20123315</small>
+            <strong>R/LAB</strong>
+            <span id="rotatingRole">AI × Web × Tools</span>
+          </div>
+        </div>
+        <div class="float-chip"><i></i><span>Memory Manager</span></div>
+        <div class="float-chip violet"><i></i><span>RayLingo</span></div>
+        <div class="float-chip pink"><i></i><span>QQ AI Bot</span></div>
+        <div class="float-chip lime"><i></i><span>Minecraft Mods</span></div>
+      </div>
+    </section>
+
+    <section class="section shell" id="projects">
+      <div class="section-head reveal">
+        <div>
+          <div class="eyebrow"><i></i><span>Selected work</span></div>
+          <h2>我在做的東西。</h2>
+        </div>
+        <p>不是把 repo 名稱排成一排，而是把每個專案的問題、系統與技術方向整理成可以快速理解的作品牆。</p>
+      </div>
+
+      <div class="featured">
+        <article class="project-card big reveal">
+          <span class="accent-orb"></span>
+          <div class="top"><span class="tag">Windows / systems / observability</span><a class="repo-link" href="https://github.com/Ray20123315/Memory_manager" target="_blank" rel="noopener" aria-label="Open Memory Manager repository">↗</a></div>
+          <h3>Memory Manager</h3>
+          <p>Windows 11 記憶體觀測與事故分析工具。重點放在 Commit、Process Commit、Headroom、事故時間線與可回復規則，而不是單純「一鍵清 RAM」。</p>
+          <div class="stack"><span>Windows</span><span>Telemetry</span><span>Diagnostics</span><span>Safety-first</span></div>
+        </article>
+
+        <article class="project-card medium violet reveal">
+          <span class="accent-orb"></span>
+          <div class="top"><span class="tag">Browser extension / translation</span><a class="repo-link" href="https://github.com/Ray20123315/RayLingo-translate" target="_blank" rel="noopener" aria-label="Open RayLingo repository">↗</a></div>
+          <h3>RayLingo</h3>
+          <p>跨瀏覽器即時翻譯擴充套件，包含 Popup、Workspace、TTS、反白翻譯、多語 UI、更新檢查與安全診斷。</p>
+          <div class="stack"><span>MV3</span><span>Firefox</span><span>Safari</span><span>Translator API</span></div>
+        </article>
+
+        <article class="project-card third pink reveal">
+          <span class="accent-orb"></span>
+          <div class="top"><span class="tag">AI / Cloudflare / realtime</span><a class="repo-link" href="https://github.com/Ray20123315/qqaibot" target="_blank" rel="noopener" aria-label="Open QQ AI Bot repository">↗</a></div>
+          <h3>QQ AI Bot</h3>
+          <p>部署於 Cloudflare Workers 的 QQ 群聊 AI Bot，整合多模型、D1、Vectorize、Durable Objects、排程、群管與 Portal。</p>
+          <div class="stack"><span>Workers</span><span>Gemini</span><span>D1</span><span>Vectorize</span></div>
+        </article>
+
+        <article class="project-card third lime reveal">
+          <span class="accent-orb"></span>
+          <div class="top"><span class="tag">Realtime game / state machine</span><a class="repo-link" href="https://github.com/Ray20123315/werewolf-ai-worker" target="_blank" rel="noopener" aria-label="Open Werewolf AI Worker repository">↗</a></div>
+          <h3>Werewolf AI Worker</h3>
+          <p>Cloudflare Workers 即時多人狼人殺 Web App，以 Durable Object 維護 authoritative state，WebSocket 做即時同步。</p>
+          <div class="stack"><span>WebSocket</span><span>Durable Object</span><span>State Machine</span></div>
+        </article>
+
+        <article class="project-card third orange reveal">
+          <span class="accent-orb"></span>
+          <div class="top"><span class="tag">Desktop utility / compression</span><a class="repo-link" href="https://github.com/Ray20123315/Compression-software" target="_blank" rel="noopener" aria-label="Open RayPack repository">↗</a></div>
+          <h3>RayPack</h3>
+          <p>Windows 壓縮／解壓縮工具，提供 Exact、AutoBest、LZMA2、Zstd 與 Smart Media 等模式，兼顧完整還原與媒體體積。</p>
+          <div class="stack"><span>Compression</span><span>CLI</span><span>GUI</span><span>SHA-256</span></div>
+        </article>
+
+        <article class="project-card big violet reveal">
+          <span class="accent-orb"></span>
+          <div class="top"><span class="tag">Browser tooling / media workflow</span><a class="repo-link" href="https://github.com/Ray20123315/youtube-speed-studio" target="_blank" rel="noopener" aria-label="Open YouTube Speed Studio repository">↗</a></div>
+          <h3>YouTube Speed Studio</h3>
+          <p>瀏覽器影片控制與媒體工作流工具，具多語 UI、可調整 accent、runtime recovery、更新檢查與 signed anti-tamper integrity lock。</p>
+          <div class="stack"><span>Browser Extension</span><span>Runtime Recovery</span><span>RSA-3072</span><span>Integrity</span></div>
+        </article>
+
+        <article class="project-card medium lime reveal">
+          <span class="accent-orb"></span>
+          <div class="top"><span class="tag">Minecraft / Fabric + Forge</span><a class="repo-link" href="https://github.com/Ray20123315/minecraft_key_random_scramble_mod" target="_blank" rel="noopener" aria-label="Open Random Keys Survival repository">↗</a></div>
+          <h3>Random Keys Survival</h3>
+          <p>Minecraft 1.20.1 Fabric + Forge Mod。玩家每次有效扣血會重新抽選按鍵配置，並由 Server 保存 authoritative layout 與多人交換狀態。</p>
+          <div class="stack"><span>Minecraft 1.20.1</span><span>Fabric</span><span>Forge</span><span>Java 17</span></div>
+        </article>
+
+        <article class="project-card medium pink reveal">
+          <span class="accent-orb"></span>
+          <div class="top"><span class="tag">Minecraft / tactical extraction</span><a class="repo-link" href="https://github.com/Ray20123315/delta_ops_hazardzone_Alpha" target="_blank" rel="noopener" aria-label="Open Delta Ops repository">↗</a></div>
+          <h3>Delta Ops: Hazard Zone</h3>
+          <p>Forge 1.20.1 戰術撤離玩法模組，包含撤離、經濟、安全箱、小隊、戰利品容器、部位傷害，以及完整性校驗與安全診斷。</p>
+          <div class="stack"><span>Forge</span><span>Economy</span><span>Squad</span><span>Integrity</span></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section shell" id="explorer">
+      <div class="section-head reveal">
+        <div>
+          <div class="eyebrow"><i></i><span>Live GitHub explorer</span></div>
+          <h2>全部公開倉庫。</h2>
+        </div>
+        <p>這一區直接讀取 GitHub 的公開 API，所以未來新增的 public repository 也會自動出現在這裡。</p>
+      </div>
+
+      <div class="lab-panel reveal">
+        <div class="lab-bar"><i></i><i></i><i></i><span>github://Ray20123315/public-repositories</span></div>
+        <div class="explorer-tools">
+          <div class="filters" id="filters">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="AI">AI</button>
+            <button class="filter-btn" data-filter="Tools">Tools</button>
+            <button class="filter-btn" data-filter="Minecraft">Minecraft</button>
+            <button class="filter-btn" data-filter="Web">Web</button>
+            <button class="filter-btn" data-filter="Media">Media</button>
+          </div>
+          <label class="search-wrap">
+            <input id="search" type="search" placeholder="Search repositories…" aria-label="Search repositories">
+          </label>
+        </div>
+        <div class="repo-grid" id="repoGrid">
+          <div class="empty">Loading public repositories…</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="shell" id="principles">
+      <div class="manifesto">
+        <div class="reveal">
+          <div class="eyebrow"><i></i><span>Build principles</span></div>
+          <h2>做出來，<br>再把它<br>做對。</h2>
+        </div>
+        <div class="manifesto-copy">
+          <article class="reveal"><b>01</b><div><h3>先讓系統可運作</h3><p>從最小可用版本開始，把資料流、狀態與失敗模式跑通，再做外觀與擴充。</p></div></article>
+          <article class="reveal"><b>02</b><div><h3>把風險寫成邊界</h3><p>更新、完整性、回復、權限、外部 API 與平台限制，都應該能被清楚看到，而不是藏在 UI 後面。</p></div></article>
+          <article class="reveal"><b>03</b><div><h3>跨領域不是亂做</h3><p>AI、Web、Windows 與 Minecraft 看起來很遠，但核心其實都是 state、data、interface 與可靠性。</p></div></article>
+          <article class="reveal"><b>04</b><div><h3>讓作品自己說話</h3><p>Repository、Release、文件與可執行成果比抽象形容更有說服力；這個網站只是把入口整理得更清楚。</p></div></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta-final shell reveal">
+      <div class="eyebrow"><i></i><span>Keep exploring</span></div>
+      <h2>See the code.<br>Break the box.</h2>
+      <p>想看完整實作、版本歷史、Release 與 README，直接進 GitHub。這裡只負責把整個 project universe 串起來。</p>
+      <div class="hero-actions">
+        <a class="btn primary" href="https://github.com/Ray20123315" target="_blank" rel="noopener">Open GitHub <span class="arrow">↗</span></a>
+        <a class="btn" href="../">Memory Manager site <span class="arrow">↗</span></a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="shell">
+    <span>© <span id="year"></span> Ray20123315 / BUILD LAB</span>
+    <span>GitHub public projects · live index</span>
+  </footer>
+
+  <script>
+    (function(){
+      var root = document.documentElement;
+      var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var progress = document.getElementById('progress');
+      var repoGrid = document.getElementById('repoGrid');
+      var repoCount = document.getElementById('repoCount');
+      var search = document.getElementById('search');
+      var filterButtons = Array.prototype.slice.call(document.querySelectorAll('.filter-btn'));
+      var activeFilter = 'all';
+      var repos = [];
+
+      document.getElementById('year').textContent = new Date().getFullYear();
+
+      window.addEventListener('pointermove', function(e){
+        root.style.setProperty('--mx', e.clientX + 'px');
+        root.style.setProperty('--my', e.clientY + 'px');
+      }, {passive:true});
+
+      function updateProgress(){
+        var max = document.documentElement.scrollHeight - window.innerHeight;
+        var p = max > 0 ? (window.scrollY / max) * 100 : 0;
+        progress.style.width = p + '%';
+      }
+      updateProgress();
+      window.addEventListener('scroll', updateProgress, {passive:true});
+
+      var io = new IntersectionObserver(function(entries){
+        entries.forEach(function(entry){
+          if(entry.isIntersecting){
+            entry.target.classList.add('visible');
+            io.unobserve(entry.target);
+          }
+        });
+      }, {threshold:.12});
+      document.querySelectorAll('.reveal').forEach(function(el){io.observe(el)});
+
+      document.querySelectorAll('.project-card').forEach(function(card){
+        card.addEventListener('pointermove', function(e){
+          if(reduceMotion) return;
+          var r = card.getBoundingClientRect();
+          var x = (e.clientX - r.left) / r.width;
+          var y = (e.clientY - r.top) / r.height;
+          card.style.setProperty('--ry', ((x - .5) * 7) + 'deg');
+          card.style.setProperty('--rx', ((.5 - y) * 7) + 'deg');
+          card.style.setProperty('--gx', (x * 100) + '%');
+          card.style.setProperty('--gy', (y * 100) + '%');
+        });
+        card.addEventListener('pointerleave', function(){
+          card.style.setProperty('--ry','0deg');
+          card.style.setProperty('--rx','0deg');
+        });
+      });
+
+      var roles = ['AI × Web × Tools','Workers × Realtime','Windows × Systems','Minecraft × Mods','Ship × Learn × Repeat'];
+      var roleIndex = 0;
+      var roleEl = document.getElementById('rotatingRole');
+      if(!reduceMotion){
+        setInterval(function(){
+          roleIndex = (roleIndex + 1) % roles.length;
+          roleEl.animate([{opacity:1,transform:'translateY(0)'},{opacity:0,transform:'translateY(-5px)'}],{duration:180,fill:'forwards'}).onfinish = function(){
+            roleEl.textContent = roles[roleIndex];
+            roleEl.animate([{opacity:0,transform:'translateY(5px)'},{opacity:1,transform:'translateY(0)'}],{duration:220,fill:'forwards'});
+          };
+        },2600);
+      }
+
+      var fallback = [
+        '-','AyeAI','cc-switch','Compression-software','delta_ops_hazardzone','delta_ops_hazardzone_Alpha',
+        'FTB-Ultimine','html','joyflix','LibreTV','LINE-Data-integration','LINE_Data_integration','Memory_manager',
+        'Minecraft-ZoneSnapshot-Logistics','minecraft_key_random_scramble_mod','MoonTV',
+        'object-detection-opencv-master-Chinese-culture-','pubgm-site','qqaibot','RayLingo-translate',
+        'werewolf-ai-worker','youtube-speed-studio'
+      ].map(function(name){
+        return {name:name,html_url:'https://github.com/Ray20123315/' + encodeURIComponent(name),description:'Public GitHub repository',language:null,stargazers_count:0,fork:false,updated_at:null};
+      });
+
+      function category(repo){
+        var hay = ((repo.name || '') + ' ' + (repo.description || '')).toLowerCase();
+        if(/minecraft|forge|fabric|ftb|hazardzone/.test(hay)) return 'Minecraft';
+        if(/ai|bot|gemini|deepseek|werewolf|translate|llm/.test(hay)) return 'AI';
+        if(/youtube|tv|video|media|pubgm|joyflix/.test(hay)) return 'Media';
+        if(/html|line|web|worker|cloudflare|site/.test(hay)) return 'Web';
+        if(/memory|compression|switch|studio|tool|pack/.test(hay)) return 'Tools';
+        return 'Other';
+      }
+
+      function escapeHtml(s){
+        return String(s == null ? '' : s).replace(/[&<>"']/g,function(c){
+          return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+        });
+      }
+
+      function relativeDate(value){
+        if(!value) return 'public';
+        var d = new Date(value);
+        var days = Math.max(0,Math.floor((Date.now() - d.getTime()) / 86400000));
+        if(days < 1) return 'today';
+        if(days < 30) return days + 'd ago';
+        if(days < 365) return Math.floor(days / 30) + 'mo ago';
+        return Math.floor(days / 365) + 'y ago';
+      }
+
+      function render(){
+        var q = search.value.trim().toLowerCase();
+        var items = repos.filter(function(repo){
+          var cat = category(repo);
+          var passesFilter = activeFilter === 'all' || cat === activeFilter;
+          var hay = ((repo.name || '') + ' ' + (repo.description || '') + ' ' + (repo.language || '')).toLowerCase();
+          return passesFilter && (!q || hay.indexOf(q) >= 0);
+        });
+        if(!items.length){
+          repoGrid.innerHTML = '<div class="empty">No repositories match this filter.</div>';
+          return;
+        }
+        repoGrid.innerHTML = items.map(function(repo){
+          var cat = category(repo);
+          var lang = repo.language || 'Mixed';
+          var desc = repo.description || 'Public repository on GitHub.';
+          var fork = repo.fork ? ' · fork' : '';
+          return '<a class="repo" href="' + escapeHtml(repo.html_url) + '" target="_blank" rel="noopener">' +
+            '<div class="repo-top"><span class="category">' + escapeHtml(cat) + '</span><span class="meta">' + escapeHtml(relativeDate(repo.updated_at)) + fork + '</span></div>' +
+            '<h3>' + escapeHtml(repo.name) + '</h3>' +
+            '<p>' + escapeHtml(desc) + '</p>' +
+            '<div class="repo-footer"><span class="lang"><i></i>' + escapeHtml(lang) + '</span><span>★ ' + Number(repo.stargazers_count || 0) + ' ↗</span></div>' +
+          '</a>';
+        }).join('');
+      }
+
+      filterButtons.forEach(function(btn){
+        btn.addEventListener('click',function(){
+          activeFilter = btn.getAttribute('data-filter');
+          filterButtons.forEach(function(b){b.classList.toggle('active', b === btn)});
+          render();
+        });
+      });
+      search.addEventListener('input',render);
+
+      fetch('https://api.github.com/users/Ray20123315/repos?per_page=100&sort=updated&type=public', {headers:{'Accept':'application/vnd.github+json'}})
+        .then(function(r){if(!r.ok) throw new Error('GitHub API ' + r.status);return r.json()})
+        .then(function(data){
+          repos = data.filter(function(r){return !r.private});
+          repoCount.textContent = String(repos.length);
+          render();
+        })
+        .catch(function(){
+          repos = fallback;
+          repoCount.textContent = String(fallback.length);
+          render();
+        });
+
+      var canvas = document.getElementById('network');
+      var ctx = canvas.getContext('2d');
+      var host = canvas.parentElement;
+      var points = [];
+      var pointer = {x:-9999,y:-9999};
+
+      function resizeCanvas(){
+        var rect = host.getBoundingClientRect();
+        var dpr = Math.min(window.devicePixelRatio || 1,2);
+        canvas.width = Math.max(1,Math.floor(rect.width * dpr));
+        canvas.height = Math.max(1,Math.floor(rect.height * dpr));
+        canvas.style.width = rect.width + 'px';
+        canvas.style.height = rect.height + 'px';
+        ctx.setTransform(dpr,0,0,dpr,0,0);
+        points = [];
+        var count = rect.width < 500 ? 24 : 38;
+        for(var i=0;i<count;i++){
+          points.push({
+            x:Math.random()*rect.width,
+            y:Math.random()*rect.height,
+            vx:(Math.random()-.5)*.18,
+            vy:(Math.random()-.5)*.18,
+            r:Math.random()*1.4+.5
+          });
+        }
+      }
+      host.addEventListener('pointermove',function(e){
+        var r = host.getBoundingClientRect();
+        pointer.x = e.clientX-r.left;
+        pointer.y = e.clientY-r.top;
+      });
+      host.addEventListener('pointerleave',function(){pointer.x=-9999;pointer.y=-9999});
+      window.addEventListener('resize',resizeCanvas,{passive:true});
+      resizeCanvas();
+
+      function drawNetwork(){
+        var w = host.clientWidth, h = host.clientHeight;
+        ctx.clearRect(0,0,w,h);
+        for(var i=0;i<points.length;i++){
+          var p = points[i];
+          if(!reduceMotion){p.x+=p.vx;p.y+=p.vy}
+          if(p.x<0||p.x>w)p.vx*=-1;
+          if(p.y<0||p.y>h)p.vy*=-1;
+          var dx=p.x-pointer.x,dy=p.y-pointer.y,dist=Math.sqrt(dx*dx+dy*dy);
+          if(dist<120 && dist>0 && !reduceMotion){p.x+=dx/dist*.22;p.y+=dy/dist*.22}
+          ctx.beginPath();
+          ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+          ctx.fillStyle='rgba(210,238,255,.58)';
+          ctx.fill();
+          for(var j=i+1;j<points.length;j++){
+            var q=points[j],ddx=p.x-q.x,ddy=p.y-q.y,d=Math.sqrt(ddx*ddx+ddy*ddy);
+            if(d<110){
+              ctx.beginPath();
+              ctx.moveTo(p.x,p.y);ctx.lineTo(q.x,q.y);
+              ctx.strokeStyle='rgba(126,184,220,' + ((1-d/110)*.18) + ')';
+              ctx.lineWidth=.7;ctx.stroke();
+            }
+          }
+        }
+        requestAnimationFrame(drawNetwork);
+      }
+      drawNetwork();
+    })();
+  </script>
+</body>
+</html>
