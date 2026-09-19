@@ -2,16 +2,14 @@
 
 Verified current state:
 - Repository: `Ray20123315/html`.
-- Portfolio revision 5 source: `portfolio/index.html`.
-- Current main commit: `549ee43763fc81e5cc1099c27db1f710b3ea4e98`.
-- Current blob: `1874b8e0231c316fb7a90edd4bf5e81dec4a862a`.
-- No GSAP or ScrollTrigger dependency remains.
-- Motion architecture: CSS sticky scenes + native requestAnimationFrame scroll progress.
-- Hero core moves continuously from center to upper-right and scales down as scroll progresses.
-- Dock-state copy reveals progressively.
-- Selected Work transitions natively between five projects.
-- Progressive no-JS fallback keeps work cards visible in normal flow.
-- GitHub repository explorer remains dynamic with static fallback.
+- Portfolio revision 6 source: `portfolio/index.html`.
+- Current main commit: `47609530ec1bfa73854c792abfa43877f7b1ebf9`.
+- Current blob: `2cb3ea5595863717e2c239fed617246db9c03c7b`.
+- Hero now shows a large central product/app window instead of a subtle abstract orb.
+- Hero object includes toolbar, title, metrics, chart, and "SCROLL LINKED" badge.
+- Native CSS sticky + requestAnimationFrame scroll engine remains.
+- Hero object continuously shrinks and moves toward the upper-right as scroll progresses.
 - Inline JavaScript syntax: PASS.
-- Both Pages workflows: completed/success.
+- No GSAP/ScrollTrigger dependency.
+- GitHub Pages run `35460825049`: completed/success.
 - Root Memory Manager site remains unchanged.
