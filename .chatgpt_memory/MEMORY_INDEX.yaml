@@ -7,4 +7,4 @@ canonical:
   requirements: USER_REQUIREMENTS.md
   decisions: DECISIONS.md
   verification: VERIFY.md
-status: CLEAN
+status: DIRTY
