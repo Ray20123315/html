@@ -1,0 +1,10 @@
+version: 1
+active_topic: portfolio-v2
+canonical:
+  entry: 00_START_HERE.md
+  task: ACTIVE_TASK.md
+  state: CURRENT_STATE.md
+  requirements: USER_REQUIREMENTS.md
+  decisions: DECISIONS.md
+  verification: VERIFY.md
+status: DIRTY
