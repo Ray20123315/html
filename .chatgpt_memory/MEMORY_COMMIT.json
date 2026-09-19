@@ -1,1 +1,1 @@
-{"topic":"portfolio-v2","revision":3,"status":"CLEAN","main_commit":"ef456e98a712b43f25049e9e1f1d068c3359a509","content_blob":"dfd858a86a49d6561242c3edf3314bba493310e9","verification":{"js_syntax":"pass","gsap":"3.15.0","scrolltrigger":"present","pages_workflow":"success","pages_deployment":"success"},"next_action":null}
+{"topic":"portfolio-v2","revision":4,"status":"DIRTY","base_main_commit":"ef456e98a712b43f25049e9e1f1d068c3359a509","goal":"continuous centered object shrinks and docks to side on scroll","next_action":"patch hero and verify"}
