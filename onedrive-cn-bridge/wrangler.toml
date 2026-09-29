@@ -1,0 +1,16 @@
+name = "onedrive-cn-bridge"
+main = "worker.js"
+compatibility_date = "2026-09-29"
+
+[vars]
+BASE_PATH = "CloudflareBridge"
+MS_TENANT = "common"
+
+[[kv_namespaces]]
+binding = "STATE"
+id = "491ff784a714401197d86b62a9a84f62"
+
+# Secrets are intentionally not committed:
+# ACCESS_KEY
+# MS_CLIENT_ID
+# MS_CLIENT_SECRET
