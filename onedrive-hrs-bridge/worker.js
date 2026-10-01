@@ -1,4 +1,5 @@
 const TK='auth:tokens';
+const SESSION_COOKIE='hrs_session', SESSION_TTL=7*24*60*60;
 const CHUNK=10*1024*1024, MAX_CHUNK=60*1024*1024, ALIGN=320*1024;
 
 export default {
@@ -18,9 +19,11 @@ async function route(request, env) {
     stateConfigured:!!env.STATE, chunkSize:CHUNK
   });
   if (p==='/auth/callback' && request.method==='GET') return oauthCallback(request,env);
+  if (p==='/login' && request.method==='POST') return login(request,env);
+  if (p==='/logout' && request.method==='POST') return logout(request,env);
   if (p.startsWith('/d/') && request.method==='GET') return download(request,env,p.slice(3));
 
-  requireAuth(request,env);
+  await requireAuth(request,env);
 
   if (p==='/api/status' && request.method==='GET') return status(env);
   if (p==='/api/auth/url' && request.method==='POST') { requireSameOrigin(request); return oauthUrl(request,env); }
@@ -47,9 +50,68 @@ async function route(request, env) {
   return json({ok:false,error:'Not found'},404);
 }
 
-function requireAuth(request,env) {
+async function requireAuth(request,env) {
   if (!env.ACCESS_KEY) throw httpError(503,'ACCESS_KEY 尚未設定');
-  if ((request.headers.get('authorization')||'') !== 'Bearer '+env.ACCESS_KEY) throw httpError(401,'Unauthorized');
+  const bearer=request.headers.get('authorization')||'';
+  if (bearer==='Bearer '+env.ACCESS_KEY) return true;
+  if (!env.STATE) throw httpError(503,'STATE KV 尚未設定');
+  const token=getCookie(request,SESSION_COOKIE);
+  if (!token) throw httpError(401,'請先登入');
+  const hash=await sha256Hex(token);
+  if (!await env.STATE.get('sess:'+hash)) throw httpError(401,'登入已過期');
+  return true;
+}
+
+async function login(request,env) {
+  if (!env.ACCESS_KEY) return Response.redirect(new URL('/?login=not-configured',request.url),303);
+  if (!env.STATE) return Response.redirect(new URL('/?login=state-missing',request.url),303);
+  let supplied='';
+  const type=request.headers.get('content-type')||'';
+  if (type.includes('application/json')) {
+    const b=await request.json().catch(()=>({}));
+    supplied=String(b.access_key||b.accessKey||'');
+  } else {
+    const form=await request.formData();
+    supplied=String(form.get('access_key')||'');
+  }
+  if (supplied!==env.ACCESS_KEY) return Response.redirect(new URL('/?login=failed',request.url),303);
+  const token=randomToken();
+  const hash=await sha256Hex(token);
+  await env.STATE.put('sess:'+hash,'1',{expirationTtl:SESSION_TTL});
+  const headers=new Headers({location:'/overview'});
+  headers.append('set-cookie',SESSION_COOKIE+'='+token+'; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age='+SESSION_TTL);
+  return new Response(null,{status:303,headers});
+}
+
+async function logout(request,env) {
+  if (env.STATE) {
+    const token=getCookie(request,SESSION_COOKIE);
+    if (token) {
+      const hash=await sha256Hex(token);
+      await env.STATE.delete('sess:'+hash);
+    }
+  }
+  const headers=new Headers({location:'/'});
+  headers.append('set-cookie',SESSION_COOKIE+'=; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=0');
+  return new Response(null,{status:303,headers});
+}
+
+function getCookie(request,name) {
+  const raw=request.headers.get('cookie')||'';
+  for (const part of raw.split(';')) {
+    const i=part.indexOf('=');
+    if (i<0) continue;
+    if (part.slice(0,i).trim()===name) return part.slice(i+1).trim();
+  }
+  return '';
+}
+function randomToken() {
+  const a=new Uint8Array(32); crypto.getRandomValues(a);
+  return Array.from(a,b=>b.toString(16).padStart(2,'0')).join('');
+}
+async function sha256Hex(value) {
+  const data=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(String(value)));
+  return Array.from(new Uint8Array(data),b=>b.toString(16).padStart(2,'0')).join('');
 }
 function requireSameOrigin(request) {
   const origin=request.headers.get('origin');
@@ -418,11 +480,11 @@ button,input{font:inherit}button{touch-action:manipulation}a{color:inherit;text-
     <div class="eyebrow">Private OneDrive Gateway</div>
     <h1>HRS Drive</h1>
     <p>此入口只允許操作 OneDrive 根目錄的 <b>/HRS</b>。其他資料不會列出，也不能用 item ID 越權操作。</p>
-    <form id="gateForm">
-      <div class="field"><label>ACCESS_KEY</label><input id="accessKey" class="input" type="password" autocomplete="off" placeholder="輸入存取金鑰"></div>
+    <form id="gateForm" method="post" action="/login">
+      <div class="field"><label>ACCESS_KEY</label><input id="accessKey" name="access_key" class="input" type="password" autocomplete="current-password" required placeholder="輸入存取金鑰"></div>
       <button class="btn primary" style="width:100%;margin-top:14px">進入 HRS</button>
     </form>
-    <p id="gateMsg" style="font-size:12px;margin-bottom:0">金鑰只保存在這個分頁的 sessionStorage。</p>
+    <p id="gateMsg" style="font-size:12px;margin-bottom:0">金鑰只會送到這個 Worker 驗證；成功後使用 HttpOnly Session Cookie。</p>
   </div>
 </div>
 
@@ -482,17 +544,16 @@ button,input{font:inherit}button{touch-action:manipulation}a{color:inherit;text-
 <div id="toastbox" class="toastbox"></div><div id="modalHost"></div>
 <script>
 (()=>{"use strict";
-const st={key:sessionStorage.getItem("hrs-access-key")||"",path:"",items:[],file:null};
+const st={path:"",items:[],file:null};
 const q=id=>document.getElementById(id), qa=s=>Array.from(document.querySelectorAll(s));
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 function bytes(n){n=Number(n||0);if(n<1024)return n+" B";if(n<1048576)return(n/1024).toFixed(1)+" KiB";if(n<1073741824)return(n/1048576).toFixed(2)+" MiB";if(n<1099511627776)return(n/1073741824).toFixed(2)+" GiB";return(n/1099511627776).toFixed(2)+" TiB"}
 function toast(m){const x=document.createElement("div");x.className="toast";x.textContent=m;q("toastbox").appendChild(x);setTimeout(()=>x.remove(),3800)}
-function headers(){if(!st.key)throw Error("請先輸入 ACCESS_KEY");return{Authorization:"Bearer "+st.key}}
-async function jf(url,opt={}){const h=new Headers(opt.headers||{});for(const[k,v]of Object.entries(headers()))h.set(k,v);const r=await fetch(url,{...opt,headers:h,cache:"no-store"}),t=await r.text();let d;try{d=t?JSON.parse(t):null}catch{throw Error(t||("HTTP "+r.status))}if(!r.ok)throw Error(d?.error||("HTTP "+r.status));return d}
+async function jf(url,opt={}){const h=new Headers(opt.headers||{});const r=await fetch(url,{...opt,headers:h,cache:"no-store",credentials:"same-origin"}),t=await r.text();let d;try{d=t?JSON.parse(t):null}catch{throw Error(t||("HTTP "+r.status))}if(!r.ok)throw Error(d?.error||("HTTP "+r.status));return d}
 function page(){return location.pathname.replace(/^\/+|\/+$/g,"")||"overview"}
 function show(pg,push=true){if(!["overview","upload","files"].includes(pg))pg="overview";q("overviewView").hidden=pg!=="overview";q("uploadView").hidden=pg!=="upload";q("filesView").hidden=pg!=="files";qa(".nav a").forEach(a=>a.classList.toggle("on",a.dataset.page===pg));q("pageTitle").textContent=pg==="overview"?"總覽":pg==="upload"?"上傳":"檔案";q("pageSub").textContent=pg==="overview"?"只管理 /HRS，其他 OneDrive 內容保持隔離。":pg==="upload"?"大型檔案採 Microsoft Graph Upload Session 分段上傳。":"在 /HRS 範圍內自由建立、刪除、下載與共用。";if(push&&location.pathname!=="/"+pg)history.pushState({},"","/"+pg);if(pg==="overview")loadOverview();if(pg==="files")loadFiles()}
 function badge(ok,label){const b=q("connBadge");b.classList.toggle("ok",!!ok);b.classList.toggle("err",ok===false);b.querySelector("span").textContent=label;q("sideStatus").textContent=label}
-async function unlock(){st.key=q("accessKey").value.trim();if(!st.key)throw Error("請輸入 ACCESS_KEY");const d=await jf("/api/status");sessionStorage.setItem("hrs-access-key",st.key);q("gate").hidden=true;badge(d.connected,d.connected?"OneDrive 已連接":"OneDrive 尚未連接");q("connectBtn").hidden=d.connected||!d.microsoftConfigured;show(page(),false)}
+async function boot(){try{const d=await jf("/api/status");q("gate").hidden=true;badge(d.connected,d.connected?"OneDrive 已連接":"OneDrive 尚未連接");q("connectBtn").hidden=d.connected||!d.microsoftConfigured;show(page(),false)}catch(e){q("gate").hidden=false;const p=new URLSearchParams(location.search).get("login");if(p==="failed")q("gateMsg").textContent="ACCESS_KEY 不正確";else if(p==="not-configured")q("gateMsg").textContent="Worker 尚未設定 ACCESS_KEY";else if(p==="state-missing")q("gateMsg").textContent="Worker 尚未設定 STATE KV"}}
 async function connect(){const d=await jf("/api/auth/url",{method:"POST"});location.href=d.url}
 async function loadOverview(){try{const d=await jf("/api/overview");q("mItems").textContent=d.items;q("mFiles").textContent=d.files;q("mFolders").textContent=d.folders;q("mBytes").textContent=bytes(d.bytes)}catch(e){toast(e.message)}}
 function crumbs(){const a=st.path?st.path.split("/"):[],out=['<button data-path="">HRS</button>'];let acc="";for(const p of a){acc=acc?acc+"/"+p:p;out.push("<span>›</span><button data-path=\""+esc(acc)+"\">"+esc(p)+"</button>")}q("crumbs").innerHTML=out.join(" ");qa("#crumbs button").forEach(b=>b.onclick=()=>{st.path=b.dataset.path;loadFiles()})}
@@ -506,8 +567,7 @@ async function shareFile(f){try{const d=await jf("/api/share/"+encodeURIComponen
 async function downloadFile(f){try{const d=await jf("/api/download-ticket/"+encodeURIComponent(f.id),{method:"POST"});location.href=d.url}catch(e){toast(e.message)}}
 function choose(f){st.file=f;q("uploadBtn").disabled=!f;q("upText").textContent=f?f.name+" · "+bytes(f.size):"尚未選擇檔案";q("upBar").style.width="0%";q("upPct").textContent="0%"}
 async function upload(){const f=st.file;if(!f)return;const btn=q("uploadBtn");btn.disabled=true;try{const d=await jf("/api/upload/start",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({path:q("uploadPath").value,name:f.name,size:f.size})}),chunk=d.chunkSize||10485760;let pos=0;while(pos<f.size){const end=Math.min(pos+chunk,f.size),blob=f.slice(pos,end);let last=null;for(let n=0;n<3;n++){try{await jf("/api/upload/"+encodeURIComponent(d.uploadId),{method:"PUT",headers:{"content-range":"bytes "+pos+"-"+(end-1)+"/"+f.size,"content-type":"application/octet-stream"},body:blob});last=null;break}catch(e){last=e;await new Promise(r=>setTimeout(r,1000*Math.pow(2,n)))}}if(last)throw last;pos=end;const pct=pos/f.size*100;q("upBar").style.width=pct.toFixed(2)+"%";q("upPct").textContent=pct.toFixed(1)+"%";q("upText").textContent="上傳中 · "+bytes(pos)+" / "+bytes(f.size)}toast("上傳完成："+f.name);q("upText").textContent="上傳完成 · "+f.name;loadOverview()}catch(e){toast("上傳失敗："+e.message);q("upText").textContent="上傳中斷"}finally{btn.disabled=false}}
-q("gateForm").onsubmit=e=>{e.preventDefault();unlock().catch(x=>q("gateMsg").textContent="錯誤："+x.message)};
-q("lockBtn").onclick=()=>{sessionStorage.removeItem("hrs-access-key");st.key="";q("accessKey").value="";q("gate").hidden=false};
+q("lockBtn").onclick=async()=>{await fetch("/logout",{method:"POST",credentials:"same-origin"});location.href="/"};
 q("connectBtn").onclick=()=>connect().catch(e=>toast(e.message));
 qa(".nav a").forEach(a=>a.onclick=e=>{e.preventDefault();show(a.dataset.page)});
 qa("[data-go]").forEach(b=>b.onclick=()=>show(b.dataset.go));
@@ -518,7 +578,7 @@ drop.onclick=()=>fi.click();fi.onchange=()=>choose(fi.files?.[0]||null);
 ["dragenter","dragover"].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.add("over")}));
 ["dragleave","drop"].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.remove("over")}));
 drop.addEventListener("drop",e=>choose(e.dataTransfer.files?.[0]||null));
-if(st.key){q("accessKey").value=st.key;unlock().catch(()=>{st.key="";sessionStorage.removeItem("hrs-access-key");q("gate").hidden=false})}
+boot();
 })();
 </script>
 </body></html>`;
