@@ -479,14 +479,4 @@ async function odAccessToken(env){
   if(t.access_token&&Date.now()<Number(t.expires_at||0))return t.access_token;
   if(!t.refresh_token)throw httpError(409,'OneDrive refresh token 不存在');
   const q=new URLSearchParams({
-    client_id:env.MS_CLIENT_ID,client_secret:env.MS_CLIENT_SECRET,
-    grant_type:'refresh_token',refresh_token:t.refresh_token,
-    scope:'offline_access Files.ReadWrite User.Read'
-  });
-  const r=await fetch('https://login.microsoftonline.com/'+encodeURIComponent(env.MS_TENANT||'common')+'/oauth2/v2.0/token',{
-    method:'POST',headers:{'content-type':'application/x-www-form-urlencoded'},body:q
-  });
-  const n=await r.json();
-  if(!r.ok)throw httpError(502,n?.error_description||n?.error||'OneDrive token refresh failed');
-  t={...t,...n,expires_at:Date.now()+(Number(n.expires_in||3600)-60)*1000};
-  await env.STATE.put(OD_TOKEN_KEY,JSON.stringify(t)); --- TRUNCATED --- 156,013 chars
+    client_id:env.MS_CLIENT_ID,client_secret:env.MS_CLIENT --- TRUNCATED --- 156,532 chars
