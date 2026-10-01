@@ -489,13 +489,4 @@ async function odAccessToken(env){
   const n=await r.json();
   if(!r.ok)throw httpError(502,n?.error_description||n?.error||'OneDrive token refresh failed');
   t={...t,...n,expires_at:Date.now()+(Number(n.expires_in||3600)-60)*1000};
-  await env.STATE.put(OD_TOKEN_KEY,JSON.stringify(t));
-  return t.access_token;
-}
-async function odGraph(env,path,init={}){
-  const h=new Headers(init.headers||{});
-  h.set('authorization','Bearer '+await odAccessToken(env));
-  if(init.body&&!h.has('content-type'))h.set('content-type','application/json');
-  return fetch(path.startsWith('http')?path:'https://graph.microsoft.com/v1.0'+path,{...init,headers:h});
-}
-async function odData(r){const t=await r.text();if(!t)return null;try{return JSON.parse(t)}catch{ret --- TRUNCATED --- 151,640 chars
+  await env.STATE.put(OD_TOKEN_KEY,JSON.stringify(t)); --- TRUNCATED --- 156,013 chars
