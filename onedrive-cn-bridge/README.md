@@ -22,6 +22,21 @@ Do **not** commit these values:
 
 `MS_TENANT` defaults to `common`.
 
+## Browser setup UI
+
+Open:
+
+`https://onedrive-cn-bridge.ray20123315.workers.dev/`
+
+The home page now provides a browser UI for the one-time Microsoft OAuth connection:
+
+1. Enter the Worker `ACCESS_KEY`.
+2. Click **連接 OneDrive**.
+3. Sign in to Microsoft and approve access.
+4. Microsoft redirects back to the Worker and the page checks whether OneDrive is connected.
+
+The access key is kept only in the tab's `sessionStorage`; it is not placed in the URL or sent to Microsoft.
+
 ## Microsoft Entra setup
 
 Create an app registration and add this redirect URI:
