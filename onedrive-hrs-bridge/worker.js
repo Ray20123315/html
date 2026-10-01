@@ -1,4 +1,5 @@
 const TK='auth:tokens';
+const D1_SESSION_COOKIE='hf_admin_session', D1_SESSION_TTL_SECONDS=7*24*60*60, D1_PASSWORD_ITERATIONS=100000;
 const SESSION_COOKIE='hrs_session', SESSION_TTL=7*24*60*60;
 const CHUNK=10*1024*1024, MAX_CHUNK=60*1024*1024, ALIGN=320*1024;
 
@@ -22,8 +23,11 @@ async function route(request, env) {
   if (p==='/login' && request.method==='POST') return login(request,env);
   if (p==='/logout' && request.method==='POST') return logout(request,env);
   if (p.startsWith('/d/') && request.method==='GET') return download(request,env,p.slice(3));
+  if (p==='/api/auth/status' && request.method==='GET') return d1AuthStatus(request,env);
+  if (p==='/api/auth/login' && request.method==='POST') return d1AuthLogin(request,env);
+  if (p==='/api/auth/logout' && request.method==='POST') return d1AuthLogout(request,env);
 
-  await requireAuth(request,env);
+  await requireD1User(request,env);
 
   if (p==='/api/status' && request.method==='GET') return status(env);
   if (p==='/api/auth/url' && request.method==='POST') { requireSameOrigin(request); return oauthUrl(request,env); }
@@ -138,6 +142,101 @@ async function verifySession(payload,signature,secret) {
   } catch { return false; }
 }
 
+
+async function d1AuthStatus(request,env){
+  if(!env.DB) return json({ok:false,error:'D1_NOT_CONFIGURED'},500);
+  const count=await env.DB.prepare("SELECT COUNT(*) AS n FROM admin_users WHERE role='admin'").first();
+  const hasAdmin=Number(count?.n||0)>0;
+  const user=hasAdmin?await d1GetUser(request,env):null;
+  return json({ok:true,hasAdmin,authenticated:!!user,user:user?d1PublicUser(user):null});
+}
+async function d1AuthLogin(request,env){
+  requireSameOrigin(request);
+  if(!env.DB) throw httpError(500,'D1_NOT_CONFIGURED');
+  const body=await request.json().catch(()=>({}));
+  const username=String(body.username||'').trim();
+  const password=String(body.password||'');
+  if(!username||!password) throw httpError(400,'請輸入帳號與密碼');
+  const user=await env.DB.prepare(
+    'SELECT id,username,password_salt,password_hash,password_iterations,role,quota_bytes,enabled FROM admin_users WHERE username = ? COLLATE NOCASE'
+  ).bind(username).first();
+  let valid=false;
+  if(user&&Number(user.enabled)===1){
+    const candidate=await d1HashPassword(password,user.password_salt,Number(user.password_iterations||D1_PASSWORD_ITERATIONS));
+    valid=d1TimingSafeEqual(candidate,user.password_hash);
+  }
+  if(!valid) throw httpError(401,'帳號或密碼錯誤，或帳號已停用');
+  await env.DB.prepare('DELETE FROM admin_sessions WHERE expires_at <= ?').bind(new Date().toISOString()).run();
+  const token=d1RandomHex(32), tokenHash=await d1Sha256Hex(new TextEncoder().encode(token));
+  const now=new Date(), exp=new Date(now.getTime()+D1_SESSION_TTL_SECONDS*1000);
+  await env.DB.prepare('INSERT INTO admin_sessions (token_hash,user_id,created_at,expires_at) VALUES (?,?,?,?)')
+    .bind(tokenHash,user.id,now.toISOString(),exp.toISOString()).run();
+  await env.DB.prepare('INSERT INTO admin_audit (user_id,action,target_id,details,created_at) VALUES (?,?,?,?,?)')
+    .bind(user.id,'login',user.id,null,new Date().toISOString()).run();
+  return d1JsonWithCookie(
+    {ok:true,user:d1PublicUser(user)},
+    D1_SESSION_COOKIE+'='+token+'; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age='+D1_SESSION_TTL_SECONDS
+  );
+}
+async function d1AuthLogout(request,env){
+  requireSameOrigin(request);
+  const token=d1GetCookie(request,D1_SESSION_COOKIE);
+  if(token&&env.DB){
+    const hash=await d1Sha256Hex(new TextEncoder().encode(token));
+    const user=await d1GetUser(request,env);
+    await env.DB.prepare('DELETE FROM admin_sessions WHERE token_hash = ?').bind(hash).run();
+    if(user) await env.DB.prepare('INSERT INTO admin_audit (user_id,action,target_id,details,created_at) VALUES (?,?,?,?,?)')
+      .bind(user.id,'logout',user.id,null,new Date().toISOString()).run();
+  }
+  return d1JsonWithCookie({ok:true},D1_SESSION_COOKIE+'=; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=0');
+}
+async function requireD1User(request,env){
+  const user=await d1GetUser(request,env);
+  if(!user) throw httpError(401,'請先登入');
+  return user;
+}
+async function d1GetUser(request,env){
+  if(!env.DB) return null;
+  const token=d1GetCookie(request,D1_SESSION_COOKIE);
+  if(!token) return null;
+  const hash=await d1Sha256Hex(new TextEncoder().encode(token));
+  const row=await env.DB.prepare(
+    'SELECT u.id,u.username,u.role,u.quota_bytes,u.enabled,s.expires_at FROM admin_sessions s JOIN admin_users u ON u.id=s.user_id WHERE s.token_hash=?'
+  ).bind(hash).first();
+  if(!row) return null;
+  if(row.expires_at<=new Date().toISOString()||Number(row.enabled)!==1){
+    await env.DB.prepare('DELETE FROM admin_sessions WHERE token_hash=?').bind(hash).run();
+    return null;
+  }
+  return {id:row.id,username:row.username,role:row.role||'user',quota_bytes:Number(row.quota_bytes||0),enabled:Number(row.enabled)===1};
+}
+function d1PublicUser(u){return{id:u.id,username:u.username,role:u.role||'user',quotaBytes:Number(u.quota_bytes||0),enabled:Number(u.enabled)!==0}}
+function d1GetCookie(request,name){
+  const raw=request.headers.get('cookie')||'';
+  for(const part of raw.split(';')){
+    const i=part.indexOf('=');
+    if(i<0)continue;
+    if(part.slice(0,i).trim()===name)return part.slice(i+1).trim();
+  }
+  return '';
+}
+async function d1HashPassword(password,saltHex,iterations){
+  const key=await crypto.subtle.importKey('raw',new TextEncoder().encode(password),'PBKDF2',false,['deriveBits']);
+  const bits=await crypto.subtle.deriveBits({name:'PBKDF2',hash:'SHA-256',salt:d1HexToBytes(saltHex),iterations},key,256);
+  return d1BytesToHex(new Uint8Array(bits));
+}
+function d1TimingSafeEqual(a,b){
+  if(typeof a!=='string'||typeof b!=='string'||a.length!==b.length)return false;
+  let diff=0;for(let i=0;i<a.length;i++)diff|=a.charCodeAt(i)^b.charCodeAt(i);return diff===0;
+}
+function d1RandomHex(bytes){const a=new Uint8Array(bytes);crypto.getRandomValues(a);return d1BytesToHex(a)}
+function d1HexToBytes(hex){const a=new Uint8Array(hex.length/2);for(let i=0;i<a.length;i++)a[i]=parseInt(hex.slice(i*2,i*2+2),16);return a}
+function d1BytesToHex(a){return Array.from(a,b=>b.toString(16).padStart(2,'0')).join('')}
+async function d1Sha256Hex(data){return d1BytesToHex(new Uint8Array(await crypto.subtle.digest('SHA-256',data)))}
+function d1JsonWithCookie(data,cookie,status=200){
+  const h=new Headers({'content-type':'application/json; charset=utf-8','cache-control':'no-store'});
+  h.append('set-cookie',cookie);return new Response(JSON.stringify(data),{status,headers:h});
+}
 function requireSameOrigin(request) {
   const origin=request.headers.get('origin');
   if (origin && origin!==new URL(request.url).origin) throw httpError(403,'Origin 不允許');
@@ -503,16 +602,16 @@ button,input{font:inherit}button{touch-action:manipulation}a{color:inherit;text-
   <div class="gatebox">
     <div class="logo" style="margin-bottom:16px">H</div>
     <div class="eyebrow">Private OneDrive Gateway</div>
-    <h1>HRS Drive</h1>
-    <p>此入口只允許操作 OneDrive 根目錄的 <b>/HRS</b>。其他資料不會列出，也不能用 item ID 越權操作。</p>
-    <form id="gateForm" method="post" action="/login">
-      <div class="field"><label>ACCESS_KEY</label><input id="accessKey" name="access_key" class="input" type="password" autocomplete="current-password" required placeholder="輸入存取金鑰"></div>
-      <button class="btn primary" style="width:100%;margin-top:14px">進入 HRS</button>
+    <h1 id="authTitle">登入</h1>
+    <p id="authSubtitle">使用 HF Vault 相同的帳號與密碼。</p>
+    <form id="authForm">
+      <div class="field"><label>帳號</label><input id="authUser" class="input" autocomplete="username" required placeholder="輸入帳號"></div>
+      <div class="field"><label>密碼</label><input id="authPass" class="input" type="password" autocomplete="current-password" required placeholder="輸入密碼"></div>
+      <button id="authSubmit" class="btn primary" style="width:100%;margin-top:14px">登入</button>
     </form>
-    <p id="gateMsg" style="font-size:12px;margin-bottom:0">金鑰只會送到這個 Worker 驗證；成功後使用簽名 HttpOnly Session Cookie，不依賴 KV 即時讀取。</p>
+    <p id="authHint" style="font-size:12px;margin-bottom:0">沿用 hf-cf-upload-poc-20260929 的 D1 登入與 Session。</p>
   </div>
 </div>
-
 <div class="shell">
 <aside class="side">
   <div class="brand"><div class="logo">H</div><div><b>HRS Drive</b><span>Cloudflare × OneDrive</span></div></div>
@@ -569,41 +668,34 @@ button,input{font:inherit}button{touch-action:manipulation}a{color:inherit;text-
 <div id="toastbox" class="toastbox"></div><div id="modalHost"></div>
 <script>
 (()=>{"use strict";
-const st={path:"",items:[],file:null};
-const q=id=>document.getElementById(id), qa=s=>Array.from(document.querySelectorAll(s));
-const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const st={user:null,path:"",items:[],file:null};
+const q=id=>document.getElementById(id),qa=s=>Array.from(document.querySelectorAll(s));
+const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 function bytes(n){n=Number(n||0);if(n<1024)return n+" B";if(n<1048576)return(n/1024).toFixed(1)+" KiB";if(n<1073741824)return(n/1048576).toFixed(2)+" MiB";if(n<1099511627776)return(n/1073741824).toFixed(2)+" GiB";return(n/1099511627776).toFixed(2)+" TiB"}
 function toast(m){const x=document.createElement("div");x.className="toast";x.textContent=m;q("toastbox").appendChild(x);setTimeout(()=>x.remove(),3800)}
-async function jf(url,opt={}){const h=new Headers(opt.headers||{});const r=await fetch(url,{...opt,headers:h,cache:"no-store",credentials:"same-origin"}),t=await r.text();let d;try{d=t?JSON.parse(t):null}catch{throw Error(t||("HTTP "+r.status))}if(!r.ok)throw Error(d?.error||("HTTP "+r.status));return d}
-function page(){return location.pathname.replace(/^\/+|\/+$/g,"")||"overview"}
-function show(pg,push=true){if(!["overview","upload","files"].includes(pg))pg="overview";q("overviewView").hidden=pg!=="overview";q("uploadView").hidden=pg!=="upload";q("filesView").hidden=pg!=="files";qa(".nav a").forEach(a=>a.classList.toggle("on",a.dataset.page===pg));q("pageTitle").textContent=pg==="overview"?"總覽":pg==="upload"?"上傳":"檔案";q("pageSub").textContent=pg==="overview"?"只管理 /HRS，其他 OneDrive 內容保持隔離。":pg==="upload"?"大型檔案採 Microsoft Graph Upload Session 分段上傳。":"在 /HRS 範圍內自由建立、刪除、下載與共用。";if(push&&location.pathname!=="/"+pg)history.pushState({},"","/"+pg);if(pg==="overview")loadOverview();if(pg==="files")loadFiles()}
+async function raw(url,opt={}){const r=await fetch(url,{...opt,cache:"no-store",credentials:"same-origin"}),t=await r.text();let d;try{d=t?JSON.parse(t):null}catch{throw Error(t||("HTTP "+r.status))}if(!r.ok)throw Error((d&&d.error)||("HTTP "+r.status));return d}
+const api=raw;
+function page(){const p=location.pathname.replace(/^\/+|\/+$/g,"")||"overview";return["overview","upload","files"].includes(p)?p:"overview"}
+function show(pg,push=true){q("overviewView").hidden=pg!=="overview";q("uploadView").hidden=pg!=="upload";q("filesView").hidden=pg!=="files";qa(".nav a").forEach(a=>a.classList.toggle("on",a.dataset.page===pg));q("pageTitle").textContent=pg==="overview"?"總覽":pg==="upload"?"上傳":"檔案";q("pageSub").textContent=pg==="overview"?"只管理 /HRS，其他 OneDrive 內容保持隔離。":pg==="upload"?"大型檔案採 Microsoft Graph Upload Session 分段上傳。":"在 /HRS 範圍內自由建立、刪除、下載與共用。";if(push&&location.pathname!=="/"+pg)history.pushState({},"","/"+pg);if(pg==="overview")loadOverview();if(pg==="files")loadFiles()}
 function badge(ok,label){const b=q("connBadge");b.classList.toggle("ok",!!ok);b.classList.toggle("err",ok===false);b.querySelector("span").textContent=label;q("sideStatus").textContent=label}
-async function boot(){try{const d=await jf("/api/status");q("gate").hidden=true;badge(d.connected,d.connected?"OneDrive 已連接":"OneDrive 尚未連接");q("connectBtn").hidden=d.connected||!d.microsoftConfigured;show(page(),false)}catch(e){q("gate").hidden=false;const p=new URLSearchParams(location.search).get("login");if(p==="failed")q("gateMsg").textContent="ACCESS_KEY 不正確";else if(p==="not-configured")q("gateMsg").textContent="Worker 尚未設定 ACCESS_KEY";else if(p==="state-missing")q("gateMsg").textContent="Worker 尚未設定 STATE KV"}}
-async function connect(){const d=await jf("/api/auth/url",{method:"POST"});location.href=d.url}
-async function loadOverview(){try{const d=await jf("/api/overview");q("mItems").textContent=d.items;q("mFiles").textContent=d.files;q("mFolders").textContent=d.folders;q("mBytes").textContent=bytes(d.bytes)}catch(e){toast(e.message)}}
-function crumbs(){const a=st.path?st.path.split("/"):[],out=['<button data-path="">HRS</button>'];let acc="";for(const p of a){acc=acc?acc+"/"+p:p;out.push("<span>›</span><button data-path=\""+esc(acc)+"\">"+esc(p)+"</button>")}q("crumbs").innerHTML=out.join(" ");qa("#crumbs button").forEach(b=>b.onclick=()=>{st.path=b.dataset.path;loadFiles()})}
-async function loadFiles(){try{const d=await jf("/api/files?path="+encodeURIComponent(st.path));st.items=d.items||[];crumbs();renderFiles()}catch(e){toast(e.message)}}
+async function enterApp(){q("gate").hidden=true;const d=await api("/api/status");badge(d.connected,d.connected?"OneDrive 已連接":"OneDrive 尚未連接");q("connectBtn").hidden=d.connected||!d.microsoftConfigured;show(page(),false)}
+async function authGate(){q("gate").hidden=false;try{const a=await raw("/api/auth/status");if(a.authenticated){st.user=a.user;await enterApp()}else{q("authTitle").textContent="登入";q("authSubtitle").textContent="使用 HF Vault 相同的帳號與密碼。"}}catch(e){q("authHint").textContent="無法連線："+e.message}}
+async function submitAuth(e){e.preventDefault();const username=q("authUser").value.trim(),password=q("authPass").value,btn=q("authSubmit");if(!username||!password){toast("請輸入帳號與密碼");return}btn.disabled=true;btn.textContent="登入中…";try{const d=await raw("/api/auth/login",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({username,password})});st.user=d.user;q("authPass").value="";toast("登入成功");await enterApp()}catch(err){toast(err.message)}finally{btn.disabled=false;btn.textContent="登入"}}
+async function logout(){try{await raw("/api/auth/logout",{method:"POST"})}catch{}st.user=null;q("gate").hidden=false;await authGate()}
+async function connect(){const d=await api("/api/auth/url",{method:"POST"});location.href=d.url}
+async function loadOverview(){try{const d=await api("/api/overview");q("mItems").textContent=d.items;q("mFiles").textContent=d.files;q("mFolders").textContent=d.folders;q("mBytes").textContent=bytes(d.bytes)}catch(e){toast(e.message)}}
+function crumbs(){const parts=st.path?st.path.split("/"):[],out=['<button data-path="">HRS</button>'];let acc="";for(const p of parts){acc=acc?acc+"/"+p:p;out.push("<span>›</span><button data-path=\""+esc(acc)+"\">"+esc(p)+"</button>")}q("crumbs").innerHTML=out.join(" ");qa("#crumbs button").forEach(b=>b.onclick=()=>{st.path=b.dataset.path;loadFiles()})}
+async function loadFiles(){try{const d=await api("/api/files?path="+encodeURIComponent(st.path));st.items=d.items||[];crumbs();renderFiles()}catch(e){toast(e.message)}}
 function renderFiles(){const term=q("searchInput").value.trim().toLowerCase(),a=st.items.filter(x=>!term||x.name.toLowerCase().includes(term));q("fileRows").innerHTML=a.length?"":'<tr><td colspan="5" style="color:var(--muted)">這個資料夾是空的</td></tr>';for(const f of a){const tr=document.createElement("tr");tr.innerHTML="<td></td><td>"+(f.folder?"資料夾":"檔案")+"</td><td>"+bytes(f.size)+"</td><td>"+esc(f.lastModifiedDateTime?new Intl.DateTimeFormat("zh-TW",{dateStyle:"medium",timeStyle:"short"}).format(new Date(f.lastModifiedDateTime)):"-")+'</td><td><div class="actions"></div></td>';const nb=document.createElement("button");nb.className="namebtn";nb.textContent=(f.folder?"DIR  ":"FILE  ")+f.name;if(f.folder)nb.onclick=()=>{st.path=st.path?st.path+"/"+f.name:f.name;loadFiles()};tr.children[0].appendChild(nb);const ac=tr.querySelector(".actions");if(f.file){const dl=document.createElement("button");dl.className="btn mini";dl.textContent="下載";dl.onclick=()=>downloadFile(f);ac.appendChild(dl)}const sh=document.createElement("button");sh.className="btn mini success";sh.textContent="共用";sh.onclick=()=>shareFile(f);ac.appendChild(sh);const de=document.createElement("button");de.className="btn mini danger";de.textContent="刪除";de.onclick=()=>removeFile(f);ac.appendChild(de);q("fileRows").appendChild(tr)}}
 function modal(title,body,buttons){q("modalHost").innerHTML='<div class="modalback"><div class="modal"><h3>'+esc(title)+"</h3><div>"+body+'</div><div class="row" id="modalBtns"></div></div></div>';for(const b of buttons){const x=document.createElement("button");x.className="btn "+(b.cls||"");x.textContent=b.text;x.onclick=b.fn;q("modalBtns").appendChild(x)}}
 function closeModal(){q("modalHost").innerHTML=""}
-function newFolder(){modal("新增資料夾",'<div class="field"><label>名稱</label><input id="folderName" class="input" autofocus></div>',[{text:"取消",fn:closeModal},{text:"建立",cls:"primary",fn:async()=>{try{await jf("/api/folders",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({path:st.path,name:q("folderName").value})});closeModal();toast("資料夾已建立");loadFiles()}catch(e){toast(e.message)}}}])}
-function removeFile(f){modal("刪除 "+f.name,"<p>這會將項目移到 OneDrive 資源回收筒。若是資料夾，其底下內容也會一起刪除。</p>",[{text:"取消",fn:closeModal},{text:"刪除",cls:"danger",fn:async()=>{try{await jf("/api/items/"+encodeURIComponent(f.id),{method:"DELETE"});closeModal();toast("已刪除 "+f.name);loadFiles();loadOverview()}catch(e){toast(e.message)}}}])}
-async function shareFile(f){try{const d=await jf("/api/share/"+encodeURIComponent(f.id),{method:"POST"}),url=d.link?.webUrl;if(!url)throw Error("Microsoft 未回傳共用網址");modal("共用連結",'<p>匿名唯讀連結，只指向這個 HRS 項目。</p><div class="field"><input id="shareUrl" class="input" readonly value="'+esc(url)+'"></div>',[{text:"關閉",fn:closeModal},{text:"複製",cls:"primary",fn:async()=>{await navigator.clipboard.writeText(url);toast("已複製");closeModal()}}])}catch(e){toast("共用失敗："+e.message)}}
-async function downloadFile(f){try{const d=await jf("/api/download-ticket/"+encodeURIComponent(f.id),{method:"POST"});location.href=d.url}catch(e){toast(e.message)}}
+function newFolder(){modal("新增資料夾",'<div class="field"><label>名稱</label><input id="folderName" class="input" autofocus></div>',[{text:"取消",fn:closeModal},{text:"建立",cls:"primary",fn:async()=>{try{await api("/api/folders",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({path:st.path,name:q("folderName").value})});closeModal();toast("資料夾已建立");loadFiles()}catch(e){toast(e.message)}}}])}
+function removeFile(f){modal("刪除 "+f.name,"<p>這會將項目移到 OneDrive 資源回收筒。若是資料夾，其底下內容也會一起刪除。</p>",[{text:"取消",fn:closeModal},{text:"刪除",cls:"danger",fn:async()=>{try{await api("/api/items/"+encodeURIComponent(f.id),{method:"DELETE"});closeModal();toast("已刪除 "+f.name);loadFiles();loadOverview()}catch(e){toast(e.message)}}}])}
+async function shareFile(f){try{const d=await api("/api/share/"+encodeURIComponent(f.id),{method:"POST"}),url=d.link&&d.link.webUrl;if(!url)throw Error("Microsoft 未回傳共用網址");modal("共用連結",'<p>匿名唯讀連結，只指向這個 HRS 項目。</p><div class="field"><input id="shareUrl" class="input" readonly value="'+esc(url)+'"></div>',[{text:"關閉",fn:closeModal},{text:"複製",cls:"primary",fn:async()=>{await navigator.clipboard.writeText(url);toast("已複製");closeModal()}}])}catch(e){toast("共用失敗："+e.message)}}
+async function downloadFile(f){try{const d=await api("/api/download-ticket/"+encodeURIComponent(f.id),{method:"POST"});location.href=d.url}catch(e){toast(e.message)}}
 function choose(f){st.file=f;q("uploadBtn").disabled=!f;q("upText").textContent=f?f.name+" · "+bytes(f.size):"尚未選擇檔案";q("upBar").style.width="0%";q("upPct").textContent="0%"}
-async function upload(){const f=st.file;if(!f)return;const btn=q("uploadBtn");btn.disabled=true;try{const d=await jf("/api/upload/start",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({path:q("uploadPath").value,name:f.name,size:f.size})}),chunk=d.chunkSize||10485760;let pos=0;while(pos<f.size){const end=Math.min(pos+chunk,f.size),blob=f.slice(pos,end);let last=null;for(let n=0;n<3;n++){try{await jf("/api/upload/"+encodeURIComponent(d.uploadId),{method:"PUT",headers:{"content-range":"bytes "+pos+"-"+(end-1)+"/"+f.size,"content-type":"application/octet-stream"},body:blob});last=null;break}catch(e){last=e;await new Promise(r=>setTimeout(r,1000*Math.pow(2,n)))}}if(last)throw last;pos=end;const pct=pos/f.size*100;q("upBar").style.width=pct.toFixed(2)+"%";q("upPct").textContent=pct.toFixed(1)+"%";q("upText").textContent="上傳中 · "+bytes(pos)+" / "+bytes(f.size)}toast("上傳完成："+f.name);q("upText").textContent="上傳完成 · "+f.name;loadOverview()}catch(e){toast("上傳失敗："+e.message);q("upText").textContent="上傳中斷"}finally{btn.disabled=false}}
-q("lockBtn").onclick=async()=>{await fetch("/logout",{method:"POST",credentials:"same-origin"});location.href="/"};
-q("connectBtn").onclick=()=>connect().catch(e=>toast(e.message));
-qa(".nav a").forEach(a=>a.onclick=e=>{e.preventDefault();show(a.dataset.page)});
-qa("[data-go]").forEach(b=>b.onclick=()=>show(b.dataset.go));
-window.onpopstate=()=>show(page(),false);
-q("newFolderBtn").onclick=newFolder;q("refreshBtn").onclick=loadFiles;q("searchInput").oninput=renderFiles;q("uploadBtn").onclick=upload;
-const drop=q("drop"),fi=q("fileInput");
-drop.onclick=()=>fi.click();fi.onchange=()=>choose(fi.files?.[0]||null);
-["dragenter","dragover"].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.add("over")}));
-["dragleave","drop"].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.remove("over")}));
-drop.addEventListener("drop",e=>choose(e.dataTransfer.files?.[0]||null));
-boot();
+async function upload(){const f=st.file;if(!f)return;const btn=q("uploadBtn");btn.disabled=true;try{const d=await api("/api/upload/start",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({path:q("uploadPath").value,name:f.name,size:f.size})}),chunk=d.chunkSize||10485760;let pos=0;while(pos<f.size){const end=Math.min(pos+chunk,f.size),blob=f.slice(pos,end);let last=null;for(let n=0;n<3;n++){try{await api("/api/upload/"+encodeURIComponent(d.uploadId),{method:"PUT",headers:{"content-range":"bytes "+pos+"-"+(end-1)+"/"+f.size,"content-type":"application/octet-stream"},body:blob});last=null;break}catch(e){last=e;await new Promise(r=>setTimeout(r,1000*Math.pow(2,n)))}}if(last)throw last;pos=end;const pct=pos/f.size*100;q("upBar").style.width=pct.toFixed(2)+"%";q("upPct").textContent=pct.toFixed(1)+"%";q("upText").textContent="上傳中 · "+bytes(pos)+" / "+bytes(f.size)}toast("上傳完成："+f.name);q("upText").textContent="上傳完成 · "+f.name;loadOverview()}catch(e){toast("上傳失敗："+e.message);q("upText").textContent="上傳中斷"}finally{btn.disabled=false}}
+q("authForm").onsubmit=submitAuth;q("lockBtn").onclick=logout;q("connectBtn").onclick=()=>connect().catch(e=>toast(e.message));qa(".nav a").forEach(a=>a.onclick=e=>{e.preventDefault();show(a.dataset.page)});qa("[data-go]").forEach(b=>b.onclick=()=>show(b.dataset.go));window.onpopstate=()=>show(page(),false);q("newFolderBtn").onclick=newFolder;q("refreshBtn").onclick=loadFiles;q("searchInput").oninput=renderFiles;q("uploadBtn").onclick=upload;const drop=q("drop"),fi=q("fileInput");drop.onclick=()=>fi.click();fi.onchange=()=>choose(fi.files&&fi.files[0]||null);["dragenter","dragover"].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.add("over")}));["dragleave","drop"].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.remove("over")}));drop.addEventListener("drop",e=>choose(e.dataTransfer.files&&e.dataTransfer.files[0]||null));authGate();
 })();
 </script>
 </body></html>`;
