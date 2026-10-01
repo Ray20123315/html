@@ -1,0 +1,16 @@
+name = "onedrive-cn-files"
+main = "worker.js"
+compatibility_date = "2026-10-01"
+
+[vars]
+ROOT_FOLDER = "HRS"
+MS_TENANT = "common"
+
+[[kv_namespaces]]
+binding = "STATE"
+id = "491ff784a714401197d86b62a9a84f62"
+
+# Secrets are intentionally NOT committed or managed by automation:
+# ACCESS_KEY
+# MS_CLIENT_ID
+# MS_CLIENT_SECRET
