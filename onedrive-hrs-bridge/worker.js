@@ -62,6 +62,14 @@ export default {
           requireSameOrigin(request);
           return await multipartPart(request, url, env, auth);
         }
+        if (url.pathname === '/api/multipart/direct/ack' && request.method === 'POST') {
+          requireSameOrigin(request);
+          return await multipartDirectAck(request, env, auth);
+        }
+        if (url.pathname === '/api/multipart/reconcile' && request.method === 'POST') {
+          requireSameOrigin(request);
+          return await multipartReconcile(request, env, auth);
+        }
         if (url.pathname === '/api/multipart/complete' && request.method === 'POST') {
           requireSameOrigin(request);
           return await multipartComplete(request, env, auth);
@@ -77,6 +85,10 @@ export default {
         if (url.pathname === '/api/rename' && request.method === 'POST') {
           requireSameOrigin(request);
           return await renameFile(request, env, auth);
+        }
+        if (url.pathname === '/api/move' && request.method === 'POST') {
+          requireSameOrigin(request);
+          return await moveFile(request, env, auth);
         }
         if (url.pathname === '/api/delete' && request.method === 'POST') {
           requireSameOrigin(request);
@@ -96,6 +108,11 @@ export default {
           requireSameOrigin(request);
           requireAdmin(auth);
           return await updateUser(request, env, auth);
+        }
+        if (url.pathname === '/api/users/delete' && request.method === 'POST') {
+          requireSameOrigin(request);
+          requireAdmin(auth);
+          return await deleteUser(request, env, auth);
         }
       }
 
@@ -352,38 +369,24 @@ async function listAudit(env, auth) {
   return json({ok:true,items:rows.results || []});
 }
 
-async function overviewData(env, auth) {
+async function overviewData(env,auth){
   requireConfig(env);
-  const files=await odAllFiles(env);
-  const totalBytes=files.reduce((n,x)=>n+Number(x.size||0),0);
+  const physical=await odAllItems(env),files=physical.filter(x=>x.file),totalBytes=files.reduce((n,x)=>n+Number(x.size||0),0);
   if(auth.role==='admin'){
     const users=await env.DB.prepare("SELECT COUNT(*) AS n FROM admin_users WHERE role='user'").first();
-    return json({ok:true,role:'admin',stats:{
-      userCount:Number(users?.n||0),fileCount:files.length,totalBytes,legacyCount:0
-    }});
+    const meta=await env.DB.prepare('SELECT id,owner_user_id FROM od_files').all(),map=Object.fromEntries((meta.results||[]).map(x=>[x.id,x]));
+    const legacyCount=files.filter(x=>!map[x.id]||!map[x.id].owner_user_id).length;
+    return json({ok:true,role:'admin',stats:{userCount:Number(users?.n||0),fileCount:files.length,totalBytes,legacyCount}});
   }
-  const quota=Number(auth.quota_bytes||0);
-  return json({ok:true,role:'user',stats:{
-    fileCount:files.length,totalBytes,quotaBytes:quota,
-    remainingBytes:quota>0?Math.max(0,quota-totalBytes):null
-  }});
+  const usage=await odOwnedUsage(env,auth.id),quota=Number(auth.quota_bytes||0);
+  return json({ok:true,role:'user',stats:{fileCount:usage.fileCount,totalBytes:usage.usedBytes,quotaBytes:quota,remainingBytes:quota>0?Math.max(0,quota-usage.usedBytes):null}});
 }
-async function listUsers(env) {
-  const rows = await env.DB.prepare(
-    "SELECT u.id,u.username,u.role,u.quota_bytes,u.enabled,u.created_at,COUNT(f.id) AS file_count,COALESCE(SUM(f.size_bytes),0) AS used_bytes FROM admin_users u LEFT JOIN hf_files f ON f.owner_user_id = u.id GROUP BY u.id,u.username,u.role,u.quota_bytes,u.enabled,u.created_at ORDER BY CASE WHEN u.role='admin' THEN 0 ELSE 1 END,u.username COLLATE NOCASE"
+async function listUsers(env){
+  const rows=await env.DB.prepare(
+    "SELECT u.id,u.username,u.role,u.quota_bytes,u.enabled,u.created_at,COALESCE(SUM(CASE WHEN f.mime_type!='inode/directory' THEN 1 ELSE 0 END),0) AS file_count,COALESCE(SUM(CASE WHEN f.mime_type!='inode/directory' THEN f.size_bytes ELSE 0 END),0) AS used_bytes FROM admin_users u LEFT JOIN od_files f ON f.owner_user_id=u.id GROUP BY u.id,u.username,u.role,u.quota_bytes,u.enabled,u.created_at ORDER BY CASE WHEN u.role='admin' THEN 0 ELSE 1 END,u.username COLLATE NOCASE"
   ).all();
-  return json({ok:true,users:(rows.results || []).map(r=>({
-    id:r.id,
-    username:r.username,
-    role:r.role || 'user',
-    quotaBytes:Number(r.quota_bytes || 0),
-    enabled:Number(r.enabled) === 1,
-    fileCount:Number(r.file_count || 0),
-    usedBytes:Number(r.used_bytes || 0),
-    createdAt:r.created_at
-  }))});
+  return json({ok:true,users:(rows.results||[]).map(r=>({id:r.id,username:r.username,role:r.role||'user',quotaBytes:Number(r.quota_bytes||0),enabled:Number(r.enabled)===1,fileCount:Number(r.file_count||0),usedBytes:Number(r.used_bytes||0),createdAt:r.created_at}))});
 }
-
 async function createUser(request, env, auth) {
   const body = await safeJson(request);
   const username = validateUsername(body.username);
@@ -406,40 +409,37 @@ async function createUser(request, env, auth) {
 }
 
 async function updateUser(request, env, auth) {
-  const body = await safeJson(request);
-  const id = String(body.id || '');
-  if (!id) throw httpError(400,'Missing user id');
-  const target = await env.DB.prepare(
-    'SELECT id,username,role,quota_bytes,enabled FROM admin_users WHERE id = ?'
-  ).bind(id).first();
-  if (!target) throw httpError(404,'找不到使用者');
-  if ((target.role || 'user') === 'admin') throw httpError(400,'此頁不修改管理員帳號');
-
-  let quotaBytes = Number(target.quota_bytes || 0);
-  let enabled = Number(target.enabled) === 1 ? 1 : 0;
-  if (body.quotaBytes != null) quotaBytes = validateQuotaBytes(body.quotaBytes);
-  if (body.enabled != null) enabled = body.enabled ? 1 : 0;
-
-  await env.DB.prepare(
-    'UPDATE admin_users SET quota_bytes = ?,enabled = ?,updated_at = ? WHERE id = ?'
-  ).bind(quotaBytes,enabled,new Date().toISOString(),id).run();
-
-  if (body.password) {
-    const password = validatePassword(body.password);
-    const salt = randomHex(16);
-    const hash = await hashPassword(password,salt,PASSWORD_ITERATIONS);
-    await env.DB.prepare(
-      'UPDATE admin_users SET password_salt = ?,password_hash = ?,password_iterations = ?,updated_at = ? WHERE id = ?'
-    ).bind(salt,hash,PASSWORD_ITERATIONS,new Date().toISOString(),id).run();
-    await env.DB.prepare('DELETE FROM admin_sessions WHERE user_id = ?').bind(id).run();
-  } else if (!enabled) {
-    await env.DB.prepare('DELETE FROM admin_sessions WHERE user_id = ?').bind(id).run();
-  }
-
-  await audit(env,auth.id,'user_update',id,JSON.stringify({quotaBytes,enabled:Boolean(enabled),passwordReset:Boolean(body.password)}));
-  return json({ok:true,id,quotaBytes,enabled:Boolean(enabled)});
+  const body=await safeJson(request),id=String(body.id||'');
+  if(!id)throw httpError(400,'Missing user id');
+  const target=await env.DB.prepare('SELECT id,username,role,quota_bytes,enabled FROM admin_users WHERE id=?').bind(id).first();
+  if(!target)throw httpError(404,'找不到使用者');
+  if((target.role||'user')==='admin')throw httpError(400,'此頁不修改管理員帳號');
+  let quotaBytes=Number(target.quota_bytes||0),enabled=Number(target.enabled)===1?1:0,username=String(target.username||'');
+  if(body.quotaBytes!=null)quotaBytes=validateQuotaBytes(body.quotaBytes);
+  if(body.enabled!=null)enabled=body.enabled?1:0;
+  if(body.username!=null)username=validateUsername(body.username);
+  try{await env.DB.prepare('UPDATE admin_users SET username=?,quota_bytes=?,enabled=?,updated_at=? WHERE id=?').bind(username,quotaBytes,enabled,new Date().toISOString(),id).run()}
+  catch(e){if(String(e?.message||e).toLowerCase().includes('unique'))throw httpError(409,'帳號已存在');throw e}
+  if(body.password){
+    const password=validatePassword(body.password),salt=randomHex(16),hash=await hashPassword(password,salt,PASSWORD_ITERATIONS);
+    await env.DB.prepare('UPDATE admin_users SET password_salt=?,password_hash=?,password_iterations=?,updated_at=? WHERE id=?').bind(salt,hash,PASSWORD_ITERATIONS,new Date().toISOString(),id).run();
+    await env.DB.prepare('DELETE FROM admin_sessions WHERE user_id=?').bind(id).run();
+  }else if(!enabled)await env.DB.prepare('DELETE FROM admin_sessions WHERE user_id=?').bind(id).run();
+  await audit(env,auth.id,'user_update',id,JSON.stringify({username,quotaBytes,enabled:Boolean(enabled),passwordReset:Boolean(body.password)}));
+  return json({ok:true,id,username,quotaBytes,enabled:Boolean(enabled)});
 }
-
+async function deleteUser(request,env,auth){
+  const body=await safeJson(request),id=String(body.id||'');
+  if(!id)throw httpError(400,'Missing user id');
+  const target=await env.DB.prepare('SELECT id,username,role FROM admin_users WHERE id=?').bind(id).first();
+  if(!target)throw httpError(404,'找不到使用者');
+  if((target.role||'user')==='admin')throw httpError(400,'不能刪除管理員帳號');
+  await env.DB.prepare('DELETE FROM admin_sessions WHERE user_id=?').bind(id).run();
+  await env.DB.prepare('UPDATE od_files SET owner_user_id=NULL WHERE owner_user_id=?').bind(id).run();
+  await env.DB.prepare('DELETE FROM admin_users WHERE id=?').bind(id).run();
+  await audit(env,auth.id,'user_delete',id,JSON.stringify({username:target.username,filesPreserved:true}));
+  return json({ok:true,id,username:target.username,filesPreserved:true});
+}
 async function safeJson(request) {
   try { return await request.json(); }
   catch (_) { throw httpError(400,'JSON 格式錯誤'); }
@@ -452,30 +452,42 @@ function httpError(status,message) {
 }
 
 function requireConfig(env) {
-  if (!env.MS_CLIENT_ID || !env.MS_CLIENT_SECRET || !env.STATE || !env.DB) {
-    throw httpError(500,'OneDrive 設定不完整');
-  }
+  if (!env.MS_CLIENT_ID || !env.MS_CLIENT_SECRET || !env.STATE || !env.DB) throw httpError(500,'OneDrive 設定不完整');
 }
 const OD_TOKEN_KEY='auth:tokens';
-function odRoot(env){ return String(env.ROOT_FOLDER || 'HRS'); }
+function odRoot(env){return String(env.ROOT_FOLDER||'HRS')}
+function odCleanSegment(value){
+  const x=String(value==null?'':value);
+  if(!x||x==='.'||x==='..')throw httpError(400,'名稱不合法');
+  if(/[\u0000-\u001f\\/:*?"<>|]/.test(x)||/[ .]$/.test(x))throw httpError(400,'名稱包含 OneDrive 不允許的字元');
+  if(x.length>255)throw httpError(400,'名稱過長');
+  return x;
+}
+function odCleanPath(value){
+  const raw=String(value||'').replace(/\\/g,'/').replace(/^\/+|\/+$/g,'');
+  if(!raw)return '';
+  return raw.split('/').map(odCleanSegment).join('/');
+}
+function odEncodedPath(env,relative=''){
+  const rel=odCleanPath(relative);
+  return [odRoot(env),...rel.split('/').filter(Boolean)].map(encodeURIComponent).join('/');
+}
 async function odAccessToken(env){
   requireConfig(env);
   let t=await env.STATE.get(OD_TOKEN_KEY,'json');
-  if(!t) throw httpError(409,'OneDrive 尚未連接');
-  if(t.access_token && Date.now()<Number(t.expires_at||0)) return t.access_token;
-  if(!t.refresh_token) throw httpError(409,'OneDrive refresh token 不存在');
+  if(!t)throw httpError(409,'OneDrive 尚未連接');
+  if(t.access_token&&Date.now()<Number(t.expires_at||0))return t.access_token;
+  if(!t.refresh_token)throw httpError(409,'OneDrive refresh token 不存在');
   const q=new URLSearchParams({
-    client_id:env.MS_CLIENT_ID,
-    client_secret:env.MS_CLIENT_SECRET,
-    grant_type:'refresh_token',
-    refresh_token:t.refresh_token,
+    client_id:env.MS_CLIENT_ID,client_secret:env.MS_CLIENT_SECRET,
+    grant_type:'refresh_token',refresh_token:t.refresh_token,
     scope:'offline_access Files.ReadWrite User.Read'
   });
   const r=await fetch('https://login.microsoftonline.com/'+encodeURIComponent(env.MS_TENANT||'common')+'/oauth2/v2.0/token',{
     method:'POST',headers:{'content-type':'application/x-www-form-urlencoded'},body:q
   });
   const n=await r.json();
-  if(!r.ok) throw httpError(502,n?.error_description||n?.error||'OneDrive token refresh failed');
+  if(!r.ok)throw httpError(502,n?.error_description||n?.error||'OneDrive token refresh failed');
   t={...t,...n,expires_at:Date.now()+(Number(n.expires_in||3600)-60)*1000};
   await env.STATE.put(OD_TOKEN_KEY,JSON.stringify(t));
   return t.access_token;
@@ -483,59 +495,7 @@ async function odAccessToken(env){
 async function odGraph(env,path,init={}){
   const h=new Headers(init.headers||{});
   h.set('authorization','Bearer '+await odAccessToken(env));
-  if(init.body && !h.has('content-type')) h.set('content-type','application/json');
+  if(init.body&&!h.has('content-type'))h.set('content-type','application/json');
   return fetch(path.startsWith('http')?path:'https://graph.microsoft.com/v1.0'+path,{...init,headers:h});
 }
-async function odData(resp){
-  const text=await resp.text();
-  if(!text) return null;
-  try{return JSON.parse(text)}catch{return {raw:text}}
-}
-async function odEnsureRoot(env){
-  const name=odRoot(env);
-  let r=await odGraph(env,'/me/drive/root:/'+encodeURIComponent(name)+'?$select=id,name,folder');
-  if(r.ok) return odData(r);
-  if(r.status!==404){const d=await odData(r);throw httpError(r.status,d?.error?.message||'無法讀取 /HRS')}
-  r=await odGraph(env,'/me/drive/root/children',{
-    method:'POST',
-    body:JSON.stringify({name,folder:{},'@microsoft.graph.conflictBehavior':'fail'})
-  });
-  const d=await odData(r);
-  if(!r.ok && r.status!==409) throw httpError(r.status,d?.error?.message||'無法建立 /HRS');
-  if(r.ok) return d;
-  r=await odGraph(env,'/me/drive/root:/'+encodeURIComponent(name)+'?$select=id,name,folder');
-  if(!r.ok) throw httpError(r.status,'/HRS 建立後仍無法讀取');
-  return odData(r);
-}
-async function odAssert(env,itemId){
-  const root=await odEnsureRoot(env);
-  const r=await odGraph(env,'/me/drive/items/'+encodeURIComponent(itemId)+'?$select=id,name,size,file,folder,parentReference,lastModifiedDateTime,@microsoft.graph.downloadUrl');
-  const d=await odData(r);
-  if(!r.ok) throw httpError(r.status,d?.error?.message||'OneDrive 項目不存在');
-  if(d.id===root.id) return d;
-  const p=String(d.parentReference?.path||'');
-  const prefix='/drive/root:/'+odRoot(env);
-  if(!(p===prefix||p.startsWith(prefix+'/'))) throw httpError(403,'此項目不在 /HRS');
-  return d;
-}
-async function odAllFiles(env){
-  const root=await odEnsureRoot(env);
-  const queue=[{id:root.id,prefix:''}],out=[];
-  while(queue.length){
-    const cur=queue.shift();
-    let next='https://graph.microsoft.com/v1.0/me/drive/items/'+encodeURIComponent(cur.id)+'/children?$select=id,name,size,file,folder,parentReference,lastModifiedDateTime,createdDateTime&$top=200';
-    while(next){
-      const r=await odGraph(env,next),d=await odData(r);
-      if(!r.ok) throw httpError(r.status,d?.error?.message||'無法列出 /HRS');
-      for(const x of d.value||[]){
-        const rel=cur.prefix?cur.prefix+'/'+x.name:x.name;
-        if(x.folder) queue.push({id:x.id,prefix:rel});
-        else if(x.file) out.push({...x,relativeName:rel});
-      }
-      next=d['@odata.nextLink']||'';
-    }
-  }
-  return out;
-}
-function odCleanSegment(value){
-  const s=String(value==null?'' --- TRUNCATED --- 124,791 chars
+async function odData(r){const t=await r.text();if(!t)return null;try{return JSON.parse(t)}catch{ret --- TRUNCATED --- 151,640 chars
