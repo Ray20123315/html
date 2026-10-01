@@ -54,17 +54,26 @@ async function requireAuth(request,env) {
   if (!env.ACCESS_KEY) throw httpError(503,'ACCESS_KEY 尚未設定');
   const bearer=request.headers.get('authorization')||'';
   if (bearer==='Bearer '+env.ACCESS_KEY) return true;
-  if (!env.STATE) throw httpError(503,'STATE KV 尚未設定');
-  const token=getCookie(request,SESSION_COOKIE);
-  if (!token) throw httpError(401,'請先登入');
-  const hash=await sha256Hex(token);
-  if (!await env.STATE.get('sess:'+hash)) throw httpError(401,'登入已過期');
+
+  const raw=getCookie(request,SESSION_COOKIE);
+  if (!raw) throw httpError(401,'請先登入');
+  const dot=raw.lastIndexOf('.');
+  if (dot<1) throw httpError(401,'登入已過期');
+
+  const payload=raw.slice(0,dot), signature=raw.slice(dot+1);
+  if (!await verifySession(payload,signature,env.ACCESS_KEY)) throw httpError(401,'登入已過期');
+
+  let data;
+  try { data=JSON.parse(new TextDecoder().decode(base64UrlDecode(payload))); }
+  catch { throw httpError(401,'登入已過期'); }
+
+  if (!data?.exp || Date.now()>Number(data.exp)) throw httpError(401,'登入已過期');
   return true;
 }
 
 async function login(request,env) {
   if (!env.ACCESS_KEY) return Response.redirect(new URL('/?login=not-configured',request.url),303);
-  if (!env.STATE) return Response.redirect(new URL('/?login=state-missing',request.url),303);
+
   let supplied='';
   const type=request.headers.get('content-type')||'';
   if (type.includes('application/json')) {
@@ -74,23 +83,19 @@ async function login(request,env) {
     const form=await request.formData();
     supplied=String(form.get('access_key')||'');
   }
+
   if (supplied!==env.ACCESS_KEY) return Response.redirect(new URL('/?login=failed',request.url),303);
-  const token=randomToken();
-  const hash=await sha256Hex(token);
-  await env.STATE.put('sess:'+hash,'1',{expirationTtl:SESSION_TTL});
+
+  const payload=base64UrlEncode(new TextEncoder().encode(JSON.stringify({exp:Date.now()+SESSION_TTL*1000})));
+  const signature=await signSession(payload,env.ACCESS_KEY);
+  const cookie=payload+'.'+signature;
+
   const headers=new Headers({location:'/overview'});
-  headers.append('set-cookie',SESSION_COOKIE+'='+token+'; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age='+SESSION_TTL);
+  headers.append('set-cookie',SESSION_COOKIE+'='+cookie+'; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age='+SESSION_TTL);
   return new Response(null,{status:303,headers});
 }
 
 async function logout(request,env) {
-  if (env.STATE) {
-    const token=getCookie(request,SESSION_COOKIE);
-    if (token) {
-      const hash=await sha256Hex(token);
-      await env.STATE.delete('sess:'+hash);
-    }
-  }
   const headers=new Headers({location:'/'});
   headers.append('set-cookie',SESSION_COOKIE+'=; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=0');
   return new Response(null,{status:303,headers});
@@ -105,14 +110,34 @@ function getCookie(request,name) {
   }
   return '';
 }
-function randomToken() {
-  const a=new Uint8Array(32); crypto.getRandomValues(a);
-  return Array.from(a,b=>b.toString(16).padStart(2,'0')).join('');
+
+function base64UrlEncode(bytes) {
+  let raw='';
+  for (const b of bytes) raw+=String.fromCharCode(b);
+  return btoa(raw).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
 }
-async function sha256Hex(value) {
-  const data=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(String(value)));
-  return Array.from(new Uint8Array(data),b=>b.toString(16).padStart(2,'0')).join('');
+function base64UrlDecode(s) {
+  s=String(s).replace(/-/g,'+').replace(/_/g,'/');
+  while (s.length%4) s+='=';
+  const raw=atob(s), out=new Uint8Array(raw.length);
+  for (let i=0;i<raw.length;i++) out[i]=raw.charCodeAt(i);
+  return out;
 }
+async function sessionKey(secret,usage) {
+  return crypto.subtle.importKey('raw',new TextEncoder().encode(String(secret)),{name:'HMAC',hash:'SHA-256'},false,[usage]);
+}
+async function signSession(payload,secret) {
+  const key=await sessionKey(secret,'sign');
+  const sig=new Uint8Array(await crypto.subtle.sign('HMAC',key,new TextEncoder().encode(payload)));
+  return base64UrlEncode(sig);
+}
+async function verifySession(payload,signature,secret) {
+  try {
+    const key=await sessionKey(secret,'verify');
+    return await crypto.subtle.verify('HMAC',key,base64UrlDecode(signature),new TextEncoder().encode(payload));
+  } catch { return false; }
+}
+
 function requireSameOrigin(request) {
   const origin=request.headers.get('origin');
   if (origin && origin!==new URL(request.url).origin) throw httpError(403,'Origin 不允許');
@@ -484,7 +509,7 @@ button,input{font:inherit}button{touch-action:manipulation}a{color:inherit;text-
       <div class="field"><label>ACCESS_KEY</label><input id="accessKey" name="access_key" class="input" type="password" autocomplete="current-password" required placeholder="輸入存取金鑰"></div>
       <button class="btn primary" style="width:100%;margin-top:14px">進入 HRS</button>
     </form>
-    <p id="gateMsg" style="font-size:12px;margin-bottom:0">金鑰只會送到這個 Worker 驗證；成功後使用 HttpOnly Session Cookie。</p>
+    <p id="gateMsg" style="font-size:12px;margin-bottom:0">金鑰只會送到這個 Worker 驗證；成功後使用簽名 HttpOnly Session Cookie，不依賴 KV 即時讀取。</p>
   </div>
 </div>
 
